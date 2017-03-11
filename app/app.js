@@ -14,53 +14,33 @@ The user's information will include:
 		Ratings and Reviews for specific Locations
 */
 
-var app = angular.module("MyPretentiousCup", [
-						'ui.router',
-						'ngMaterial'
-])
+var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.router.stateHelper'])
 
 .service('fbRef', function(FBCreds) {
-	return new Firebase(FBCreds.databaseURL);
+	return firebase.initializeApp(FBCreds);
 })
 
-.service('fbAuth', function($q, $firebase, $firebaseAuth, fbRef) {
-				var auth;
-				return function() {
-					if (auth) return $q.when(auth);
-					var authObj = $firebaseAuth(fbRef);
-					if (authObj.$getAuth()) {
-						return $q.when(auth = authObj.$getAuth());
-					}
-
-					var deferred = $q.defer();
-					authObj.$authAnonymously().then(function(authData) {
-							auth = authData;
-							console.log(authData);
-							deferred.resolve(authData);
-					});
-					return deferred.promise;
-				};
-})
-
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider, stateHelperProvider) {
 
 				console.log("I am within the config");
 
-				var checkIfAuth = {
-					projects: function(fbAuth) {
-						return fbAuth();
-					}
-				};
-
 				$urlRouterProvider.otherwise('/landing');
 
-				$stateProvider
+				stateHelperProvider
         
 		        // HOME STATES AND NESTED VIEWS ========================================
-		        .state('landing', {
-		            url: '/landing',
-		            templateUrl: '../partials/Landing.html',
-		            controller: "LandingCtrl"
+		        .state({
+		        	name: 'landing', 
+	            templateUrl: '../partials/Landing.html',
+	            controller: "LandingCtrl",
+	            children : [
+	            	{
+	            		name: 'login',
+	            		templateUrl: '<ui-view />'
+	            	}
+	            ]
+		        	
+		        
 		        })
 		        .state('login', {
 		            url: '/login',
@@ -75,39 +55,37 @@ var app = angular.module("MyPretentiousCup", [
 		        .state('home', {
 		            url: '/home',
 		            templateUrl: '../partials/Home.html',
-		            controller: "HomeCtrl",
-		            resolve: {checkIfAuth}
+		            controller: "HomeCtrl"
 		        })
 		        .state('field-journal', {
 		            url: '/field-journal',
 		            templateUrl: '../partials/FieldJournal.html',
-		            controller: "FieldJournalCtrl",
-		            resolve: {checkIfAuth}
+		            controller: "FieldJournalCtrl"
 		        })
 		        .state('recipes', {
 		            url: '/recipes',
 		            templateUrl: '../partials/Recipes.html',
-		            controller: "RecipesCtrl",
-		            resolve: {checkIfAuth}
+		            controller: "RecipesCtrl"
 		        })
 		        .state('drinking-buddies', {
 		            url: '/drinking-buddies',
 		            templateUrl: '../partials/DrinkingBuddies.html',
-		            controller: "DrinkingBuddiesCtrl",
-		            resolve: {checkIfAuth}
+		            controller: "DrinkingBuddiesCtrl"
 		        })
 		        .state('globe-view', {
 		            url: '/globe-view',
 		            templateUrl: '../partials/GlobeView.html',
-		            controller: "GlobeViewCtrl",
-		            resolve: {checkIfAuth}
+		            controller: "GlobeViewCtrl"
 		        });
 
 	
 })
 
-.run(() => {
-						console.log("You are connected");
+.run((fbRef) => {
+	console.log("You are connected");
+	fbRef.database().ref('users').once('value').then(
+			(snapshot) => console.log(snapshot.val())
+		);
 });
 
 
