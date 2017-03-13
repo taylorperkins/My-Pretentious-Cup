@@ -1,0 +1,36 @@
+
+<div class="jumbotron text-center">
+  <h1><em>Welcome Back!</em></h1>
+  <p class="lead">You know the drill. Email and password, or sign in with <a class="google" ng-click="loginGoogle()"><span style="color: #4885ed">G</span><span style="color: #db3236">o</span><span style="color: #f4c20d">o</span><span style="color: #4885ed">g</span><span style="color: #3cba54">l</span><span style="color: #db3236">e</span>!</a> </p>
+  <div class="row">
+    <div class="col-xs-6 col-xs-offset-3">
+      <form class="form-horizontal register-form">  
+        <div class="form-group">
+          <label for="inputEmail1" class="col-sm-4 control-label">Email: *</label>
+          <div class="col-sm-8">
+            <input type="email" class="form-control" id="inputEmail1" placeholder="Hello_Friend@Valued_Customer.com" ng-model="account.email">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputPassword1" class="col-sm-4 control-label">Password:  *</label>
+          <div class="col-sm-8">
+            <input type="password" class="form-control" id="inputPassword1" placeholder="youRememberThisRight??.." ng-model="account.password">
+          </div>
+        </div>
+      </form>
+
+      <div class="row">
+        <div class="col-xs-8 col-xs-offset-4">
+          <button type="button" class="btn btn-primary btn-block" ng-click="login()">Login!</button>  
+        </div>        
+      </div>
+
+      <div class="row">
+        <div class="col-xs-6 col-xs-offset-6">
+          <p class="text-right user-login">Not a user?? <a ui-sref="register()"><em>Register now!</em></a></p>
+        </div>
+      </div>
+    
+    </div>
+  </div>
+</div>
