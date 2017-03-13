@@ -1,0 +1,85 @@
+body, html {
+	width: 100%;
+	height: 100%;
+}
+
+h1, h2, h3, h4, h5, h6 li, ol, ul p, a {
+	margin: 0;
+	padding: 0;
+}
+
+/*================================*/
+/*==========Landing Page==========*/
+/*================================*/
+
+
+.landing-letters {
+	min-height: 390px;
+	vertical-align: middle;
+	display: table;
+	table-layout: fixed;
+}
+
+.landing-letters h1 {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.landing-side-column li {
+	color: lightblue;
+}
+
+.landing-side-column ul > li {
+	color: darkblue;
+}
+
+
+/*================================*/
+/*===========Home Page============*/
+/*================================*/
+
+.home-books-container {
+	min-height: 300px;
+}
+
+.home-books {
+	-ms-transform: rotate(90deg); /* IE 9 */
+  -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
+  transform: rotate(90deg);
+  bottom: 0;
+}
+
+.home-books div {
+	border: 2px solid black;
+}
+
+.home-newsfeed {
+	border: 2px solid black;
+}
+
+.home-globe {
+	padding: 0;
+	background-image: url('../images/home-globe.jpeg');
+	min-height: 340px;
+	background-size: contain;
+	background-repeat: no-repeat;
+	border-radius: 300px; 
+}
+
+
+.list-field-journal-containers {
+	min-height: 300px;
+	border: 2px solid black;
+}
+
+
+
+
+
+
+
+
+
+
+
+

@@ -14,36 +14,26 @@ The user's information will include:
 		Ratings and Reviews for specific Locations
 */
 
-var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.router.stateHelper'])
+var app = angular.module("MyPretentiousCup", ['ui.router'])
 
 .service('fbRef', function(FBCreds) {
 	return firebase.initializeApp(FBCreds);
 })
 
-.config(function($stateProvider, $urlRouterProvider, stateHelperProvider) {
+.config(function($stateProvider, $urlRouterProvider) {
 
 				console.log("I am within the config");
 
-				$urlRouterProvider.otherwise('/landing');
-
-				stateHelperProvider
+				$stateProvider
         
 		        // HOME STATES AND NESTED VIEWS ========================================
-		        .state({
-		        	name: 'landing', 
-	            templateUrl: '../partials/Landing.html',
-	            controller: "LandingCtrl",
-	            children : [
-	            	{
-	            		name: 'login',
-	            		templateUrl: '<ui-view />'
-	            	}
-	            ]
-		        	
-		        
+		        .state('root', {
+			        	url: '/',
+		            templateUrl: '../partials/Root.html',
+		            controller: "RootCtrl"	        
 		        })
 		        .state('login', {
-		            url: '/login',
+		            url: '/login/{a}/{b}',
 		            templateUrl: '../partials/Login.html',
 		            controller: "LoginCtrl"
 		        })
@@ -52,30 +42,62 @@ var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.router.stateHelpe
 		            templateUrl: '../partials/Register.html',
 		            controller: "RegisterCtrl"
 		        })
+		        .state('sample', {
+		        	url: '/sampleView',
+		        	templateUrl: '../partials/Sample.html',
+		        	controller: "SampleCtrl"		        				        
+		        })
 		        .state('home', {
 		            url: '/home',
 		            templateUrl: '../partials/Home.html',
 		            controller: "HomeCtrl"
 		        })
-		        .state('field-journal', {
+		        .state('fieldJournal', {
 		            url: '/field-journal',
 		            templateUrl: '../partials/FieldJournal.html',
 		            controller: "FieldJournalCtrl"
+		        })
+		        .state('newFieldJournal', {
+		        	url: '/field-journal/new',
+		        	templateUrl: '../partials/NewFieldJournal.html',
+		        	controller: "NewFieldJournalCtrl"
+		        })
+		        .state('listFieldJournal', {
+		        	url: '/field-journal/list',
+		        	templateUrl: '../partials/ListFieldJournal.html',
+		        	controller: "ListFieldJournalCtrl"
 		        })
 		        .state('recipes', {
 		            url: '/recipes',
 		            templateUrl: '../partials/Recipes.html',
 		            controller: "RecipesCtrl"
 		        })
-		        .state('drinking-buddies', {
+		        .state('newRecipes', {
+		        	url: '/recipes/new',
+		        	templateUrl: '../partials/NewRecipes.html',
+		        	controller: "NewRecipesCtrl"
+		        })
+		        .state('listRecipes', {
+		        	url: '/recipes/list',
+		        	templateUrl: '../partials/ListRecipes.html',
+		        	controller: "ListRecipesCtrl"
+		        })
+		        .state('drinkingBuddies', {
 		            url: '/drinking-buddies',
 		            templateUrl: '../partials/DrinkingBuddies.html',
 		            controller: "DrinkingBuddiesCtrl"
 		        })
-		        .state('globe-view', {
+		        .state('globeView', {
 		            url: '/globe-view',
 		            templateUrl: '../partials/GlobeView.html',
 		            controller: "GlobeViewCtrl"
+		        })
+		        .state('notARoute', {
+		        	url: '*path',
+		        	template: function($location, $scope) {
+		        		alert("I'm sorry, but the route you have chosen is not available. We're sending you back to your most rpevious page to try again!");		      
+		        		$window.history.back();
+		        	}
 		        });
 
 	

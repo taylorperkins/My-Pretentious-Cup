@@ -1,0 +1,44 @@
+<a ui-sref="home()"><h2>Go Home</h2></a>
+<hr>
+<a ui-sref="fieldJournal()"><h3>Field Journal Landing</h3></a>
+
+<hr>
+	
+<div class="row">
+	<div class="col-sm-10 col-sm-offset-1">
+		<h1 class="text-left">This is for new Field Journal Creation / Title</h1>		
+	</div>
+</div>
+<hr>
+
+<div class="row">
+	
+	<div class="col-xs-6">		
+		<p class="lead">This will contain a list of things to look for in your drink category when taking notes.<br>
+		Kind of like a guideline for your note-taking.</p>
+		<ul>
+			<li>What to look for 1..</li>
+			<li>What to look for 2..</li>
+			<li>What to look for 3..</li>
+			<li>What to look for 4..</li>
+			<li>What to look for 5..</li>
+		</ul>
+	</div>
+
+  <div class="col-xs-6">
+		<div class="row">
+		  <form class="form-inline">	
+			  <div class="form-group col-sm-3">	
+			  	<div class="no-border-container">	    			  	
+			      <input type="text" class="form-control no-border" placeholder="Title..">	    
+			    </div>
+			  </div>			  
+			</form>
+		</div>
+
+	  <form class="form-horizontal register-form">
+		  <textarea class="form-control" rows="15" ng-model="note.content"></textarea>
+		</form>			
+	</div>
+
+</div>
