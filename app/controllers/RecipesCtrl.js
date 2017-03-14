@@ -2,13 +2,10 @@
 
 console.log("RecipesCtrl.js is connected");
 
-app.controller("RecipesCtrl", function($scope) {
+app.controller("RecipesCtrl", function($scope, pages) {
 	let s = $scope;
 
-	s.pages = {
-		newEntry: '../partials/NewRecipes.html',
-		listEntry: '../partials/ListRecipes.html'
-	};
+	s.pages = pages;
 
 	s.changeViews = (view) => {
 		s.subPage = view;
