@@ -24,81 +24,74 @@ var app = angular.module("MyPretentiousCup", ['ui.router'])
 
 				console.log("I am within the config");
 
+				$urlRouterProvider.otherwise('/landing');
+
+				// HOME STATES AND NESTED VIEWS ========================================
+
 				$stateProvider
-        
-		        // HOME STATES AND NESTED VIEWS ========================================
-		        .state('root', {
-			        	url: '/',
-		            templateUrl: '../partials/Root.html',
-		            controller: "RootCtrl"	        
-		        })
-		        .state('login', {
-		            url: '/login/{a}/{b}',
-		            templateUrl: '../partials/Login.html',
-		            controller: "LoginCtrl"
-		        })
-		        .state('register', {
-		            url: '/register',
-		            templateUrl: '../partials/Register.html',
-		            controller: "RegisterCtrl"
-		        })
-		        .state('sample', {
-		        	url: '/sampleView',
-		        	templateUrl: '../partials/Sample.html',
-		        	controller: "SampleCtrl"		        				        
-		        })
-		        .state('home', {
-		            url: '/home',
-		            templateUrl: '../partials/Home.html',
-		            controller: "HomeCtrl"
-		        })
-		        .state('fieldJournal', {
-		            url: '/field-journal',
-		            templateUrl: '../partials/FieldJournal.html',
-		            controller: "FieldJournalCtrl"
-		        })
-		        .state('newFieldJournal', {
-		        	url: '/field-journal/new',
-		        	templateUrl: '../partials/NewFieldJournal.html',
-		        	controller: "NewFieldJournalCtrl"
-		        })
-		        .state('listFieldJournal', {
-		        	url: '/field-journal/list',
-		        	templateUrl: '../partials/ListFieldJournal.html',
-		        	controller: "ListFieldJournalCtrl"
-		        })
-		        .state('recipes', {
-		            url: '/recipes',
-		            templateUrl: '../partials/Recipes.html',
-		            controller: "RecipesCtrl"
-		        })
-		        .state('newRecipes', {
-		        	url: '/recipes/new',
-		        	templateUrl: '../partials/NewRecipes.html',
-		        	controller: "NewRecipesCtrl"
-		        })
-		        .state('listRecipes', {
-		        	url: '/recipes/list',
-		        	templateUrl: '../partials/ListRecipes.html',
-		        	controller: "ListRecipesCtrl"
-		        })
-		        .state('drinkingBuddies', {
-		            url: '/drinking-buddies',
-		            templateUrl: '../partials/DrinkingBuddies.html',
-		            controller: "DrinkingBuddiesCtrl"
-		        })
-		        .state('globeView', {
-		            url: '/globe-view',
-		            templateUrl: '../partials/GlobeView.html',
-		            controller: "GlobeViewCtrl"
-		        })
-		        .state('notARoute', {
-		        	url: '*path',
-		        	template: function($location, $scope) {
-		        		alert("I'm sorry, but the route you have chosen is not available. We're sending you back to your most rpevious page to try again!");		      
-		        		$window.history.back();
-		        	}
-		        });
+
+					.state('landing', {
+						url: '/landing',
+						templateUrl: '../partials/Landing.html',
+						controller: "LandingCtrl"			      		           
+			  	})
+					.state('landing.login', {
+            url: '^/login',
+            templateUrl: '../partials/Login.html',
+            controller: "LoginCtrl"
+					})
+					.state('landing.register', {
+						url: '^/register',
+            templateUrl: '../partials/Register.html',
+            controller: "RegisterCtrl"
+					})
+					.state('home', {			
+						url: '/home',
+						views: {
+							"": { 
+								templateUrl: 'partials/Home.html',
+								controller: "HomeCtrl"
+							},
+              "main@home": { 
+              	templateUrl: 'partials/Main.html',
+              	controller: "MainCtrl"              	
+              },
+              "fieldJournal@home": {
+              	url: '/fieldJournal',
+              	templateUrl: 'partials/FieldJournal.html',
+              	controller: "FieldJournalCtrl"
+              },
+              "fieldjournal.newFieldJournal@home": {
+              	url: '/new',
+              	templateUrl: 'partials/NewFieldJournal.html',
+              	controller: 'NewFieldJournalCtrl'
+              },
+              "recipes@home": {
+              	templateUrl: 'partials/Recipes.html',
+              	controller: "RecipesCtrl"
+              },
+              "drinkingBuddies@home": {
+              	template: 'partials/DrinkingBuddies.html',
+              	controller: "DrinkingBuddiesCtrl"
+              },
+              "globeView@home": {
+              	template: 'partials/GlobeView.html',
+              	controller: "GlobeViewCtrl"
+              }
+            }						
+					})      		   		       
+	        .state('sample', {
+	        	url: '/sampleView',
+	        	templateUrl: '../partials/Sample.html',
+	        	controller: "SampleCtrl"		        				        
+	        })		        
+	        .state('notARoute', {
+	        	url: '*path',
+	        	template: function($location, $scope) {
+	        		alert("I'm sorry, but the route you have chosen is not available. We're sending you back to your most rpevious page to try again!");		      
+	        		$window.history.back();
+	        	}
+	        });
 
 	
 })
@@ -109,6 +102,9 @@ var app = angular.module("MyPretentiousCup", ['ui.router'])
 			(snapshot) => console.log(snapshot.val())
 		);
 });
+
+
+
 
 
 

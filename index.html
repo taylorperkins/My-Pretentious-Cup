@@ -9,55 +9,27 @@
 </head>
 <body ng-app="MyPretentiousCup">
 
-	<div class="row">
-		<div class="col-sm-12 well">
-			header | <a href="#!/">Home</a>
-		</div>
+<div class="container">
+	<div ui-view>				
 	</div>
-	<div class="row">
-		<div class="col-sm-3 well landing-side-column">
-			<ul>
-				<li><a ui-sref='login({a:20, b:30})'>Login</a></li>
-				<li><a ui-sref='register()'>Register</a></li>
-				<li><a ui-sref='home()'>Home</a></li>
-				<li><a ui-sref='fieldJournal()'>Field Journal</a>
-					<ul>
-						<li><a ui-sref="listFieldJournal()">Field Journal/List</a></li>
-						<li><a ui-sref="newFieldJournal()">Field Journal/New</a></li>
-					</ul>
-				</li>
-				<li><a ui-sref='recipes()'>Recipes</a>
-					<ul>
-						<li><a ui-sref="listRecipes()">Recipes/List</a></li>
-						<li><a ui-sref="newRecipes()">Recipes/New</a></li>
-					</ul>
-				</li>
-
-				<li><a ui-sref='drinkingBuddies()'>Drinking Buddies</a></li>
-				<li><a ui-sref='globeView()'>Globe View</a></li>
-				<li><a ui-sref='sample()'>Sample Views</a></li>
-			</ul>
-		</div>
-		<div class="col-sm-9 well">
-			<div ui-view>				
-			</div>
-		</div>
-	</div>
+</div>
 
 
 <!--ALL PACKAGES-->
 <script type="text/javascript" src="lib/node_modules/jquery/dist/jquery.min.js"></script>
 <script type="text/javascript" src="lib/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="lib/node_modules/firebase/firebase.js"></script>
-
 <script type="text/javascript" src="lib/node_modules/angular/angular.min.js"></script>
 <script type="text/javascript" src="lib/node_modules/angular-ui-router/release/angular-ui-router.min.js"></script>
 <script type="text/javascript" src="lib/node_modules/angular-animate/angular-animate.min.js"></script>
 <script type="text/javascript" src="lib/node_modules/angular-aria/angular-aria.min.js"></script>
+<!-- <script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>  -->
+
 
 <!--APP AND VALUES-->
 <script type="text/javascript" src="app/app.js"></script>
 <script type="text/javascript" src="app/values/FBConfig.js"></script>
+<script type="text/javascript" src="app/values/GoogleMapsConfig.js"></script>
 
 <!--FACTORIES-->
 <script type="text/javascript" src="app/factories/AuthUserFactory.js"></script>
@@ -72,13 +44,14 @@
 <script type="text/javascript" src="app/controllers/NewFieldJournalCtrl.js"></script>
 <script type="text/javascript" src="app/controllers/GlobeViewCtrl.js"></script>
 <script type="text/javascript" src="app/controllers/HomeCtrl.js"></script>
-<script type="text/javascript" src="app/controllers/RootCtrl.js"></script>
+<script type="text/javascript" src="app/controllers/LandingCtrl.js"></script>
 <script type="text/javascript" src="app/controllers/LoginCtrl.js"></script>
 <script type="text/javascript" src="app/controllers/RecipesCtrl.js"></script>
 <script type="text/javascript" src="app/controllers/NewRecipesCtrl.js"></script>
 <script type="text/javascript" src="app/controllers/ListRecipesCtrl.js"></script>
 <script type="text/javascript" src="app/controllers/RegisterCtrl.js"></script>
 <script type="text/javascript" src="app/controllers/SampleCtrl.js"></script>
+<script type="text/javascript" src="app/controllers/MainCtrl.js"></script>
 
 </body>
 </html>
