@@ -1,5 +1,3 @@
-<a ng-click="changeViews('newEntry')"><h3>Create New Recipe Entry</h3></a>
-<hr>
-<a ng-click="changeViews('listEntry')"><h3>List All Recipe Entries</h3></a>
+<h3 class="text-center"><a ng-click="changeViews('newRecipes')">Create New Recipe Entry</a> | <a ng-click="changeViews('listRecipes')">List All Recipe Entries</a></h3>
 
 <ng-include src="pages[subPage]" scope="" onload=""></ng-include>

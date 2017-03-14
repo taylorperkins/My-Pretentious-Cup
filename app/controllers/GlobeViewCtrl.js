@@ -2,18 +2,22 @@
 
 console.log("GlobeViewCtrl.js is connected");
 
-app.controller("GlobeViewCtrl", function($scope, $http, GoogleMapsConfig) {
-	let s = $scope;
-
-	let mapKey = GoogleMapsConfig.apiKey;
-	console.log(GoogleMapsConfig.apiKey);
-
-	s.mapURL = `https://maps.google.com/maps/embed/v1/place?key=${mapKey}&q=Space+Needle,Seattle+WA`;
-
-
+app.controller("GlobeViewCtrl", function($scope, $http, $sce, GoogleMapsConfig) {
 	
 
-	// let map;
+	// let s = $scope,
+	// 		mapKey = GoogleMapsConfig.apiKey;
+			
+
+	// var mapOptions = {
+	// 	zoom: 4, 
+	// 	center: new googlempas.latlng(25,80),
+	// 	mapTypeId: google.maps.MapTypeId.ROADMAP
+	// };
+
+	// s.map = new google.maps.Map(document.getElementById('map'), mapOptions);
+
+	// s.markers = [];
 
 	// let initMap = function() {
 	// 	map = new google.maps.Map(document.getElementById('map', {
@@ -22,17 +26,10 @@ app.controller("GlobeViewCtrl", function($scope, $http, GoogleMapsConfig) {
 	// 	}));
 	// };
 
-	// $http.get(`https://maps.googleapis.com/maps/api/js?key=${s.mapKey}&v=3&callback${initMap}`).then(
-	// 		(mapData) => {
-	// 			console.log(mapData);
-	// 			initMap(mapData);				
-	// 		}
-	// 	);
-
-	console.log(`https://maps.google.com/maps/embed/v1/place?key=${s.mapKey}&q=Space+Needle,Seattle+WA`);
-
-
-	console.log("GlobeViewCtrl.js is working");
-	console.log("This should be my key: ", mapKey);
+	// s.mapURL = $sce.trustAsResourceUrl(`https://maps.googleapis.com/maps/api/js?key=${mapKey}&callback=${initMap}`);
+	// console.log(s.mapURL);
+	
+	// console.log("GlobeViewCtrl.js is working");
+	// console.log("This should be my key: ", mapKey);
 		
 });

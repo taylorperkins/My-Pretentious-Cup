@@ -14,7 +14,7 @@ The user's information will include:
 		Ratings and Reviews for specific Locations
 */
 
-var app = angular.module("MyPretentiousCup", ['ui.router'])
+var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate'])
 
 .service('fbRef', function(FBCreds) {
 	return firebase.initializeApp(FBCreds);
@@ -24,7 +24,7 @@ var app = angular.module("MyPretentiousCup", ['ui.router'])
 
 				console.log("I am within the config");
 
-				$urlRouterProvider.otherwise('/landing');
+				$urlRouterProvider.otherwise('/login');
 
 				// HOME STATES AND NESTED VIEWS ========================================
 
@@ -32,7 +32,10 @@ var app = angular.module("MyPretentiousCup", ['ui.router'])
 
 					.state('landing', {
 						url: '/landing',
-						templateUrl: '../partials/Landing.html',
+						template: 
+							'<div class="container">' +
+								'<div ui-view></div>' +
+							'</div>',
 						controller: "LandingCtrl"			      		           
 			  	})
 					.state('landing.login', {
@@ -47,6 +50,16 @@ var app = angular.module("MyPretentiousCup", ['ui.router'])
 					})
 					.state('home', {			
 						url: '/home',
+						resolve: {
+							pages: function() {
+								return {
+									'newFieldJournal': '../partials/NewFieldJournal.html',
+									'listFieldJournal': '../partials/ListFieldJournal.html',
+									'newRecipes': '../partials/NewRecipes.html',
+									'listRecipes': '../partials/ListRecipes.html'								
+								};							
+							}							
+						},						
 						views: {
 							"": { 
 								templateUrl: 'partials/Home.html',
@@ -61,21 +74,21 @@ var app = angular.module("MyPretentiousCup", ['ui.router'])
               	templateUrl: 'partials/FieldJournal.html',
               	controller: "FieldJournalCtrl"
               },
-              "fieldjournal.newFieldJournal@home": {
-              	url: '/new',
-              	templateUrl: 'partials/NewFieldJournal.html',
-              	controller: 'NewFieldJournalCtrl'
-              },
+              // "fieldjournal.newFieldJournal@home": {
+              // 	url: '/new',
+              // 	templateUrl: 'partials/NewFieldJournal.html',
+              // 	controller: 'NewFieldJournalCtrl'
+              // },
               "recipes@home": {
               	templateUrl: 'partials/Recipes.html',
               	controller: "RecipesCtrl"
               },
               "drinkingBuddies@home": {
-              	template: 'partials/DrinkingBuddies.html',
+              	templateUrl: 'partials/DrinkingBuddies.html',
               	controller: "DrinkingBuddiesCtrl"
               },
               "globeView@home": {
-              	template: 'partials/GlobeView.html',
+              	templateUrl: 'partials/GlobeView.html',
               	controller: "GlobeViewCtrl"
               }
             }						

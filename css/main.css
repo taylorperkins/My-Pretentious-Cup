@@ -3,9 +3,39 @@ body, html {
 	height: 100%;
 }
 
+body {
+	padding-top: 2em;
+}
+
 h1, h2, h3, h4, h5, h6 li, ol, ul p, a {
 	margin: 0;
 	padding: 0;
+}
+
+
+/*=================================*/
+/*==========Register Page==========*/
+/*=================================*/
+
+.le-drank {
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+.datepicker {
+	width: 100%;
+	height: 34px;
+	padding: 6px 12px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+.datepicker::placeholder {
+	color: #ccc;
+}
+
+.password-input-wrong::focus {
+	color: 1px solid red !important;
 }
 
 /*================================*/
@@ -66,6 +96,10 @@ h1, h2, h3, h4, h5, h6 li, ol, ul p, a {
 	border-radius: 300px; 
 }
 
+.home-margin-bottom {
+	margin-bottom: 10em;
+}
+
 
 /*================================*/
 /*======Field Journal Page========*/
@@ -75,6 +109,10 @@ h1, h2, h3, h4, h5, h6 li, ol, ul p, a {
 .list-field-journal-containers {
 	min-height: 300px;
 	border: 2px solid black;
+}
+
+svg {
+	font: 10px sans-serif;
 }
 
 

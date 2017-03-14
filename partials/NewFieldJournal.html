@@ -1,44 +1,27 @@
-<a ui-sref="home()"><h2>Go Home</h2></a>
-<hr>
-<a ui-sref="fieldJournal()"><h3>Field Journal Landing</h3></a>
-
-<hr>
-	
-<div class="row">
-	<div class="col-sm-10 col-sm-offset-1">
-		<h1 class="text-left">This is for new Field Journal Creation / Title</h1>		
-	</div>
-</div>
-<hr>
-
 <div class="row">
 	
 	<div class="col-xs-6">		
-		<p class="lead">This will contain a list of things to look for in your drink category when taking notes.<br>
-		Kind of like a guideline for your note-taking.</p>
+		<p>What to look for in your coffee:</p>
 		<ul>
-			<li>What to look for 1..</li>
-			<li>What to look for 2..</li>
-			<li>What to look for 3..</li>
-			<li>What to look for 4..</li>
-			<li>What to look for 5..</li>
+			<li>Sweetness</li>
+			<li>Acidity</li>
+			<li>Body</li>
+			<li>Cleanliness</li>
 		</ul>
+		<p>Are there grounds in your coffee??</p>
+		<p>Can you taste the specific notes??</p>
+		<p>Look around you.. Atmosphere?</p>
+		<ul>
+			<li>Was the barista nice?</li>
+			<li>Are there outlets?</li>
+			<li>How does the shop make you feel??</li>
+			<li>Would you come here to study or on a date?</li>		
+		</ul>
+
 	</div>
 
-  <div class="col-xs-6">
-		<div class="row">
-		  <form class="form-inline">	
-			  <div class="form-group col-sm-3">	
-			  	<div class="no-border-container">	    			  	
-			      <input type="text" class="form-control no-border" placeholder="Title..">	    
-			    </div>
-			  </div>			  
-			</form>
-		</div>
-
-	  <form class="form-horizontal register-form">
-		  <textarea class="form-control" rows="15" ng-model="note.content"></textarea>
-		</form>			
+	<div>
+		<ng-include src="drinkForm" scope="" onload=""></ng-include>	
 	</div>
 
 </div>
