@@ -7,43 +7,29 @@ app.factory("HandleFBDataFactory", function($q, $http, FBCreds, AuthUserFactory,
 	//This function goes to firebase, organizes the object returned, and stores it locally.
 	//Args: Single location string Ex: 'users', 'pins', 'board'
 	//Return: locationInfo Obj
-	let getItemList = (location) => {
 
-		let user = UserStorageFactory.getCurrentUserUid();
-		console.log("I am now within HandleFBDataFactory.js getItemList() to get: ", location);
-		console.log(user);
+	//User's UID is provided within getItemList()
 
+	let getItemList = () => {
+
+		let userUID = UserStorageFactory.getCurrentUserInfo();
+
+		if (userUID.hasOwnProperty('uid')) {
+			userUID = userUID.uid;
+		} else {
+			userUID = userUID[Object.keys(userUID)[0]].uid;
+		}
 		return $q((resolve, reject) => {
-			$http.get(`${FBCreds.databaseURL}/${location}.json?orderBy="uid"&equalTo="${user}"`).then(
+			$http.get(`${FBCreds.databaseURL}/users.json?orderBy="uid"&equalTo="${userUID}"`).then(
 					(itemObject) => {
 						console.log("This is your itemCollection from within HandleFBDataFactory.js getItemList(): ", itemObject);
 						if ( Object.values(itemObject.data).length > 0 ) {
-
-							switch(location) {				
-								case 'users': 
-									let usersInfo = itemObject.data;
-									resolve(usersInfo);
-									break;}		
-
+							resolve(itemObject.data);							
 						} else {
 							console.log("You have no data in firebase!");
-							UserStorageFactory.setUserInfo('', location).then(
-								() => {
-									console.log(location + " set in UserStorage to ''");
-									resolve();									
-								}
-							);
+							reject();
 						}
 				}).catch((error) => reject(error));
-		});
-	};
-
-
-	let getUserInfo = () => {
-		return new Promise((resolve, reject) => {
-			getItemList('users').then(
-    			(usersObjData) => UserStorageFactory.setUserinfo(usersObjData, 'users')
-    		).then( resolve());
 		});
 	};
 
@@ -69,17 +55,41 @@ app.factory("HandleFBDataFactory", function($q, $http, FBCreds, AuthUserFactory,
 
 	//Function to remove items from a specific collection from within Firebase
 	//Args(2): itemID: string assigned by firebase, location: string for specific collection Ex: ('users', 'board', 'pins')
-	let deleteItem = (itemID, location) => {
-		console.log('Within ItemFactory.js deleteItem(): ', itemID, 'location: ', location);
+	let deleteItem = (location) => {
 		return $q((resolve, reject) => {			
-			$http.delete(`${FBCreds.databaseURL}/${location}/${itemID}.json`)
-				.then((ObjectFromFirebase) => resolve(ObjectFromFirebase));
+			$http.delete(`${FBCreds.databaseURL}/${location}.json`)
+				.then((objStatusFromFirebase) => resolve(objStatusFromFirebase));
 		});
 	};
 
-	return {	getItemList, 
-						getUserInfo, 
+
+	let putItem = (editedItem, location) => {
+
+		let userUID = UserStorageFactory.getCurrentUserInfo();
+
+		if (userUID.hasOwnProperty('uid')) {
+			userUID = userUID.uid;
+		} else {
+			userUID = Object.keys(userUID)[0];
+		}
+		console.log("Within HandleFbDataFactory.js putItem(): ", editedItem, location);
+		return $q((resolve, reject) => {
+			$http.put(`${FBCreds.databaseURL}/users/${userUID}/fieldJournal/${location}.json`, 
+				angular.toJson(editedItem))
+					.then(
+							(editedObjStatus) => {
+								console.log("Here is the edited status from firebase: ", editedObjStatus);
+								resolve(editedObjStatus);
+							}
+					).catch((error) => error);
+		});
+	};
+
+	return {	
+						getItemList, 
 						postNewItem, 
-						deleteItem		};
+						deleteItem, 
+						putItem		
+					};
 
 });

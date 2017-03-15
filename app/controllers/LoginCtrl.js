@@ -20,11 +20,11 @@ app.controller("LoginCtrl", function($scope, $location, AuthUserFactory, HandleF
   		(userData) => {
 				console.log("LoginCtrl.js login user: ", userData.uid);
 				AuthUserFactory.changeLogin(true);
-				UserStorageFactory.setCurrentUserUid(userData.uid);				
+				UserStorageFactory.setCurrentUserInfo({uid: userData.uid});				
 				HandleFBDataFactory.getItemList('users').then(
 					(profileObjFromFirebase) => {
 						console.log("Here is your profile info from firebase: ", profileObjFromFirebase);
-						UserStorageFactory.setUserInfo(profileObjFromFirebase, 'user');
+						UserStorageFactory.setCurrentUserInfo(profileObjFromFirebase);
 						$location.path('/home');													
 					});				
 			},
@@ -41,11 +41,11 @@ app.controller("LoginCtrl", function($scope, $location, AuthUserFactory, HandleF
 		    	console.log("logged in user:", userInfo);
 		    	AuthUserFactory.changeLogin(true);
 		    	s.userUID = userInfo.user.uid;	
-		    	UserStorageFactory.setCurrentUserUid(s.userUID);		    	
-		    	HandleFBDataFactory.getItemList('users').then(
-	    			(profilesObjData) => {
-		    			console.log("This is where it ends: ", profilesObjData);
-	    				UserStorageFactory.setUserInfo(profilesObjData, 'user');
+		    	UserStorageFactory.setCurrentUserInfo({uid: s.userUID});		    	
+		    	HandleFBDataFactory.getItemList().then(
+	    			(profileObjData) => {
+		    			console.log("This is where it ends: ", profileObjData);
+		    			UserStorageFactory.setCurrentUserInfo(profileObjData);
 	    				$location.path('/home');
 	    			}
 	    		);	    				 	
