@@ -106,3 +106,6 @@ app.controller("FieldJournalCtrl", function($scope, $state, pages, UserStorageFa
 
 
 
+
+
+

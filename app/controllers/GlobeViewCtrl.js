@@ -2,34 +2,56 @@
 
 console.log("GlobeViewCtrl.js is connected");
 
-app.controller("GlobeViewCtrl", function($scope, $http, $sce, GoogleMapsConfig) {
+app.controller("GlobeViewCtrl", function($scope, $http, $sce, $timeout,GoogleMapsFactory ) {
+	let s = $scope;
+
 	
 
-	// let s = $scope,
-	// 		mapKey = GoogleMapsConfig.apiKey;
-			
+	var globeInput = $( "#globe-input" );
 
-	// var mapOptions = {
-	// 	zoom: 4, 
-	// 	center: new googlempas.latlng(25,80),
-	// 	mapTypeId: google.maps.MapTypeId.ROADMAP
-	// };
+	GoogleMapsFactory.GoogleMapsRequest();
 
-	// s.map = new google.maps.Map(document.getElementById('map'), mapOptions);
+		// console.log("I am active");
+  //   navigator.geolocation.getCurrentPosition((location) => {
+  //   	console.log(location);
+  //   	s.lat = location.coords.latitude;
+  //   	s.lng = location.coords.longitude;	
+	 //    var latlng = new google.maps.LatLng(s.lat, s.lng);
+	 //    var myOptions = {
+  //       zoom: 13,
+  //       center: latlng,
+  //       mapTypeId: google.maps.MapTypeId.ROADMAP
+	 //    };
 
-	// s.markers = [];
+	 //    s.map = new google.maps.Map(document.getElementById("map"), myOptions); 
+	 //    s.marker = new google.maps.Marker({
+  //       position: {lat: s.lat, lng: s.lng},
+  //       map: s.map,
+  //       title: 'I am here!'
+  //     });
 
-	// let initMap = function() {
-	// 	map = new google.maps.Map(document.getElementById('map', {
-	// 		center: {lat: -34.397, lng: 150.644},
-	// 		zoom: 13
-	// 	}));
-	// };
 
-	// s.mapURL = $sce.trustAsResourceUrl(`https://maps.googleapis.com/maps/api/js?key=${mapKey}&callback=${initMap}`);
-	// console.log(s.mapURL);
-	
-	// console.log("GlobeViewCtrl.js is working");
-	// console.log("This should be my key: ", mapKey);
+  //     var defaultBounds = new google.maps.LatLngBounds(
+		// 	   new google.maps.LatLng(-33.8902, 151.1759),
+  // 			 new google.maps.LatLng(-33.8474, 151.2631));
+
+
+		// 	var input = $('#globe-input');
+		// 	var options = {
+		// 	  bounds: defaultBounds,
+		// 	  types: ['bar', 'cafe', 'liquor_store', 'night_club', 'restaurant', 'store', 'university']
+		// 	};
+
+		// 	autocomplete = new google.maps.places.Autocomplete(input, options);
+  //     // s.autocomplete = new google.maps.places.AutoComplete(globeInput);
+  //     // s.autocomplete.bindTo('bounds', map);
+
+	 //   });
+
 		
 });
+
+
+
+
+
