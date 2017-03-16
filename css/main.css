@@ -100,6 +100,10 @@ h1, h2, h3, h4, h5, h6 li, ol, ul p, a {
 	margin-bottom: 10em;
 }
 
+#map {
+	margin-bottom: 10em;
+}
+
 
 /*================================*/
 /*======Field Journal Page========*/
@@ -122,6 +126,10 @@ svg {
 
 #map {
 	height: 100%;
+}
+
+#globe-input {
+	margin-bottom: 1em;
 }
 
 
