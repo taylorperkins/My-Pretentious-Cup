@@ -7,9 +7,12 @@ app.controller("GlobeViewCtrl", function($scope, $http, $sce, $timeout,GoogleMap
 
 	
 
-	var globeInput = $( "#globe-input" );
+	s.GooglePlacesRequest = (inputValue) => {
+		console.log(inputValue);
+		GoogleMapsFactory.GoogleMapsRequest(inputValue);		
+	};
 
-	GoogleMapsFactory.GoogleMapsRequest();
+	// GoogleMapsFactory.GoogleMapsRequest();
 
 		// console.log("I am active");
   //   navigator.geolocation.getCurrentPosition((location) => {
