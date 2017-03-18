@@ -47,6 +47,6 @@ app.factory("GoogleMapsFactory", function($http, $sce, GoogleMapsConfig) {
 	return {
 		GoogleMapsRequest,
 		GoogleMapsAutoComplete,
-		createMarkerContent
+		createMarkerContent		
 	};
 });
