@@ -5,7 +5,10 @@
 		<div class="col-xs-4">	
 	    <input  ng-model="globeInput" ng-keyup="GooglePlacesRequest(globeInput)" id="globe-input" type="text"
 	    placeholder="Enter a location">
-		</div>		
+		</div>
+		<div class="col-xs-4">
+      <button type="button" class="btn btn-primary btn-block" ng-click="deleteMarkers(markersOnPage)">Delete Markers</button> 
+    </div>  		
 	</div>
 	<div ng-show="showRequests" class="row">
 		<ul>
