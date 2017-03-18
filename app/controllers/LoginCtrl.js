@@ -48,7 +48,8 @@ app.controller("LoginCtrl", function($scope, $location, AuthUserFactory, HandleF
 		    			UserStorageFactory.setCurrentUserInfo(profileObjData);
 	    				$location.path('/home');
 	    			}
-	    		);	    				 	
+	    		);
+
 			}).catch(
 				(error) => {
 		    	// Handle the Errors.
