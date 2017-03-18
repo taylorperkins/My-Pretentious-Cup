@@ -11,14 +11,24 @@ app.factory("UserStorageFactory", function() {
 		mailingAddress: '',
 		emailAddress: '',
 		userName: '', 
-		birthday: ''
+		birthday: '',
+		fieldJournal: {
+			//This will contain all of the current field Journal entries.  
+		}
 	};
 
 	let currentUserUid = '';
+	//userCurrentLocation is an object given by google.maps.LatLng which displays the object with 
+	//lat and lng properties as functions to be called. 
+	//Ex: userCurrentLocation.lat()
+	let userCurrentLocation = {};
 
 	//variables to hold users' info
 	let getCurrentUserInfo = () => angular.fromJson(localStorage.getItem('user'));
 	let setCurrentUserInfo = (profileObj) => localStorage.setItem('user', JSON.stringify(profileObj));
+
+	let getUserCurrentLocation = () => userCurrentLocation;
+	let setUserCurrentLocation = (locationCoords) => userCurrentLocation = locationCoords;
 	
 	let setCurrentUserUid = (userUid) => currentUserUid = userUid;
 	let getCurrentUserUid = () => currentUserUid;
@@ -27,8 +37,12 @@ app.factory("UserStorageFactory", function() {
 	return {	
 						getCurrentUserUid,
 						setCurrentUserUid,
+
 						getCurrentUserInfo,
-						setCurrentUserInfo
+						setCurrentUserInfo,
+
+						getUserCurrentLocation,
+						setUserCurrentLocation
 				 	};
 	
 });
