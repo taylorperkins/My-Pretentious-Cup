@@ -2,7 +2,7 @@
 
 console.log("GlobeViewCtrl.js is connected");
 
-app.controller("GlobeViewCtrl", function($scope, $http, $sce, $window, $timeout, GoogleMapsFactory, GoogleMapsConfig) {
+app.controller("GlobeViewCtrl", function($scope, $http, $sce, $window, $timeout, GoogleMapsFactory, GoogleMapsConfig, UserStorageFactory) {
 	let s = $scope;
 	let request;
 
@@ -12,6 +12,32 @@ app.controller("GlobeViewCtrl", function($scope, $http, $sce, $window, $timeout,
 	s.markersOnPage = [];
 	s.currentLocationMarker = [];
 	s.searchResultMarkers = [];
+
+
+	//As soon as the controller loads, grab the user's current location, and display an info-window 
+	//showing their current location. Also, send the coords to be saved within 
+	//UserStorageFactory.js to be referrenced by other controllers
+	$window.navigator.geolocation.getCurrentPosition(function(position) {	   
+  	s.myLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);	    	
+  	console.log("Here is my location: ", s.myLocation);
+
+  	UserStorageFactory.setUserCurrentLocation(s.myLocation);
+
+  	//create a map based off of my location
+  	//This is set up as soon as the ctrl loads. 
+  	//You can refer to s.map anywhere else on the page
+  	s.map = new google.maps.Map(document.getElementById("map"), {
+  		center: s.myLocation,
+  		zoom: 15
+  	});   
+  	//create a custom request based off of my current location
+  	var request = GoogleMapsFactory.getRequest(s.myLocation);
+
+	  //Set up a pop-up for my current location
+    var infoWindow = new google.maps.InfoWindow({map: s.map});
+    infoWindow.setPosition(s.myLocation);
+    infoWindow.setContent('You are here.');	        
+  });			 
 
 
 	/*
@@ -138,34 +164,7 @@ app.controller("GlobeViewCtrl", function($scope, $http, $sce, $window, $timeout,
     				});
 				  });						  	    				
 		});
-	};			
-						
-  $window.navigator.geolocation.getCurrentPosition(function(position) {	   
-
-  	s.myLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);	    	
-  	console.log("Here is my location: ", s.myLocation);
-
-  	//create a map based off of my location
-  	//This is set up as soon as the ctrl loads. 
-  	//You can refer to s.map anywhere else on the page
-  	s.map = new google.maps.Map(document.getElementById("map"), {
-  		center: s.myLocation,
-  		zoom: 15
-  	}); 
-  	
-  	//create a custom request based off of my current location
-  	var request = {
-	    location: s.myLocation,
-	    radius: '2500',
-	    types: ['bar', 'cafe', 'liquor_store', 'night_club', 'university']
-	  };
-	  
-	  //Set up a pop-up for my current location
-    var infoWindow = new google.maps.InfoWindow({map: s.map});
-    infoWindow.setPosition(s.myLocation);
-    infoWindow.setContent('You are here.');	        
-  });			 
-		
+	};										
 });
 
 

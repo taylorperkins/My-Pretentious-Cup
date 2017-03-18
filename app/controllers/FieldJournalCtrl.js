@@ -9,10 +9,10 @@
 
 console.log("FieldJournalCtrl.js is connected");
 
-app.controller("FieldJournalCtrl", function($scope, $state, pages, UserStorageFactory, HandleFBDataFactory, fbRef) {
+app.controller("FieldJournalCtrl", function($scope, $state, $timeout, pages, UserStorageFactory, HandleFBDataFactory, fbRef, GoogleMapsFactory) {
 	let s = $scope;
-	console.log("FieldJournalCtrl.js is working");
-	
+	let request;
+	console.log("FieldJournalCtrl.js is working");	
 	s.pages = pages;
 	s.category = 'Coffee';
 	s.saveEdit = true;
@@ -33,7 +33,7 @@ app.controller("FieldJournalCtrl", function($scope, $state, pages, UserStorageFa
 	s.entry = {};
 
 	s.coffeeStyles = ['Latte', 'Macchiato', 'Cortado', 'Flat White', 'Espresso', 'Cappucino'];
-	s.coffeeMethods = ['Drip', 'French Press', 'Cold Brew'];
+	s.coffeeMethods = ['Drip', 'French Press', 'Cold Brew'];	  
 
 	console.log(s.pages);
 
@@ -51,6 +51,11 @@ app.controller("FieldJournalCtrl", function($scope, $state, pages, UserStorageFa
 			});
 	};
 	updateCurrentFieldJournal();
+
+	s.getCurrentLocation = () => {
+		s.myLocation = UserStorageFactory.getUserCurrentLocation(); 
+		console.log(s.myLocation);
+	};
 
 	s.changeViews = (myString) => {
 		console.log(myString);
@@ -84,8 +89,36 @@ app.controller("FieldJournalCtrl", function($scope, $state, pages, UserStorageFa
 		HandleFBDataFactory.deleteItem(locationToDelete).then(
 				(deletionStatus) => $state.reload()
 			);
-
 	};
+
+	s.GooglePlacesRequest = (placesSearchInput) => {
+		console.log(placesSearchInput);
+		$timeout.cancel(request);
+		s.showRequests = false;
+		request = $timeout(function() {
+
+			//s.location is updated on focus of the input field			
+			console.log("I am about to make a request");
+			console.log("Here is my current location: ", s.myLocation);
+			let latLng = {
+				lat: s.myLocation.lat(),
+				lng: s.myLocation.lng()
+			};
+			GoogleMapsFactory.GoogleMapsAutoComplete(placesSearchInput, latLng).then(
+					(googleMapsRequestObj) => {
+						console.log(googleMapsRequestObj.data);
+						s.predictions = googleMapsRequestObj.data.predictions;
+						console.log($("#newDrinkLocation").val());
+						if ($("#newDrinkLocation").popover()) $("#newDrinkLocation").popover("destroy");
+						
+						$( "#newDrinkLocation" ).popover({content: `${s.predictions[0].description}`, animation: true, placement: "bottom"}); 
+						$( "#newDrinkLocation" ).popover("show");
+						s.showRequests = true;
+						return;
+					}
+				);					
+		}, 500);
+	};	
 
 		
 });

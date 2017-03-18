@@ -44,9 +44,22 @@ app.factory("GoogleMapsFactory", function($http, $sce, GoogleMapsConfig) {
 		});
 	};
 
+	let request = {
+		location: '',   //This is defined whenever you receive this request
+		radius: '2500',
+    types: ['bar', 'cafe', 'liquor_store', 'night_club', 'university']
+	};
+
+	//pass in a location to get baack the full obj to make google places requests (Ex: currentLocation obj)
+	let getRequest = (myLocation) => {
+		request.location = myLocation;
+		return request;
+	};
+
 	return {
 		GoogleMapsRequest,
 		GoogleMapsAutoComplete,
-		createMarkerContent		
+		createMarkerContent,
+		getRequest		
 	};
 });
