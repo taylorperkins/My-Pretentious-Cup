@@ -42,7 +42,7 @@ app.controller("LoginCtrl", function($scope, $location, AuthUserFactory, HandleF
 		    	AuthUserFactory.changeLogin(true);
 		    	s.userUID = userInfo.user.uid;	
 		    	UserStorageFactory.setCurrentUserInfo({uid: s.userUID});		    	
-		    	HandleFBDataFactory.getItemList().then(
+		    	HandleFBDataFactory.getItemList('users').then(
 	    			(profileObjData) => {
 		    			console.log("This is where it ends: ", profileObjData);
 		    			UserStorageFactory.setCurrentUserInfo(profileObjData);

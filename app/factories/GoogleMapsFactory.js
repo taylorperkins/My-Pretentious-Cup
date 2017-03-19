@@ -56,10 +56,24 @@ app.factory("GoogleMapsFactory", function($http, $sce, GoogleMapsConfig) {
 		return request;
 	};
 
+	let setMarkerColor = (category) => {
+		switch (category) {
+			case 'Coffee': 
+				return 'brown';
+			case 'Beer':
+				return 'gold';
+			case 'Wine':
+				return 'purple';
+			case 'Tea':
+				return 'green';
+		}
+	};
+
 	return {
 		GoogleMapsRequest,
 		GoogleMapsAutoComplete,
 		createMarkerContent,
-		getRequest		
+		getRequest,
+		setMarkerColor		
 	};
 });

@@ -10,7 +10,7 @@ app.factory("HandleFBDataFactory", function($q, $http, FBCreds, AuthUserFactory,
 
 	//User's UID is provided within getItemList()
 
-	let getItemList = () => {
+	let getItemList = (location) => {
 
 		let userUID = UserStorageFactory.getCurrentUserInfo();
 
@@ -20,7 +20,7 @@ app.factory("HandleFBDataFactory", function($q, $http, FBCreds, AuthUserFactory,
 			userUID = userUID[Object.keys(userUID)[0]].uid;
 		}
 		return $q((resolve, reject) => {
-			$http.get(`${FBCreds.databaseURL}/users.json?orderBy="uid"&equalTo="${userUID}"`).then(
+			$http.get(`${FBCreds.databaseURL}/${location}.json?orderBy="uid"&equalTo="${userUID}"`).then(
 					(itemObject) => {
 						console.log("This is your itemCollection from within HandleFBDataFactory.js getItemList(): ", itemObject);
 						if ( Object.values(itemObject.data).length > 0 ) {

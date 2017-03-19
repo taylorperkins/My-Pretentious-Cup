@@ -125,6 +125,7 @@ app.controller("GlobeViewCtrl", function($scope, $http, $sce, $window, $timeout,
         s.searchResultMarkers.push(marker);
         s.markersOnPage.push(marker);
 
+        console.log("Here is your place: ", place);
         console.log("Here is your search coords: ", place.geometry.location);
         console.log("Lat: ", place.geometry.location.lat());
         console.log("Lat: ", place.geometry.location.lng());
