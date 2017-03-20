@@ -12,6 +12,13 @@ app.controller("GlobeViewCtrl", function($scope, $http, $sce, $window, $timeout,
 	s.markersOnPage = [];
 	s.currentLocationMarker = [];
 	s.searchResultMarkers = [];
+	s.fieldJournalMarkers = [];
+
+	let getFieldJournal = function() {
+		s.fieldJournal = UserStorageFactory.getCurrentFieldJournal();
+	};
+
+	console.log("Here is your fieldJournal from GlobeViewCtrl.js: ", s.fieldJournal);
 
 
 	//As soon as the controller loads, grab the user's current location, and display an info-window 
@@ -36,7 +43,9 @@ app.controller("GlobeViewCtrl", function($scope, $http, $sce, $window, $timeout,
 	  //Set up a pop-up for my current location
     var infoWindow = new google.maps.InfoWindow({map: s.map});
     infoWindow.setPosition(s.myLocation);
-    infoWindow.setContent('You are here.');	        
+    infoWindow.setContent('You are here.');	
+
+
   });			 
 
 
@@ -59,14 +68,17 @@ app.controller("GlobeViewCtrl", function($scope, $http, $sce, $window, $timeout,
 
   //Removes all the markers from the map, 
   //Then clears the passed array, completely removing all instances of those markers
-  s.deleteMarkers = (mySelectedMarkersArr) => {
-  	console.log(mySelectedMarkersArr);
-  	if (mySelectedMarkersArr.length > 0) {
-		  s.clearMarkers(mySelectedMarkersArr);
-		  mySelectedMarkersArr = []; 
-		  console.log(mySelectedMarkersArr);
-		  $( "#globe-input" ).val(''); 		
-  	} 
+  s.deleteMarkers = () => {  	
+  	let allArrays = [s.markersOnPage, s.currentLocationMarker, s.searchResultMarkers, s.fieldJournalMarkers];
+
+  	allArrays.forEach((markerArr) => {
+  		if (markerArr.length > 0) {
+  			s.clearMarkers(markerArr);
+			  markerArr = []; 
+			  console.log(markerArr);
+			  $( "#globe-input" ).val(''); 	
+  		}
+  	});  	
   };
 
   /*
@@ -165,8 +177,43 @@ app.controller("GlobeViewCtrl", function($scope, $http, $sce, $window, $timeout,
     				});
 				  });						  	    				
 		});
-	};										
+	};
+
+	s.showFieldJournalMarkers = () => {
+		getFieldJournal();
+		console.log(s.fieldJournal);
+
+		if (s.fieldJournal.length > 0) {
+			s.fieldJournal.forEach((entry) => {
+
+				let infowindow = new google.maps.InfoWindow({
+			    content: entry.location_title
+			  });
+
+				let fieldJournalMarker = new google.maps.Marker({
+			    position: {lat: entry.lat, lng: entry.lng},
+			    map: s.map,
+			    title: `${entry.review_title}`,
+			    icon: `http://labs.google.com/ridefinder/images/mm_20_${entry.marker_color}.png`
+			  });	
+
+			  fieldJournalMarker.addListener('click', function() {
+			    infowindow.open(s.map, fieldJournalMarker);
+			    console.log(entry);		    				
+				});
+
+				s.fieldJournalMarkers.push(fieldJournalMarker);
+
+			});			
+		} else {
+			alert("You actually don't have any field Journal entries!! How about you make one and come back!");
+		}
+
+	};	
+
 });
+
+
 
 
 

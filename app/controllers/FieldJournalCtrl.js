@@ -17,14 +17,10 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, pages, Use
 	s.category = 'Coffee';
 	s.saveEdit = true;
 
-	let currentUser = UserStorageFactory.getCurrentUserInfo();
-	s.userUid = currentUser[Object.keys(currentUser)[0]].uid;
-	console.log(s.currentUser);
-
 	s.newDrink = {										//This obj is created to be sent to /fieldJournal collection within firebase
 																		//It should be referenced by uid
 
-		uid: s.userUid, 								//to search for the user's field notes
+		uid: '', 			//to search for the user's field notes
 		place_id: '',										//selected_prediction.place_id
 		user_rating: '',								//based on user
 		google_rating: '',							//second_call_obj.rating
@@ -56,9 +52,12 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, pages, Use
 																			})
 																		*/		
 	};
+	s.newDrink = {};
 
-
-
+	s.currentUser = () => {
+		let myUser = UserStorageFactory.getCurrentUserInfo();
+		return myUser[Object.keys(myUser)[0]];
+	};
 
 	s.fieldJournal = [];
 	s.drinkForm = `partials/drink-forms/${s.category}Form.html`;
@@ -75,7 +74,13 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, pages, Use
 			(userObj) => {
 				console.log("Here is your firebase obj: ", userObj);
 				s.fieldJournal = [];
-
+				for (var fieldJournalEntry in userObj) {
+					console.log(fieldJournalEntry);
+					userObj[fieldJournalEntry].uglyId = fieldJournalEntry;
+					s.fieldJournal.push(userObj[fieldJournalEntry]);					
+				}		
+				console.log("Here is your field journal: ", s.fieldJournal);
+				UserStorageFactory.setCurrentFieldJournal(s.fieldJournal);
 			});
 	};
 	updateCurrentFieldJournal();
@@ -90,34 +95,11 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, pages, Use
 		s.subPage = myString;
 	};
 
-	s.updateEntry = (myDrinkEntry) => s.entry = myDrinkEntry;
-	
-	s.saveEditedEntry = (myEditedDrink) => {
-		console.log(myEditedDrink);
-		let fieldJournalLocation = myEditedDrink.uglyID;
-		delete myEditedDrink.uglyID;
-		HandleFBDataFactory.putItem(myEditedDrink, fieldJournalLocation).then(
-				(editedStatus) => $state.reload()
-			);
+	//Triggered whenever you click an existing note from the list view
+	s.updateEntry = (myDrinkEntry) => {
+		s.entry = myDrinkEntry;	
+		console.log(s.entry);	
 	};
-
-
-	s.newFieldJournalEntry = () => {
-		console.log("Here is your drink entry: ", s.newDrink);
-		
-		HandleFBDataFactory.postNewItem(s.newDrink, "fieldJournal").then(
-				(fieldJournalStatus) => $state.reload()
-			);
-	};
-
-	s.deleteFieldJournalEntry = () => {				
-		let locationToDelete = `fieldjournal/${s.entry.uglyID}`;
-		HandleFBDataFactory.deleteItem(locationToDelete).then(
-				(deletionStatus) => $state.reload()
-			);
-	};
-
-
 
 	s.logSelectedLocation = (mySelectedLocation) => {
 		console.log(mySelectedLocation);
@@ -126,6 +108,8 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, pages, Use
 		service.getDetails({placeId: mySelectedLocation.place_id}, function(place, status) {
       if (status === google.maps.places.PlacesServiceStatus.OK) {
         console.log("Here is my selected place; ", place);
+        s.newDrink.category = s.category;
+        s.newDrink.entry_created = Date.now();
         s.newDrink.place_id = place.place_id;
         s.newDrink.google_rating = place.rating;
         s.newDrink.location_title = place.name;
@@ -133,6 +117,12 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, pages, Use
         s.newDrink.location_phone_number = place.formatted_phone_number;
         s.newDrink.lat = place.geometry.location.lat();
         s.newDrink.lng = place.geometry.location.lng();
+        s.newDrink.uid = s.currentUser().uid;
+        s.newDrink.user_name = s.currentUser().userName;
+        s.newDrink.first_name = s.currentUser().firstName;
+        s.newDrink.last_name = s.currentUser().lastName;
+        s.newDrink.marker_color = GoogleMapsFactory.setMarkerColor(s.category);
+        s.newDrink.store_hours = {};
         let storeHours = place.opening_hours.weekday_text;
         storeHours.forEach((day) => {
         	console.log(day);
@@ -144,11 +134,11 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, pages, Use
         	s.newDrink.store_hours[dayName] = dayHours;
         });
         console.log(s.newDrink);
+
+        $( "#field-journal-rating" ).attr("placeholder", "1-5 pls / Google's Rating: " + place.rating);
     	}
     });
 	};
-
-
 
 	s.GooglePlacesRequest = (placesSearchInput) => {
 		$timeout.cancel(request);
@@ -162,7 +152,8 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, pages, Use
 				lat: s.myLocation.lat(),
 				lng: s.myLocation.lng()
 			};
-			GoogleMapsFactory.GoogleMapsAutoComplete(placesSearchInput, latLng).then(
+			if(!placesSearchInput) return;
+			GoogleMapsFactory.GoogleMapsAutoComplete(placesSearchInput.toLowerCase(), latLng).then(
 					(googleMapsRequestObj) => {
 						console.log(googleMapsRequestObj.data);
 						s.predictions = googleMapsRequestObj.data.predictions;
@@ -181,9 +172,44 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, pages, Use
 					}
 				);					
 		}, 500);
-	};	
+	};
 
-		
+
+
+	//==============================================
+	//Anything Firebase
+
+	s.saveEditedEntry = (myEditedDrink) => {
+		console.log(myEditedDrink);
+		console.log(s.newDrink);
+
+		if (!($("#newDrinkLocation").val())) {
+			$("#newDrinkLocation").css("border", "1px solid red").attr("placeholder", "please enter new location!!");
+			return;
+		} else {			
+			for (var entry in s.newDrink) {
+				myEditedDrink[entry] = s.newDrink[entry];
+			}		
+			console.log("Here is myEditedDrink obj: ", myEditedDrink);
+			let fieldJournalUglyId = myEditedDrink.uglyId;
+			delete myEditedDrink.uglyID;
+			if (myEditedDrink.$$hashKey) delete myEditedDrink.$$hashKey;
+			fbRef.database().ref('fieldJournal/' + fieldJournalUglyId).set(myEditedDrink).then(
+					(snapshot) => $state.reload()
+				);		
+		} 
+
+	};
+
+	s.newFieldJournalEntry = () => {
+		console.log("Here is your drink entry: ", s.newDrink);		
+		HandleFBDataFactory.createNewFirebaseEntry(s.newDrink, "fieldJournal").then(
+				(fieldJournalStatus) => $state.reload()
+			);
+	};
+
+	s.deleteFieldJournalEntry = () => fbRef.database().ref(`fieldJournal/${s.entry.uglyId}`).remove();			
+
 });
 
 

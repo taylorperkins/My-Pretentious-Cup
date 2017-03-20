@@ -11,11 +11,10 @@ app.factory("UserStorageFactory", function() {
 		mailingAddress: '',
 		emailAddress: '',
 		userName: '', 
-		birthday: '',
-		fieldJournal: {
-			//This will contain all of the current field Journal entries.  
-		}
+		birthday: ''		
 	};
+
+	let myFieldJournalEntries = [];
 
 	let currentUserUid = '';
 	//userCurrentLocation is an object given by google.maps.LatLng which displays the object with 
@@ -30,8 +29,11 @@ app.factory("UserStorageFactory", function() {
 	let getUserCurrentLocation = () => userCurrentLocation;
 	let setUserCurrentLocation = (locationCoords) => userCurrentLocation = locationCoords;
 	
-	let setCurrentUserUid = (userUid) => currentUserUid = userUid;
 	let getCurrentUserUid = () => currentUserUid;
+	let setCurrentUserUid = (userUid) => currentUserUid = userUid;
+
+	let getCurrentFieldJournal = () => myFieldJournalEntries;
+	let setCurrentFieldJournal = (fieldJournalArr) => myFieldJournalEntries = fieldJournalArr; 
 
 	
 	return {	
@@ -42,7 +44,10 @@ app.factory("UserStorageFactory", function() {
 						setCurrentUserInfo,
 
 						getUserCurrentLocation,
-						setUserCurrentLocation
+						setUserCurrentLocation,
+
+						getCurrentFieldJournal,
+						setCurrentFieldJournal
 				 	};
 	
 });

@@ -2,13 +2,59 @@
 
 console.log("HandleFbDataFactory.js is connected");
 
-app.factory("HandleFBDataFactory", function($q, $http, FBCreds, AuthUserFactory, UserStorageFactory) {
+app.factory("HandleFBDataFactory", function($q, $http, FBCreds, AuthUserFactory, UserStorageFactory, fbRef) {
 
 	//This function goes to firebase, organizes the object returned, and stores it locally.
 	//Args: Single location string Ex: 'users', 'pins', 'board'
 	//Return: locationInfo Obj
 
 	//User's UID is provided within getItemList()
+
+	let createNewFirebaseEntry = (createdObj, location) => {
+		return new Promise((resolve, reject) => {
+			var newKey = fbRef.database().ref().child(`${location}`).push().key,
+					updates = {};
+		  updates[`/${location}/` + newKey] = createdObj;
+		  fbRef.database().ref().update(updates);
+		  fbRef.database().ref(`${location}`).once('value').then(
+	  		(snapshot) => {
+		  		console.log("Newly updated shiz: ", snapshot.val());
+	  			resolve();
+	  		}
+	  	);
+		});
+	};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	let getItemList = (location) => {
 
@@ -74,7 +120,7 @@ app.factory("HandleFBDataFactory", function($q, $http, FBCreds, AuthUserFactory,
 		}
 		console.log("Within HandleFbDataFactory.js putItem(): ", editedItem, location);
 		return $q((resolve, reject) => {
-			$http.put(`${FBCreds.databaseURL}/users/${userUID}/fieldJournal/${location}.json`, 
+			$http.put(`${FBCreds.databaseURL}/fieldJournal/${location}.json`, 
 				angular.toJson(editedItem))
 					.then(
 							(editedObjStatus) => {
@@ -89,7 +135,11 @@ app.factory("HandleFBDataFactory", function($q, $http, FBCreds, AuthUserFactory,
 						getItemList, 
 						postNewItem, 
 						deleteItem, 
-						putItem		
+						putItem,
+
+						//Trying to utilize firebase's built in crud application
+						createNewFirebaseEntry
+
 					};
 
 });

@@ -1,3 +1,4 @@
+
 <div class="row">
 	<div class="col-md-3 home-books-container">
 		This is going to contain my books
@@ -7,9 +8,26 @@
 			<div class="col-md-9 col-md-offset-3 text-center"><a ui-sref="fieldJournal()">Field Journal</a></div>
 		</div>
 	</div>
-	<div class="col-md-3 col-md-offset-1 home-newsfeed">
+	<div class="col-md-3 col-md-offset-1 home-newsfeed" ng-click="imConnected()">
 		This will contain my news feed
+		<div ng-repeat="fieldJournalEntry in fieldJournalEntries" class="row main-newsfeed-fieldjournal" ng-click="showFieldNote(fieldJournalEntry)" ng-show="newsfeed">
+			<div class="col-xs-8 col-xs-offset-2 main-newsfeed-fieldnote">
+				<p>Title: {{fieldJournalEntry.review_title}}</p>
+				<p>User: {{fieldJournalEntry.user_name}}</p>				
+				<p>Date Created: {{fieldJournalEntry.1490034022376}}</p>
+			</div>
+		</div>
+		<div class="row" ng-show="!newsfeed">
+			<div class="main-selected-fieldnote">
+				<h2>Title: {{selectedFieldNote.review_title}}</h2>
+				<p>by: {{selectedFieldNote.user_name}}/{{selectedFieldNote.first_name}}</p>
+				<p>Location: {{selectedFieldNote.location_title}}/Rating: {{selectedFieldNote.user_rating}}</p>
+				<p>Review: {{selectedFieldNote.review_description}}</p>
+				<button type="button" class="btn btn-primary btn-block" ng-click="newsFeedView()">News Feed</button>
+			</div>
+		</div>
 	</div>
 
 	<a ui-sref="globeView()"><div class="col-md-4 col-md-offset-1 home-globe"></div></a>
 </div>	
+
