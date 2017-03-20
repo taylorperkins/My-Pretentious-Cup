@@ -73,12 +73,7 @@ var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bo
               	url: '/fieldJournal',
               	templateUrl: 'partials/FieldJournal.html',
               	controller: "FieldJournalCtrl"
-              },
-              // "fieldjournal.newFieldJournal@home": {
-              // 	url: '/new',
-              // 	templateUrl: 'partials/NewFieldJournal.html',
-              // 	controller: 'NewFieldJournalCtrl'
-              // },
+              },              
               "recipes@home": {
               	templateUrl: 'partials/Recipes.html',
               	controller: "RecipesCtrl"
@@ -105,7 +100,6 @@ var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bo
 	        		$window.history.back();
 	        	}
 	        });
-
 	
 })
 

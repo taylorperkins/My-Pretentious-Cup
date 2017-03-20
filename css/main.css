@@ -8,8 +8,8 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 li, ol, ul p, a {
-	margin: 0;
-	padding: 0;
+	margin: 0 !important;
+	padding: 0!important;
 }
 
 
@@ -68,6 +68,14 @@ h1, h2, h3, h4, h5, h6 li, ol, ul p, a {
 /*===========Home Page============*/
 /*================================*/
 
+.main-newsfeed-fieldnote {
+	border: 1px solid lightblue;	
+}
+
+/*================================*/
+/*===========Home Page============*/
+/*================================*/
+
 .home-books-container {
 	min-height: 300px;
 }
@@ -85,6 +93,7 @@ h1, h2, h3, h4, h5, h6 li, ol, ul p, a {
 
 .home-newsfeed {
 	border: 2px solid black;
+	min-height: 250px;
 }
 
 .home-globe {

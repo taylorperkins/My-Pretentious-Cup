@@ -6,8 +6,11 @@
 	    <input  ng-model="globeInput" ng-keyup="GooglePlacesRequest(globeInput)" id="globe-input" type="text"
 	    placeholder="Enter a location">
 		</div>
-		<div class="col-xs-4">
-      <button type="button" class="btn btn-primary btn-block" ng-click="deleteMarkers(markersOnPage)">Delete Markers</button> 
+		<div class="col-xs-8">
+			<div class="btn-group" role="group" aria-label="...">
+			  <button type="button" class="btn btn-default" ng-click="showFieldJournalMarkers()">My Field Journal Locations</button>
+	      <button type="button" class="btn btn-primary" ng-click="deleteMarkers()">Delete Markers</button> 
+	    </div>
     </div>  		
 	</div>
 	<div ng-show="showRequests" class="row">
