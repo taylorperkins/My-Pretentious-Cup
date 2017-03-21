@@ -23,7 +23,12 @@
       <input type="text" class="form-control" id="field-journal-rating" placeholder="1-5 pls" ng-model="$parent.newDrink.user_rating">
     </div>
   </div>
-  <textarea class="form-control" rows="6" ng-model="$parent.newDrink.review_description"></textarea>   
+  <textarea class="form-control" rows="6" ng-model="$parent.newDrink.review_description"></textarea>  
+  <div class="form-group">
+    <label for="new-fieldJournal-picture">Add a picture?</label>
+    <input type="file" id="new-fieldJournal-picture" ng-model="$parent.newDrink.drink_picture">
+    <p class="help-block" ng-click="$parent.showPicture()">How about-cha add a picture!</p>
+  </div> 
 </form> 
 <div class="row">
   <div class="col-xs-8 col-xs-offset-4">

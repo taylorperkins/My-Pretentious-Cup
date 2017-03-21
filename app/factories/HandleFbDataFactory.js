@@ -13,7 +13,37 @@ app.factory("HandleFBDataFactory", function($q, $http, FBCreds, AuthUserFactory,
 	let createNewFirebaseEntry = (createdObj, location) => {
 		return new Promise((resolve, reject) => {
 			var newKey = fbRef.database().ref().child(`${location}`).push().key,
-					updates = {};
+					updates = {},
+					myImageURL;
+
+			if (createdObj.drink_image) {
+				console.log("Here is your image: ", createdObj.drink_image);
+				let imageRef = fbRef.storage().ref(newKey).child(createdObj.drink_image.name);
+				console.log("Here is your firebase image reference from HandleFbDataFactory.js: ", imageRef);
+				imageRef.put(createdObj.drink_image).then(
+						(snapshot) => {
+							console.log('Uploaded your image!!');
+							imageRef.getDownloadURL().then(
+									(url) => {
+										myImageURL = url;
+										console.log("Here is your downloaded url: ", url);										
+										let imagePlacement = {};
+										imagePlacement[`/${location}/${newKey}/drink_image`] = url;
+										fbRef.database().ref().update(imagePlacement).then(
+												() => {													
+													$http.get(url).then(
+															(pictureData) => console.log("Get request from storage: ", pictureData)
+														);													
+												}
+											);										
+									}
+								);
+						}
+					);
+			}
+
+			if (createdObj.drink_image) delete createdObj.drink_image;
+
 		  updates[`/${location}/` + newKey] = createdObj;
 		  fbRef.database().ref().update(updates);
 		  fbRef.database().ref(`${location}`).once('value').then(

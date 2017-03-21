@@ -14,7 +14,8 @@ app.controller("MainCtrl", function($scope, fbRef) {
 		console.log("databaseSnapshot: ", databaseSnapshot);
 		for (var entry in databaseSnapshot) {
 			s.fieldJournalEntries.unshift(databaseSnapshot[entry]);
-		}		
+		}	
+		s.$apply();	
 		console.log("s.fieldJournalEntries: ", s.fieldJournalEntries);
 	};
 	var fieldNotesRef = fbRef.database().ref('fieldJournal/');
