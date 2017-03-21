@@ -23,6 +23,7 @@
 				<p>by: {{selectedFieldNote.user_name}}/{{selectedFieldNote.first_name}}</p>
 				<p>Location: {{selectedFieldNote.location_title}}/Rating: {{selectedFieldNote.user_rating}}</p>
 				<p>Review: {{selectedFieldNote.review_description}}</p>
+				<img class="main-selected-fieldnote-image" ng-if="selectedFieldNote.drink_image" ng-src="{{selectedFieldNote.drink_image}}" alt="">
 				<button type="button" class="btn btn-primary btn-block" ng-click="newsFeedView()">News Feed</button>
 			</div>
 		</div>
