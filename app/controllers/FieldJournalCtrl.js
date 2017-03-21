@@ -203,12 +203,21 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, pages, Use
 
 	s.newFieldJournalEntry = () => {
 		console.log("Here is your drink entry: ", s.newDrink);		
+		let file = document.getElementById("new-fieldJournal-picture").files[0];
+		if (file) {
+			s.newDrink.drink_image = file;
+		}
 		HandleFBDataFactory.createNewFirebaseEntry(s.newDrink, "fieldJournal").then(
 				(fieldJournalStatus) => $state.reload()
 			);
 	};
 
 	s.deleteFieldJournalEntry = () => fbRef.database().ref(`fieldJournal/${s.entry.uglyId}`).remove();			
+
+	s.showPicture = () => {
+		let file = document.getElementById("new-fieldJournal-picture").files;
+		console.log(file[0]);
+	};
 
 });
 
