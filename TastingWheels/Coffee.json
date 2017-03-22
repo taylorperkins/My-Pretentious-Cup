@@ -1,0 +1,300 @@
+{
+	"name": "Tasting Wheel",	
+	"children": [
+		{
+			"name": "Aromas",
+			"size": 50,
+			"children": [
+				{
+					"name": "Enzymatic",
+					"size": 33.333333333333,
+					"children": [
+						{
+							"name": "Flowery",
+							"size": 33.333333333333,
+							"children": [
+								{
+									"name": "Floral",
+									"size": 50								
+								},
+								{
+									"name": "Fragrant",
+									"size": 50
+								}
+							]
+						},
+						{
+							"name": "Fruity",
+							"size": 33.333333333333,
+							"children": [
+								{
+									"name": "Citrus",
+									"size": 50								
+								},
+								{
+									"name": "Berry-like",
+									"size": 50
+								}
+							]
+						},
+						{
+							"name": "Herby",
+							"size": 33.333333333333,
+							"children": [
+								{
+									"name": "Alliceous",
+									"size": 50								
+								},
+								{
+									"name": "Leguminous",
+									"size": 50
+								}
+							]
+						}					
+					]
+				},
+				{
+				
+					"name": "Sugar Browning",
+					"size": 33.333333333333,
+					"children": [
+						{
+							"name": "Nutty",
+							"size": 33.333333333333,
+							"children": [
+								{
+									"name": "Nut-like",
+									"size": 50
+
+								},
+								{
+									"name": "Malt-like",
+									"size": 50
+								}
+							]
+						},
+						{
+							"name": "Carmelly",
+							"size": 33.333333333333,
+							"children": [
+								{
+									"name": "Candy-like",
+									"size": 50								
+								},
+								{
+									"name": "Syrup-like",
+									"size": 50
+								}
+							]
+						},
+						{
+							"name": "Chocolatey",
+							"size": 33.333333333333,
+							"children": [
+								{
+									"name": "Chocolate-like",
+									"size": 50								
+								},
+								{
+									"name": "Vanilla-like",
+									"size": 50
+								}
+							]
+						}					
+					]
+				},
+				{				
+					"name": "Dry Distillation",
+					"size": 33.333333333333,
+					"children": [
+						{
+							"name": "Resinous",
+							"size": 33.333333333333,
+							"children": [
+								{
+									"name": "Turpeny",
+									"size": 50								
+								},
+								{
+									"name": "Medicinal",
+									"size": 50
+								}
+							]
+						},
+						{
+							"name": "Spicy",
+							"size": 33.333333333333,
+							"children": [
+								{
+									"name": "Warming",
+									"size": 50								
+								},
+								{
+									"name": "Pungent",
+									"size": 50
+								}
+							]
+						},
+						{
+							"name": "Carbony",
+							"size": 33.333333333333,	
+							"children": [
+								{
+									"name": "Smoky",
+									"size": 50								
+								},
+								{
+									"name": "Ashy",
+									"size": 50
+								}
+							]
+						}					
+					]
+				}
+			]
+		},
+		{
+			"name": "Tastes",
+			"size": 50,
+			"children": [
+				{				
+					"name": "Sour",
+					"size": 25,
+					"children": [
+						{
+							"name": "Sour",
+							"size": 50,
+							"children": [
+								{
+									"name": "Acrid",
+									"size": 50									
+								},
+								{
+									"name": "Hard",
+									"size": 50	
+								}
+							]
+						},
+						{
+							"name": "Winey",
+							"size": 50,
+							"children": [
+								{
+									"name": "Tart",
+									"size": 50								
+								},
+								{
+									"name": "Tangy",
+									"size": 50
+								}
+							]
+						}			
+					]
+				},
+				{						
+					"name": "Sweet",
+					"size": 25,
+					"children": [
+						{
+							"name": "Adicic",
+							"size": 50,
+							"children": [
+								{
+									"name": "Piquant",
+									"size": 50
+								},
+								{
+									"name": "Nippy",
+									"size": 50
+								}
+							]
+						},
+						{
+							"name": "Mellow",
+							"size": 50,
+							"children": [
+								{
+									"name": "Mild",
+									"size": 50								
+								},
+								{
+									"name": "Delicate",
+									"size": 50
+								}
+							]
+						}			
+					]
+				},
+				{		
+					"name": "Salt",
+					"size": 25,
+					"children": [
+						{
+							"name": "Bland",
+							"size": 50,
+							"children": [
+								{
+									"name": "Soft",
+									"size": 50								
+								},
+								{
+									"name": "Neutral",
+									"size": 50
+								}
+							]
+						},
+						{
+							"name": "Sharp",
+							"size": 50,
+							"children": [
+								{
+									"name": "Rough",
+									"size": 50							
+								},
+								{
+									"name": "Astringent",
+									"size": 50
+								}
+							]
+						}				
+					]
+				},
+				{				
+					"name": "Bitter",
+					"size": 25,
+					"children": [
+						{
+							"name": "Harsh",
+							"size": 50,
+							"children": [
+								{
+									"name": "Alkaline",
+									"size": 50								
+								},
+								{
+									"name": "Caustic",
+									"size": 50
+								}
+							]
+						},
+						{
+							"name": "Pungent",
+							"size": 50,
+							"children": [
+								{
+									"name": "Phenolic",
+									"size": 50								
+								},
+								{
+									"name": "Cresol",
+									"size": 50
+								}
+							]
+						}				
+					]
+				}
+			]
+		}	
+	]
+}
+

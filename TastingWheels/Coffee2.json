@@ -1,0 +1,113 @@
+// {
+	// 	"name": "Tastes",
+	// 	"children": [
+	// 		{				
+	// 			"name": "Sour",
+	// 			"children": [
+	// 				{
+	// 					"name": "Sour",
+	// 					"children": [
+	// 						{
+	// 							"name": "Acrid"								
+	// 						},
+	// 						{
+	// 							"name": "Hard"
+	// 						}
+	// 					]
+	// 				},
+	// 				{
+	// 					"name": "Winey",
+	// 					"children": [
+	// 						{
+	// 							"name": "Tart"								
+	// 						},
+	// 						{
+	// 							"name": "Tangy"
+	// 						}
+	// 					]
+	// 				}			
+	// 			]
+	// 		},
+	// 		{						
+	// 			"name": "Sweet",
+	// 			"children": [
+	// 				{
+	// 					"name": "Adicic",
+	// 					"children": [
+	// 						{
+	// 							"name": "Piquant"								
+	// 						},
+	// 						{
+	// 							"name": "Nippy"
+	// 						}
+	// 					]
+	// 				},
+	// 				{
+	// 					"name": "Mellow",
+	// 					"children": [
+	// 						{
+	// 							"name": "Mild"								
+	// 						},
+	// 						{
+	// 							"name": "Delicate"
+	// 						}
+	// 					]
+	// 				}			
+	// 			]
+	// 		},
+	// 		{		
+	// 			"name": "Salt",
+	// 			"children": [
+	// 				{
+	// 					"name": "Bland",
+	// 					"children": [
+	// 						{
+	// 							"name": "Soft"								
+	// 						},
+	// 						{
+	// 							"name": "Neutral"
+	// 						}
+	// 					]
+	// 				},
+	// 				{
+	// 					"name": "Sharp",
+	// 					"children": [
+	// 						{
+	// 							"name": "Rough"								
+	// 						},
+	// 						{
+	// 							"name": "Astringent"
+	// 						}
+	// 					]
+	// 				}				
+	// 			]
+	// 		},
+	// 		{				
+	// 			"name": "Bitter",
+	// 			"children": [
+	// 				{
+	// 					"name": "Harsh",
+	// 					"children": [
+	// 						{
+	// 							"name": "Alkaline"								
+	// 						},
+	// 						{
+	// 							"name": "Caustic"
+	// 						}
+	// 					]
+	// 				},
+	// 				{
+	// 					"name": "Pungent",
+	// 					"children": [
+	// 						{
+	// 							"name": "Phenolic"								
+	// 						},
+	// 						{
+	// 							"name": "Cresol"
+	// 						}
+	// 					]
+	// 				}				
+	// 			]
+	// 		}
+	// 	]
+	// }	

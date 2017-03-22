@@ -12,10 +12,13 @@ app.factory("GoogleMapsFactory", function($http, $sce, GoogleMapsConfig) {
 
 	//Thanks to Blaise Roberts --> https://github.com/BlaiseRoberts/proxy-server							
 
-	let GoogleMapsRequest = () => $http.get("https://my-pretentious-cup.herokuapp.com/api/googleMaps/js?key=AIzaSyDePd5ts_xkK8JsFIkJnUs60rqG5nTgg2g&libraries=places");
+	let GoogleMapsRequest = () => $http.get("https://my-pretentious-cup.herokuapp.com/api/googleMaps/js?key=AIzaSyAhT4ILSuATDfD9y1k5Sx7HZNITgHj5e3U&libraries=places");
 
 	// userInput should be a string search result, and LatLngCoord should be an obj: {lat: '', lng: ''}
-	let GoogleMapsAutoComplete = (userInput, LatLngCoord) => $http.get(`https://my-pretentious-cup.herokuapp.com/api/googleMaps/place/autocomplete/json?input=${userInput}&types=establishment&location=${LatLngCoord.lat},${LatLngCoord.lng}&radius=1000&key=AIzaSyDePd5ts_xkK8JsFIkJnUs60rqG5nTgg2g`);
+	let GoogleMapsAutoComplete = (userInput, LatLngCoord) => $http.get(`https://my-pretentious-cup.herokuapp.com/api/googleMaps/place/autocomplete/json?input=${userInput}&types=establishment&location=${LatLngCoord.lat},${LatLngCoord.lng}&radius=1000&key=AIzaSyAhT4ILSuATDfD9y1k5Sx7HZNITgHj5e3U`);
+
+	//finding driving directions based off of two coords, origin and destination {lat: '', lng: ''}
+	let GoogleMapsDrivingDirections = (origin, destination) => $http.get(`https://my-pretentious-cup.herokuapp.com/api/googleMaps/directions/json?origin=${origin.lat},${origin.lng}&destination=${destination.lat},${destination.lng}&key=AIzaSyAhT4ILSuATDfD9y1k5Sx7HZNITgHj5e3U`);
 
 	let createMarkerContent = (results, status) => {
 		return new Promise((resolve, reject) => {
@@ -72,6 +75,7 @@ app.factory("GoogleMapsFactory", function($http, $sce, GoogleMapsConfig) {
 	return {
 		GoogleMapsRequest,
 		GoogleMapsAutoComplete,
+		GoogleMapsDrivingDirections,
 		createMarkerContent,
 		getRequest,
 		setMarkerColor		

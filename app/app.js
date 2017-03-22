@@ -14,16 +14,19 @@ The user's information will include:
 		Ratings and Reviews for specific Locations
 */
 
-var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bootstrap'])
+var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bootstrap', 'd3'])
 
 .service('fbRef', function(FBCreds) {
 	return firebase.initializeApp(FBCreds);
 })
 
+.service('drinkingBuddiesCoords', function() {
+	this.Coords = {};
+})
+
 .config(function($stateProvider, $urlRouterProvider) {
 
 				console.log("I am within the config");
-
 				$urlRouterProvider.otherwise('/login');
 
 				// HOME STATES AND NESTED VIEWS ========================================
@@ -103,7 +106,7 @@ var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bo
 	
 })
 
-.run((fbRef) => {
+.run((fbRef, $http) => {
 	console.log("You are connected");
 	fbRef.database().ref('users').once('value').then(
 			(snapshot) => console.log(snapshot.val())

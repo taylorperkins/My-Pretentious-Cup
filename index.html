@@ -4,7 +4,7 @@
 <head>
 	<title>My Pretentious Cup</title>
 	<meta charset="utf-8">
-	<script type="text/javascript" src="https://my-pretentious-cup.herokuapp.com/api/googleMaps/js?key=AIzaSyAaItou6JOJeNcTIiLTIqXxsPwyO7Xroyg&libraries=places"></script>
+	<script type="text/javascript" src="https://my-pretentious-cup.herokuapp.com/api/googleMaps/js?key=AIzaSyAhT4ILSuATDfD9y1k5Sx7HZNITgHj5e3U&libraries=places"></script>
 	<link rel="stylesheet" href="lib/node_modules/bootstrap/dist/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
@@ -15,13 +15,10 @@
 	</div>
 </div>
 
-<input type="text" value="Click me!" uib-popover="I appeared on focus! Click away and I'll vanish..."  popover-trigger="'focus'" class="form-control">
-
-
 
 <!--ALL PACKAGES-->
 <script type="text/javascript" src="lib/node_modules/jquery/dist/jquery.min.js"></script>
-<script type="text/javascript" src="lib/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- <script type="text/javascript" src="lib/node_modules/bootstrap/dist/js/bootstrap.min.js"></script> -->
 <script type="text/javascript" src="lib/node_modules/firebase/firebase.js"></script>
 
 <script type="text/javascript" src="lib/node_modules/angular/angular.min.js"></script>
@@ -29,8 +26,11 @@
 <script type="text/javascript" src="lib/node_modules/angular-ui-router/release/angular-ui-router.min.js"></script>
 <script type="text/javascript" src="lib/node_modules/angular-animate/angular-animate.min.js"></script>
 <script type="text/javascript" src="lib/node_modules/angular-aria/angular-aria.min.js"></script>
-<script type="text/javascript" src="lib/node_modules/angular-bootstrap/ui-bootstrap.min.js"></script>
+<!-- <script type="text/javascript" src="lib/node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js"></script> -->
+<script type="text/javascript" src="lib/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
+<script type="text/javascript" src="lib/node_modules/angular-ui-bootstrap/src/popover/popover.js"></script>
 <script type="text/javascript" src="lib/node_modules/d3/build/d3.min.js"></script>
+<script type="text/javascript" src="lib/node_modules/color-scheme/lib/color-scheme.min.js"></script>
 
 <!-- MODULES -->
 <script type="text/javascript" src="app/modules/d3Module.js"></script>
@@ -45,6 +45,8 @@
 <script type="text/javascript" src="app/factories/HandleFbDataFactory.js"></script>
 <script type="text/javascript" src="app/factories/UserStorageFactory.js"></script>
 <script type="text/javascript" src="app/factories/GoogleMapsFactory.js"></script>
+<script type="text/javascript" src="app/factories/TransferDataFactory.js"></script>
+<script type="text/javascript" src="app/factories/TastingWheelFactory.js"></script>
 
 <!--CONTROLLERS-->
 <script type="text/javascript" src="app/controllers/DrinkFilterCtrl.js"></script>
