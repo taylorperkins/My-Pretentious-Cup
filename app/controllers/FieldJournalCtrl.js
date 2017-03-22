@@ -9,7 +9,7 @@
 
 console.log("FieldJournalCtrl.js is connected");
 
-app.controller("FieldJournalCtrl", function($scope, $state, $timeout, pages, UserStorageFactory, HandleFBDataFactory, fbRef, GoogleMapsFactory) {
+app.controller("FieldJournalCtrl", function($scope, $state, $timeout, pages, UserStorageFactory, HandleFBDataFactory, fbRef, GoogleMapsFactory, TastingWheelFactory) {
 	let s = $scope;
 	let request;
 	console.log("FieldJournalCtrl.js is working");	
@@ -52,7 +52,7 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, pages, Use
 																			})
 																		*/		
 	};
-	s.newDrink = {};
+	s.newDrink = {};	
 
 	s.currentUser = () => {
 		let myUser = UserStorageFactory.getCurrentUserInfo();
@@ -85,15 +85,28 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, pages, Use
 	};
 	updateCurrentFieldJournal();
 
+
+
+
+
+	TastingWheelFactory.createWheel();
+	// .then(
+	// 		(updatedColorWheelArr) => {
+	// 			console.log("Here is your color wheel array from FieldJournalCtrl.js: ", updatedColorWheelArr);
+	// 			TastingWheelFactory.createWheel(updatedColorWheelArr);
+	// 		}
+	// 	);
+
+
+
+
+
 	s.getCurrentLocation = () => {
 		s.myLocation = UserStorageFactory.getUserCurrentLocation(); 
 		console.log(s.myLocation);
 	};
 
-	s.changeViews = (myString) => {
-		console.log(myString);
-		s.subPage = myString;
-	};
+	s.changeViews = (myString) => s.subPage = myString;	
 
 	//Triggered whenever you click an existing note from the list view
 	s.updateEntry = (myDrinkEntry) => {
@@ -102,6 +115,9 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, pages, Use
 	};
 
 	s.logSelectedLocation = (mySelectedLocation) => {
+		$("#newDrinkLocation").val(mySelectedLocation.description);
+		s.searchPrediction = false;
+		s.predictions = null;
 		console.log(mySelectedLocation);
 		var service = new google.maps.places.PlacesService(document.createElement('div'));
 
@@ -136,6 +152,7 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, pages, Use
         console.log(s.newDrink);
 
         $( "#field-journal-rating" ).attr("placeholder", "1-5 pls / Google's Rating: " + place.rating);
+        s.$apply();
     	}
     });
 	};
@@ -143,6 +160,7 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, pages, Use
 	s.GooglePlacesRequest = (placesSearchInput) => {
 		$timeout.cancel(request);
 		s.showRequests = false;
+		s.searchPrediction = false;
 		request = $timeout(function() {
 
 			//s.location is updated on focus of the input field			
@@ -157,18 +175,9 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, pages, Use
 					(googleMapsRequestObj) => {
 						console.log(googleMapsRequestObj.data);
 						s.predictions = googleMapsRequestObj.data.predictions;
-						console.log($("#newDrinkLocation").val());
-						if ($("#newDrinkLocation").popover()) $("#newDrinkLocation").popover("destroy");
-						
-						$( "#newDrinkLocation" ).popover({html: true, animation: true, placement: "bottom", content: `<div id='location-popover'>${s.predictions[0].description}</div>`})
-								.parent().on('click', '#location-popover', function() {
-									$("#newDrinkLocation").val(s.predictions[0].description);
-									$("#newDrinkLocation").popover("destroy");
-									s.logSelectedLocation(s.predictions[0]);
-								}); 
-						$( "#newDrinkLocation" ).popover("show");
-						s.showRequests = true;
-						return;
+						console.log($("#newDrinkLocation").val());						
+						s.newFieldJournalPopup = "../../partials/BootstrapTemplates/NewFieldJournalPopup.html";						
+					  s.searchPrediction = true;										
 					}
 				);					
 		}, 500);
@@ -212,7 +221,10 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, pages, Use
 			);
 	};
 
-	s.deleteFieldJournalEntry = () => fbRef.database().ref(`fieldJournal/${s.entry.uglyId}`).remove();			
+	s.deleteFieldJournalEntry = () => {
+		fbRef.database().ref(`fieldJournal/${s.entry.uglyId}`).remove();			
+		$state.reload();
+	};
 
 	s.showPicture = () => {
 		let file = document.getElementById("new-fieldJournal-picture").files;

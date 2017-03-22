@@ -2,7 +2,7 @@
 
 console.log("GlobeViewCtrl.js is connected");
 
-app.controller("GlobeViewCtrl", function($scope, $http, $sce, $window, $timeout, GoogleMapsFactory, GoogleMapsConfig, UserStorageFactory) {
+app.controller("GlobeViewCtrl", function($scope, $http, $sce, $window, $timeout, GoogleMapsFactory, GoogleMapsConfig, UserStorageFactory, TransferDataFactory, drinkingBuddiesCoords) {
 	let s = $scope;
 	let request;
 
@@ -19,6 +19,50 @@ app.controller("GlobeViewCtrl", function($scope, $http, $sce, $window, $timeout,
 	};
 
 	console.log("Here is your fieldJournal from GlobeViewCtrl.js: ", s.fieldJournal);
+
+	s.$watch(
+		function(){ return drinkingBuddiesCoords.Coords;}, 
+		function(newValue, oldValue){
+			if (newValue.lat && newValue.lng) {
+				console.log("Your data has changed!");
+				let currentLocation = UserStorageFactory.getUserCurrentLocation();
+				let origin = {
+					lat: currentLocation.lat(),
+					lng: currentLocation.lng()
+				};				
+				console.log("destination: ", newValue, " origin: ", origin);				
+				// GoogleMapsFactory.GoogleMapsDrivingDirections(origin, newValue).then(
+				// 		(result) => {
+				// 			console.log("Here are your directions: ", result.data);
+
+        var directionsService = new google.maps.DirectionsService;
+        var directionsDisplay = new google.maps.DirectionsRenderer;
+        s.map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 7,
+          center: {lat: origin.lat, lng: origin.lng}
+        });
+        $( "<div id='right-panel'></div>" ).insertAfter( "#map" );
+        directionsDisplay.setMap(s.map);	        	     									
+        directionsDisplay.setPanel(document.getElementById('right-panel'));
+
+        
+
+        directionsService.route({
+          origin: {lat: origin.lat, lng: origin.lng},
+          destination: {lat: newValue.lat, lng: newValue.lng},
+          travelMode: 'DRIVING'
+        }, function(response, status) {
+        	console.log(response, status);
+          if (status === 'OK') {
+            directionsDisplay.setDirections(response);
+          } else {
+            window.alert('Directions request failed due to ' + status);
+          }
+        });				      					
+					// );
+			}
+		}
+	);
 
 
 	//As soon as the controller loads, grab the user's current location, and display an info-window 
@@ -46,8 +90,7 @@ app.controller("GlobeViewCtrl", function($scope, $http, $sce, $window, $timeout,
     infoWindow.setContent('You are here.');	
 
 
-  });			 
-
+  });		
 
 	/*
 		These next few functions are designed to only clear markers from the map and also clear the designated arrays
@@ -76,8 +119,16 @@ app.controller("GlobeViewCtrl", function($scope, $http, $sce, $window, $timeout,
   			s.clearMarkers(markerArr);
 			  markerArr = []; 
 			  console.log(markerArr);
-			  $( "#globe-input" ).val(''); 	
+			  $( "#globe-input" ).val(''); 			  
   		}
+  		$("#right-panel").remove();
+  		s.map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 13,
+        center: {lat: s.myLocation.lat(), lng: s.myLocation.lng()}
+      });
+      var infoWindow = new google.maps.InfoWindow({map: s.map});
+	    infoWindow.setPosition(s.myLocation);
+	    infoWindow.setContent('You are here.');	
   	});  	
   };
 
@@ -88,7 +139,7 @@ app.controller("GlobeViewCtrl", function($scope, $http, $sce, $window, $timeout,
 
 
 
-	//This function is called when you are typring in the input field above the map to 
+	//This function is called when you are typing in the input field above the map to 
 	//search for any given place. This just makes the request and displays the predictions for the 
 	//user to choose what they would like to view
 	s.GooglePlacesRequest = (inputValue) => {		
@@ -196,14 +247,11 @@ app.controller("GlobeViewCtrl", function($scope, $http, $sce, $window, $timeout,
 			    title: `${entry.review_title}`,
 			    icon: `http://labs.google.com/ridefinder/images/mm_20_${entry.marker_color}.png`
 			  });	
-
 			  fieldJournalMarker.addListener('click', function() {
 			    infowindow.open(s.map, fieldJournalMarker);
 			    console.log(entry);		    				
 				});
-
 				s.fieldJournalMarkers.push(fieldJournalMarker);
-
 			});			
 		} else {
 			alert("You actually don't have any field Journal entries!! How about you make one and come back!");

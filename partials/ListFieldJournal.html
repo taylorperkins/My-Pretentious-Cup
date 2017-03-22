@@ -45,7 +45,10 @@
 					      <input id="newDrinkLocation" type="text" class="form-control" placeholder="{{entry.location_title}}" 
 					              ng-focus="getCurrentLocation()" 
 					              ng-model="drinkLocationInput" 
-					              ng-keyup="GooglePlacesRequest(drinkLocationInput)">  
+					             	ng-keyup="GooglePlacesRequest(drinkLocationInput)"
+					             	uib-popover-template="newFieldJournalPopup"
+					              popover-placement="bottom-left"              
+					              popover-is-open="searchPrediction">  				              					             					              
 					    </div>
 					  </div>
 					  <div class="form-group">

@@ -4,10 +4,10 @@
 		<div class="well home-margin-bottom">
 			<a ng-click="logout()">Logout</a>
 		</div>
-		<div class="well home-margin-bottom" ui-view="main"></div>
-		<div class="well home-margin-bottom" ui-view="fieldJournal"></div>
-		<div class="well home-margin-bottom" ui-view="recipes"></div>
-		<div class="well home-margin-bottom" ui-view="drinkingBuddies"></div>
-		<div class="well home-margin-bottom" ui-view="globeView"></div>
+		<div id="main-view" target="main-view" class="well home-margin-bottom" ui-view="main"></div>
+		<div id="fieldJournal-view" target="fieldJournal-view" class="well home-margin-bottom" ui-view="fieldJournal"></div>
+		<!-- <div class="well home-margin-bottom" ui-view="recipes"></div> -->
+		<div id="drinkingBuddies-view" target="drinkingBuddies-view" class="well home-margin-bottom" ui-view="drinkingBuddies"></div>
+		<div id="globe-view" target="globe-view" class="well home-margin-bottom" ui-view="globeView"></div>
 	</div>
 </div>

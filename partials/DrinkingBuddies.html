@@ -1,1 +1,35 @@
 <h3 class="text-center"><a>Drinking Buddies State</a></h3>
+
+<form>
+  <div class="form-group">
+    <label for="drinking-buddies-searchFriends">Search for yo buddies</label>
+    <input ng-keyup="updatePopover($event)" ng-model="searchText" ng-focus="firebaseCallToUsers()" type="text" id="drinking-buddies-searchFriends" placeholder="Username/First Name/Last Name" 
+    uib-popover-template="hey"  
+    popover-placement="bottom-left"
+    popover-trigger="'focus'" class="form-control">        
+  </div>
+</form>
+
+
+
+<div class="row" ng-show="currentSearch">
+	<div class="jumbotron">
+	  <h1>{{selectedUser.firstName}} {{selectedUser.lastName}}!</h1>
+	  <p class="lead">Here is their collection of field journal entries!!</p>	  
+	</div>
+
+	<!-- Example row of columns -->
+	<div class="row">	  
+	  <div class="col-lg-4" ng-repeat="entry in selectedUser.fieldJournal">
+	    <h2>{{entry.category}}/{{entry.review_title}}</h2>
+	    <p>Location: {{entry.location_title}}</p>
+	    <p ng-click="sendCoordsToGlobeView({lat: entry.lat, lng: entry.lng, place_id: entry.place_id})">Address: {{entry.location_address}}</p>
+	    <p>Phone number: {{entry.location_phone_number}}</p>
+	    <p>Rating: {{entry.user_rating}}</p>
+	    <p>{{entry.review_description}}</p>
+	    <img class="drinking-buddies-selected-image" ng-if="entry.drink_image" ng-src="{{entry.drink_image}}">
+	 </div>	  
+	</div>
+</div>
+
+
