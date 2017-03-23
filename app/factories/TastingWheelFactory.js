@@ -2,8 +2,8 @@
 
 console.log("TastingWheelFactory.js is connected");
 
-app.factory("TastingWheelFactory", function($http) {
-console.log("TastingWheelFactory.js is working");
+app.factory("TastingWheelFactory", function($http, fieldJournalWheel) {
+	console.log("TastingWheelFactory.js is working");
 
 
 	let setUpColorWheel = (category) => {
@@ -54,60 +54,11 @@ console.log("TastingWheelFactory.js is working");
 
 
 	//creds --> https://bl.ocks.org/maybelinot/5552606564ef37b5de7e47ed2b7dc099
-	let createWheel = (myColors) => {
+	let createWheel = (myColors) => {		
 
-		// //Here we are setting up general layouts for the sunburst
-		// var margin = {top: 30, right: 10, bottom: 20, left: 10},
-		// 		width = 636 - margin.left - margin.right,
-		// 		height = 476 - margin.top	- margin.bottom,
-		// 		radius = Math.min(width, height) / 2;
-		// console.log("My dimensions: ", margin, width, height, radius);
-
-		// //Now we are defining the scales that will turn into 
-		// //visualization properties. 
-		// //'x' scale will represent angular position within the visualization
-		// //and ranges linearly between 0 and 2PI
-		// //'y' scale will will represent the area, so it will range between 
-		// //0 to the full radius of the Visualization
-		// //The area varies in the square of the radius, so this scale 
-		// //takes the square root of the input domain before mapping to the output
-		// //range
-		// var x = d3.scaleLinear()
-		// 			.range([0, 2 * Math.PI]);
-		// var y = d3.scaleLinear()
-		// 			.range([0, radius]);
-		// console.log("Setting up x and y coords: ", x, y);
-
-		// //d3 attributes
-		// var formatNumber = d3.format(",d");
-		// var color = d3.scaleOrdinal(d3.schemeCategory20);
-		// var partition = d3.partition();
-		// console.log("Here are your d3 attributes: ", formatNumber, color, partition);
-
-		// //Setting up the arc of the circle
-		// var arc = d3.arc()
-		// 			.startAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x0))); })
-		// 			.endAngle(function(d) 	{ return Math.max(0, Math.min(2 * Math.PI, x(d.x1))); })
-		// 			.innerRadius(function(d){ return Math.max(0, y(d.y0)); })
-		// 			.outerRadius(function(d){ return Math.max(0, y(d.y1)); });
-		// console.log("This should be your arc: ", arc);
-
-		// //Create the element to append our data to. This will be our container
-		// //for visualization.
-		// //The svg element contains a "<g>" element that can be transformed
-		// //through translation to account for margins and such		
-		// var svg = d3.select("body").append("svg")
-		// 			.attr("width", width + margin.left + margin.right)
-		// 			.attr("height", height + margin.top + margin.bottom)
-		// 		.append("g")
-		// 			.attr("transform", "translate(" +
-		// 							(margin.left + width / 2) + "," +
-		// 							(margin.top + height / 2) + ")");
-		// console.log("My svg element: ", document.getElementsByTagName("svg"));
-
-		var width = 960,
-		    height = 700,
-		    radius = (Math.min(width, height) / 2) - 10;
+		var width = 460,
+		    height = 460,
+		    radius = (Math.min(width, height) / 2 - 75);
 
 		var formatNumber = d3.format(",d");
 
@@ -127,12 +78,16 @@ console.log("TastingWheelFactory.js is working");
 		    .innerRadius(function(d) { return Math.max(0, y(d.y0)); })
 		    .outerRadius(function(d) { return Math.max(0, y(d.y1)); });
 
+		var div = d3.select("#tastingWheel").append("div")
+					.attr("class", "tooltip")				
+    			.style("opacity", 0);
 
-		var svg = d3.select("body").append("svg")
+		var svg = d3.select("#tastingWheel").append("svg")
 		    .attr("width", width)
 		    .attr("height", height)
 		  .append("g")
 		    .attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
+
 
 
 		d3.json(`../TastingWheels/Coffee.json`, function(error, root){
@@ -140,14 +95,33 @@ console.log("TastingWheelFactory.js is working");
 		  
 		  root = d3.hierarchy(root);
 		  root.sum(function(d) { return d.size; });
-		  svg.selectAll("path")
+		  svg.selectAll("path")		  		
 		      .data(partition(root).descendants())
 		    .enter().append("path")
-		      .attr("d", arc)
-		      .style("fill", function(d) { return color((d.children ? d : d.parent).data.name); })
+		    	.attr("id", function(d) { return d.data.name; })
+		      .attr("d", arc)		      
+		      .style("stroke", "#fff")
+		      .style("fill", function(d) { return color((d.children ? d : d.parent).data.name); })		      
+		      .on("dblclick", function(d) {
+		      	console.log(d);
+		      	fieldJournalWheel.Sense = d.data.name;
+		      	console.log(fieldJournalWheel);
+		      })
 		      .on("click", click)
-		    .append("title")
-		      .text(function(d) { return d.data.name; });
+		      .on("mousemove", function(d) {	
+	           div.transition()		
+                .duration(200)		
+                .style("opacity", .9);		
+            div	.html(d.data.name)	
+                .style("left", (d3.event.clientX - 400) + "px")		
+                .style("top", (d3.event.clientY - 200) + "px");	
+            })					
+	        .on("mouseout", function(d) {		
+	            div.transition()		
+	                .duration(500)		
+	                .style("opacity", 0);	
+	        });      
+		    	   
 		});
 		
 		
@@ -163,7 +137,7 @@ console.log("TastingWheelFactory.js is working");
 		      })
 		    .selectAll("path")
 		      .attrTween("d", function(d) { return function() { return arc(d); }; });
-		}
+		}		
 
 		d3.select(self.frameElement).style("height", height + "px");
 	};

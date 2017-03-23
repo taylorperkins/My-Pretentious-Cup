@@ -26,11 +26,19 @@
       <input type="text" class="form-control" id="field-journal-rating" placeholder="1-5 pls" ng-model="$parent.newDrink.user_rating">
     </div>
   </div>
-  <textarea class="form-control" rows="6" ng-model="$parent.newDrink.review_description"></textarea>  
+  <div class="row field-journal-senses">
+    <div ng-repeat="sense in senses" class="col-xs-3">
+      <p>{{sense}} <span ng-click="removeSense(sense)" class="glyphicon glyphicon-remove"></span></p>
+    </div>
+    <div ng-show="senses.length === 0" class="col-xs-10">
+      <p>Double click the wheel to add <i>tastes</i> or <i>aromas!</i></p>
+    </div>
+  </div>
+  <textarea class="form-control" rows="3" ng-model="$parent.newDrink.review_description"></textarea>  
   <div class="form-group">
-    <label for="new-fieldJournal-picture">Add a picture?</label>
+    <label for="new-fieldJournal-picture" class="col-sm-4 control-label">Add a picture?</label>
     <input type="file" id="new-fieldJournal-picture" ng-model="$parent.newDrink.drink_picture">
-    <p class="help-block" ng-click="$parent.showPicture()">How about-cha add a picture!</p>
+    <p ng-show="!$parent.newDrink.drink_picture" class="help-block" ng-click="$parent.showPicture()">How about-cha add a picture!</p>
   </div> 
 </form> 
 <div class="row">

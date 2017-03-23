@@ -24,6 +24,10 @@ var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bo
 	this.Coords = {};
 })
 
+.service('fieldJournalWheel', function() {
+	this.Sense = {};
+})
+
 .config(function($stateProvider, $urlRouterProvider) {
 
 				console.log("I am within the config");

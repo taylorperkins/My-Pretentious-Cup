@@ -9,17 +9,19 @@
 
 console.log("FieldJournalCtrl.js is connected");
 
-app.controller("FieldJournalCtrl", function($scope, $state, $timeout, pages, UserStorageFactory, HandleFBDataFactory, fbRef, GoogleMapsFactory, TastingWheelFactory) {
+app.controller("FieldJournalCtrl", function($scope, $state, $timeout, pages, UserStorageFactory, HandleFBDataFactory, fbRef, GoogleMapsFactory, TastingWheelFactory, fieldJournalWheel) {
 	let s = $scope;
 	let request;
 	console.log("FieldJournalCtrl.js is working");	
 	s.pages = pages;
 	s.category = 'Coffee';
 	s.saveEdit = true;
+	s.senses= [];
 
 	s.newDrink = {										//This obj is created to be sent to /fieldJournal collection within firebase
 																		//It should be referenced by uid
 
+	  user_senses: '',
 		uid: '', 			//to search for the user's field notes
 		place_id: '',										//selected_prediction.place_id
 		user_rating: '',								//based on user
@@ -83,23 +85,39 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, pages, Use
 				UserStorageFactory.setCurrentFieldJournal(s.fieldJournal);
 			});
 	};
-	updateCurrentFieldJournal();
+	updateCurrentFieldJournal();	
 
 
+	$timeout(function() {
+		TastingWheelFactory.createWheel();
+	}, 500);
 
+	s.updateTastingWheel = (event) => console.log(event);		
+	
+	s.checkForSenses = (event) => {
+		// console.log("FieldJournalCtrl.js: ", event.target);		
+	};
 
+	s.removeSense = (sense) => {
+		let findSense = (someSense) => someSense != sense;		
+		s.senses = s.senses.filter(findSense);
+		s.user_senses = s.senses.join(' ');
+		console.log("Here are your user's senses: ", s.user_senses);
+	};
 
-	TastingWheelFactory.createWheel();
-	// .then(
-	// 		(updatedColorWheelArr) => {
-	// 			console.log("Here is your color wheel array from FieldJournalCtrl.js: ", updatedColorWheelArr);
-	// 			TastingWheelFactory.createWheel(updatedColorWheelArr);
-	// 		}
-	// 	);
+	s.$watch(
+		function() { return fieldJournalWheel.Sense; },
+		function(newValue, oldValue) {
+			console.log("Your shit is changinnn");
+			if (s.senses.indexOf(newValue) !== -1 || typeof newValue !== "string" || newValue === "Tasting Wheel") return;			
+			s.senses.push(newValue);			
+			s.user_senses = s.senses.join(' ');
+			console.log("Here are your user's senses: ", s.user_senses);
+		});
 
-
-
-
+	s.logD = (dElement) => {
+		console.log(dElement);
+	};	
 
 	s.getCurrentLocation = () => {
 		s.myLocation = UserStorageFactory.getUserCurrentLocation(); 

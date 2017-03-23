@@ -13,6 +13,8 @@ app.controller("GlobeViewCtrl", function($scope, $http, $sce, $window, $timeout,
 	s.currentLocationMarker = [];
 	s.searchResultMarkers = [];
 	s.fieldJournalMarkers = [];
+	s.selectedGlobeLocation = [];
+	s.displayFieldJournals = false;
 
 	let getFieldJournal = function() {
 		s.fieldJournal = UserStorageFactory.getCurrentFieldJournal();
@@ -113,7 +115,8 @@ app.controller("GlobeViewCtrl", function($scope, $http, $sce, $window, $timeout,
   //Then clears the passed array, completely removing all instances of those markers
   s.deleteMarkers = () => {  	
   	let allArrays = [s.markersOnPage, s.currentLocationMarker, s.searchResultMarkers, s.fieldJournalMarkers];
-
+  	s.data.selectedGlobeLocation = [];
+  	s.data.displayFieldJournals = false;  		  
   	allArrays.forEach((markerArr) => {
   		if (markerArr.length > 0) {
   			s.clearMarkers(markerArr);
@@ -129,7 +132,8 @@ app.controller("GlobeViewCtrl", function($scope, $http, $sce, $window, $timeout,
       var infoWindow = new google.maps.InfoWindow({map: s.map});
 	    infoWindow.setPosition(s.myLocation);
 	    infoWindow.setContent('You are here.');	
-  	});  	
+  	});  
+  	s.$apply();	
   };
 
   /*
@@ -230,26 +234,55 @@ app.controller("GlobeViewCtrl", function($scope, $http, $sce, $window, $timeout,
 		});
 	};
 
+	$("#map").on("click", function(event) {
+		console.log(event.target);
+		if ($(event.target).hasClass("globe-field-journal")) {
+			console.log("I am in an info-window!");
+			console.log(s.groupBy[event.target.id]);
+			s.selectedGlobeLocation = s.groupBy[event.target.id];   
+			s.displayFieldJournals = true;	
+			s.$apply();		  
+		}
+	});
+
+
 	s.showFieldJournalMarkers = () => {
 		getFieldJournal();
 		console.log(s.fieldJournal);
 
-		if (s.fieldJournal.length > 0) {
-			s.fieldJournal.forEach((entry) => {
+		s.groupBy = function(xs, key) {
+		  return xs.reduce(function(rv, x) {
+		    (rv[x[key]] = rv[x[key]] || []).push(x);
+		    return rv;
+		  }, {});
+		}(s.fieldJournal, 'place_id');
+		
+		let groupedFieldJournalArr = [];
+		for (var place in s.groupBy) { groupedFieldJournalArr.push(s.groupBy[place]); }
+					
+		console.log("Here is your groupBy: ", s.groupBy);
+		console.log("groupedFieldJournalArr: ", groupedFieldJournalArr);
+		
+		
+		if (groupedFieldJournalArr.length > 0) {
+			groupedFieldJournalArr.forEach((entry) => {
 
+
+				let contentString = 
+					`<div>${entry[0].location_title}</div>` +
+					`<div id="${entry[0].place_id}" class="globe-field-journal">You have ${entry.length} reviews!!</div>`;
 				let infowindow = new google.maps.InfoWindow({
-			    content: entry.location_title
+			    content: contentString
 			  });
 
 				let fieldJournalMarker = new google.maps.Marker({
-			    position: {lat: entry.lat, lng: entry.lng},
-			    map: s.map,
-			    title: `${entry.review_title}`,
-			    icon: `http://labs.google.com/ridefinder/images/mm_20_${entry.marker_color}.png`
+			    position: {lat: entry[0].lat, lng: entry[0].lng},
+			    map: s.map,			    
+			    icon: `http://labs.google.com/ridefinder/images/mm_20_${entry[0].marker_color}.png`
 			  });	
 			  fieldJournalMarker.addListener('click', function() {
-			    infowindow.open(s.map, fieldJournalMarker);
-			    console.log(entry);		    				
+			  	console.log("You clicked a marker!");
+			    infowindow.open(s.map, fieldJournalMarker);			    					      
 				});
 				s.fieldJournalMarkers.push(fieldJournalMarker);
 			});			
