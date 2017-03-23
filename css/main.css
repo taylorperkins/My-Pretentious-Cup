@@ -12,6 +12,10 @@ h1, h2, h3, h4, h5, h6 li, ol, ul p, a {
 	padding: 0!important;
 }
 
+/*.main-row {
+	min-height: 585px !important;
+}*/
+
 
 /*=================================*/
 /*==========Register Page==========*/
@@ -155,6 +159,9 @@ svg {
 	margin-bottom: 1em;
 }
 
+.globe-selected-fieldJournal-location {
+	border: 2px solid lightblue;
+}
 
 
 
