@@ -1,0 +1,27 @@
+<div class="modal-header">
+    <h3 class="modal-title" id="modal-title">Settings</h3>
+</div>
+<div class="modal-body" id="modal-body">
+    <h4>What are you wanting to edit?</h4>
+    <div class="row">
+        <div class="col-xs-4">
+            <div class="btn-group-vertical" role="group" aria-label="...">
+              <button type="button" class="btn btn-default" ng-click="toEdit('FirstLastName')">First/Last Name</button>
+              <button type="button" class="btn btn-default" ng-click="toEdit('UserName')">User Name</button>
+              <button type="button" class="btn btn-default" ng-click="toEdit('Email')">Email</button>
+              <button type="button" class="btn btn-default" ng-click="toEdit('Password')">Password</button>
+              <button type="button" class="btn btn-default" ng-click="toEdit('Birthday')">Birthday</button>
+              <button type="button" class="btn btn-default" ng-click="toEdit('Category')">Drink Category</button>
+            </div>            
+        </div>
+        <div class="col-xs-6 col-xs-offset-2">
+            <div ng-include="userSelectedInfo" scope="" onload=""></div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="saveUserProfile()">Save</button>
+    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+</div>
+
+

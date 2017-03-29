@@ -1,20 +1,37 @@
+
+<div class="fieldJournal-modal-parent"></div>
+
+
 <div class="row">
 	<div class="col-sm-10 col-sm-offset-1">
-		<h1 class="text-left">This is for new Field Journal Listing</h1>		
+		<h1 class="text-left">List all of your filters here / display like Insta Pics</h1>		
 	</div>
 </div>
 <hr>
 
-<div class="row">
-	
-	<div class="col-xs-6 list-field-journal-containers">		
-		<p class="lead">This page is designed to list out all of your field notes that you have taken.
-		<ul>
-			<li ng-repeat="note in fieldJournal"><a ng-click="updateEntry(note)">{{note.review_title}}</a></li>
-		</ul>
-	</div>
 
-  <div class="col-xs-6 list-field-journal-containers" ng-show="entry.hasOwnProperty('review_title')">
+<!-- 'fieldJournal' is my array to iterate through -->
+<div class="row">
+	<!-- <div class="clearfix"></div>	 -->
+	<div ng-repeat="entry in fieldJournal">
+		<div id="{{'fieldJournal-list-pic-' + $index}}" class="col-md-4 list-field-journal-pics text-center">			
+			<div ng-mouseenter="picDetailsDisplay($index)"
+					 ng-mouseleave="removeDetailsDisplay()">
+				<div>
+					<img ng-src="../images/no_image_available.jpeg" alt="">											
+				</div>		
+				<!-- ng-show="displayDetails === $index" -->	
+				<div class="fieldJournal-list-pic-details">
+					<div ng-click="detailedPicModal(entry, $event)" class="fieldJournal-list-pic-details-container align-middle" ng-include="fieldJournalListPicDetails" scope="" onload=""></div>
+				</div>				
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<!-- <div class="col-xs-6 list-field-journal-containers" ng-show="entry.hasOwnProperty('review_title')">
 		<div class="row">
 			<div class="row">
 				<div class="col-xs-4 col-xs-offset-4">
@@ -67,6 +84,4 @@
 				</div>
 			</div>			
 		</div>	
-	</div>
-
-</div>
+	</div> -->

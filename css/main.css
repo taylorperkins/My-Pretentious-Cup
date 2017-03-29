@@ -12,10 +12,29 @@ h1, h2, h3, h4, h5, h6 li, ol, ul p, a {
 	padding: 0!important;
 }
 
-/*.main-row {
-	min-height: 585px !important;
-}*/
+#home-container {
+	background: url(../images/main.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
 
+.main-row,
+.fieldJournal-row,
+.drinkingBuddies-row,
+.globe-row {
+	min-height: 800px;
+}
+
+.drinkingBuddies-row,
+.fieldJournal-row {
+	height: auto !important;
+}
+
+.state-views {
+	margin-top: 2em;
+}
 
 /*=================================*/
 /*==========Register Page==========*/
@@ -69,11 +88,61 @@ h1, h2, h3, h4, h5, h6 li, ol, ul p, a {
 
 
 /*================================*/
-/*===========Home Page============*/
+/*===========Main Page============*/
 /*================================*/
 
-.main-newsfeed-fieldnote {
+.main-content {
+	height: 100%;
+}
+
+.main-profile-image {
+	height: 275px;
+	width: 275px;
+	background-color: white;
+	position: relative;
+	display: inline-block !important;
+	margin: auto !important;
+}
+
+.main-profile-picture {
+	height: 275px;
+	width: 275px;	
+}
+
+.main-profile-image-camera {
+	margin-top: 10px;
+	margin-right: 10px;
+}
+
+.profile-image-1 {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+.main-profile-display {
+	border-radius: 3px;
+	padding: 1em;
+	background-color: white;
+}
+
+.main-profile-user-description {
+	padding-left: 0;
+}
+
+.main-profile-user-description p {
+	margin-bottom: 0 !important;
+}
+
+.news-feed-drink-image {
+	max-height: 50px;
+	max-width: 50px;
+}
+
+.main-newsfeed-fieldJournal {
 	border: 1px solid lightblue;	
+	height: 226px !important;
+	padding: 1em !important;
 }
 
 .main-selected-fieldnote-image {
@@ -81,25 +150,47 @@ h1, h2, h3, h4, h5, h6 li, ol, ul p, a {
 	max-height: 50px;
 }
 
-.home-books-container {
-	min-height: 300px;
-}
-
-.home-books {
-	-ms-transform: rotate(90deg); /* IE 9 */
-  -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
-  transform: rotate(90deg);
-  bottom: 0;
-}
-
-.home-books div {
-	border: 2px solid black;
-}
-
-.home-newsfeed {
-	border: 2px solid black;
-	height: 250px;
+.main-news-feed {
+	bottom: 0;
+	margin-top: 2em;	
 	overflow: scroll;
+}
+
+.main-newsfeed-content-row {
+	border-left: 4px solid #f0ad4e;
+	border-top: 4px solid #337ab7;
+	background-color: white;
+	border-radius: 0 0 5px;
+	margin-top: 15px;
+
+}
+
+.main-newsfeed-profile-picture {
+	height: 65px;
+	width: 65px;
+	margin-top: 1em;
+}
+
+.main-newsfeed-entry-descriptions {
+	margin-top: 1em;
+}
+
+.main-news-feed-first-col p {
+	margin-bottom: 0;
+}
+
+.main-news-feed-first-col + p:first-child {
+	font-size: 18px;
+}
+
+.main-news-feed-first-col p:last-child {
+	font-size: 14px;
+	color: lightgrey;
+}
+
+.home-newsfeed {	
+	max-height: 600px;
+	overflow: scroll !important;
 }
 
 .home-globe {
@@ -109,10 +200,6 @@ h1, h2, h3, h4, h5, h6 li, ol, ul p, a {
 	background-size: contain;
 	background-repeat: no-repeat;
 	border-radius: 300px; 
-}
-
-.home-margin-bottom {
-	margin-bottom: 10em;
 }
 
 #map {
@@ -130,8 +217,84 @@ h1, h2, h3, h4, h5, h6 li, ol, ul p, a {
 	border: 2px solid black;
 }
 
+.list-field-journal-pics {
+	height: 300px;
+	margin: 2em auto;
+	padding: 0 !important;
+	position: relative;	
+}
+
+.list-field-journal-pics img {
+	height: 300px;
+	width: 300px;
+	margin: auto;
+	border: 1px solid tan;
+}
+
+.fieldJournal-list-pic-details {
+	position: absolute;
+	display: inline-block;	
+	top: 0;
+	left: 0;
+	height: 300px;
+	width: 100%;
+}
+
+.fieldJournal-list-pic-details-container {
+	height: 100%;
+	width: 300px;
+	margin: auto;
+}
+
+.fieldJournal-list-pic-details-container .row {
+	height: 100%;
+	position: relative;
+}
+
+.fieldJournal-pic-details-titleLocation-row {
+	height: 100%;
+	width: 100%;
+	display: table;
+  table-layout: fixed;
+}
+
+.fieldJournal-pic-details-titleLocation {
+	display:table-cell;
+  vertical-align:middle;
+  text-align:center;
+  margin-top: 7em;
+}
+
+.fieldJournal-pic-detail-likeComment {	
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	margin-bottom: 1em;
+}
+
+
 svg {
 	font: 10px sans-serif;
+}
+
+
+/*=================================*/
+/*======Entry Details Modal========*/
+/*=================================*/
+
+
+#detailed-pic-modal {
+	height: 100%;
+}
+
+.detailed-pic-modal-img img {
+	height: 500px;
+	width: 500px;
+}
+
+.detailed-pic-modal-right {
+	height: 500px;
+	border-left: 1px solid #f0ad4e;
 }
 
 
@@ -140,10 +303,92 @@ svg {
 /*======Drinking Buddies Page========*/
 /*===================================*/
 
+.drinking-buddies-individual-search {
+	background-color: white;
+	border-radius: 5px;
+	border: 1px lightgrey;
+	margin-bottom: 1em;
+	padding: 10px;
+	min-height: 200px;
+}
 
-.drinking-buddies-selected-image {
-	height: 50px;
-	width: 50px;
+.drinking-buddies-selected-profile-pic {
+	height: 150px;
+	width: 150px;
+}
+
+.drinking-buddies-entry-display {	
+	padding: 1em;
+}
+
+.drinking-buddies-entry-display-img-row h4 {
+	margin: .3em auto !important;
+}
+
+.drinking-buddies-list-header {	
+	padding-left: 1.5em;
+	padding-top: .75em;
+}
+
+.drinking-buddies-selected-content-col {
+	position: relative;
+	min-height: 226px;
+}
+
+.drinking-buddies-individual-image-thumbnail {
+	margin-bottom: 0;
+	margin-left: 2em;
+	margin-right: 2em;
+	margin-bottom: 1em;
+	min-height: 184px;
+	padding: 0 4px;
+	border: 0;
+	border-radius: 0;
+}
+
+.drinking-buddies-individual-image {
+	height: 170px;
+	width: 170px;	
+	margin-right: 2em;	
+	margin-bottom: 0;
+	border-left: 4px solid #f0ad4e;
+	border-top: 4px solid #337ab7;
+}
+
+.drinking-buddies-individual-description {
+	text-indent: 15px;
+	overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  line-height: 38px;     /* fallback */
+  max-height: 38px;      /* fallback */
+  -webkit-line-clamp: 1; /* number of lines to show */
+  -webkit-box-orient: vertical;
+
+}
+
+.drinking-buddies-rating-small {
+	margin-bottom: 3px;
+	font-size: 13px;
+}
+
+.drinking-buddies-rating-published {
+	bottom: 0 !important;
+	position: absolute;
+	margin-left: 5px;
+}
+
+.drinking-buddies-rating-published > .lead {
+	font-size: 14px;
+}
+
+.drinking-buddies-selected {
+	overflow: scroll;
+	max-height: 500px;
+}
+
+.drinkingBuddies-search-result {
+	margin-top: 2em;
 }
 
 
@@ -164,7 +409,79 @@ svg {
 }
 
 
+/*================================*/
+/*===========Map Modal============*/
+/*================================*/
 
+.map-modal-entry-list {
+	margin: 10px;
+	background-color: white;
+	max-height: 550px;
+	overflow: scroll;
+}
+
+.map-modal-entry-list-individual {
+	margin: 0 15px 2em !important;;
+}
+
+.drinkingBudies-modal-title {
+	margin-top: 1em !important;
+	margin-bottom: .25em !important;
+}
+
+.drinking-buddies-map-modal-details li {
+	font-size: 18px;
+}
+
+.drinking-buddies-map-modal-details h4 {
+	margin-bottom: .5em !important;
+}
+
+.drinking-buddies-map-modal-details p {
+	margin-bottom: 0 !important;
+}
+
+.drinking-buddies-map-and-details {
+	margin-bottom: 2em;
+}
+
+
+
+/*================================*/
+/*===========Pic Modal============*/
+/*================================*/
+
+
+.choose-profile-pic-row {
+	position: relative;
+	display: table-row;
+}
+
+#cropped-image {
+	height: 275px;
+	width: 275px;
+}
+
+.profile-pic-modal-col {
+	float: none;
+  display: table-cell;
+  vertical-align: bottom;
+}
+
+.profile-pic-modal-pic-example {
+	width: 275px;
+	height: 275px;
+	margin: auto;
+	background-color: lightgrey;
+}
+
+.bob-ross-example {
+	width: 275px;
+	height: 275px;
+	background-image: url('../images/bob-ross.jpg');
+	border: 1px solid tan;
+	margin: auto;
+}
 
 
 

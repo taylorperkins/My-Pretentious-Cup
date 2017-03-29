@@ -9,7 +9,7 @@
 
 console.log("FieldJournalCtrl.js is connected");
 
-app.controller("FieldJournalCtrl", function($scope, $state, $timeout, pages, UserStorageFactory, HandleFBDataFactory, fbRef, GoogleMapsFactory, TastingWheelFactory, fieldJournalWheel) {
+app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal, pages, UserStorageFactory, HandleFBDataFactory, fbRef, GoogleMapsFactory, TastingWheelFactory, fieldJournalWheel) {
 	let s = $scope;
 	let request;
 	console.log("FieldJournalCtrl.js is working");	
@@ -64,6 +64,7 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, pages, Use
 	s.fieldJournal = [];
 	s.drinkForm = `partials/drink-forms/${s.category}Form.html`;
 	s.subPage = 'newFieldJournal';
+	s.fieldJournalListPicDetails = "../partials/FieldJournalListPicDetails.html";
 	s.entry = {};
 
 	s.coffeeStyles = ['Latte', 'Macchiato', 'Cortado', 'Flat White', 'Espresso', 'Cappucino'];
@@ -79,7 +80,7 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, pages, Use
 				for (var fieldJournalEntry in userObj) {
 					console.log(fieldJournalEntry);
 					userObj[fieldJournalEntry].uglyId = fieldJournalEntry;
-					s.fieldJournal.push(userObj[fieldJournalEntry]);					
+					s.fieldJournal.unshift(userObj[fieldJournalEntry]);					
 				}		
 				console.log("Here is your field journal: ", s.fieldJournal);
 				UserStorageFactory.setCurrentFieldJournal(s.fieldJournal);
@@ -92,8 +93,11 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, pages, Use
 		TastingWheelFactory.createWheel();
 	}, 500);
 
+	s.picDetailsDisplay = (index) => s.displayDetails = index;
+	s.removeDetailsDisplay = () => s.displayDetails = -1;
 	s.updateTastingWheel = (event) => console.log(event);		
 	
+	//Sense don't update if this isnt here
 	s.checkForSenses = (event) => {
 		// console.log("FieldJournalCtrl.js: ", event.target);		
 	};
@@ -247,6 +251,67 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, pages, Use
 	s.showPicture = () => {
 		let file = document.getElementById("new-fieldJournal-picture").files;
 		console.log(file[0]);
+	};
+
+	s.openMapModal = (selectedCoords) => {
+		console.log("Here are your selected coords: ", selectedCoords);	
+		
+    var modalInstance = $uibModal.open({
+      animation: true,
+      ariaLabelledBy: 'drinkingBuddies-modal-title',
+      ariaDescribedBy: 'drinkingBuddies-modal-body',
+      templateUrl: '../../partials/DrinkingBuddiesMapModal.html',      
+      controller: 'DrinkingBuddiesMapModalCtrl',
+      controllerAs: 's',
+      size: 'lg',
+      appendTo: $(".fieldJournal-modal-parent"),  
+      resolve: {
+      	locationCoordsPlaceId: function() {      		
+      		return selectedCoords;
+      	},
+      	currentLocationCoords: function() {
+      		let lat = UserStorageFactory.getUserCurrentLocation().lat,
+      				lng = UserStorageFactory.getUserCurrentLocation().lng,
+      				currentLocation = {
+      					lat, lng
+      				};
+      		return currentLocation;
+      	}
+      }
+    });
+
+    modalInstance.result.then(function (selectedItem) {
+      s.selected = selectedItem;
+    }, function () {
+      console.log("Dismissed");
+    }); 
+  };
+
+  s.detailedPicModal = (entry, event) => {
+		
+  	if ($(event.target).hasClass('fieldJournal-pic-detail-location-btn')) return;
+
+    var modalInstance = $uibModal.open({
+      animation: true,      
+      ariaDescribedBy: 'modal-body',
+      templateUrl: '../../partials/FieldJournalDetailedPicModal.html',      
+      controller: 'FieldJournalDetailedPicModalCtrl',
+      controllerAs: 's',
+      size: 'lg',
+      appendTo: $(".fieldJournal-modal-parent"),  
+      resolve: {
+      	fieldJournalEntry: function() {      		
+      		return entry;
+      	}
+      }
+    }); 
+
+    modalInstance.result.then(function (selectedItem) {
+      s.selected = selectedItem;
+    }, function () {
+      console.log("Dismissed");
+    });
+
 	};
 
 });

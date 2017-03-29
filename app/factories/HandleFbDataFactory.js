@@ -12,26 +12,39 @@ app.factory("HandleFBDataFactory", function($q, $http, FBCreds, AuthUserFactory,
 
 	let createNewFirebaseEntry = (createdObj, location) => {
 		return new Promise((resolve, reject) => {
-			var newKey = fbRef.database().ref().child(`${location}`).push().key,
-					updates = {},
-					myImageURL;
 
+			//get a reference to a new key from the location you're wanting to push to 
+			//create a variable for your imageURL from fbRef.storage()
+			var newKey = fbRef.database().ref().child(`${location}`).push().key,
+					updates = {};
+					
+			//If you're saving an image, and have an image available..
 			if (createdObj.drink_image) {
 				console.log("Here is your image: ", createdObj.drink_image);
+				//reference your newKey variable for where you're wanting to place the image within storage
+				//let your child be your image
 				let imageRef = fbRef.storage().ref(newKey).child(createdObj.drink_image.name);
 				console.log("Here is your firebase image reference from HandleFbDataFactory.js: ", imageRef);
+				//Once you have created the reference, put it in place
 				imageRef.put(createdObj.drink_image).then(
 						(snapshot) => {
 							console.log('Uploaded your image!!');
+							//grab the newly created downloadURL (this is what you will put in your database)
 							imageRef.getDownloadURL().then(
-									(url) => {
-										myImageURL = url;
-										console.log("Here is your downloaded url: ", url);										
+									(url) => {										
+										console.log("Here is your downloaded url: ", url);	
+										//no we create an empty obj (firebase loves objects)	
+										//this is what we'll use for updating our database								
 										let imagePlacement = {};
+										//imagePlacement[the-location-I-specify] = my-url-from-storage
 										imagePlacement[`/${location}/${newKey}/drink_image`] = url;
+										//now that I have the reference created, update my database!
 										fbRef.database().ref().update(imagePlacement).then(
 												() => {													
 													$http.get(url).then(
+															//now that you have your image uploaded, you can just do a http request to get it back!
+															//If you're trying to put the image on the page, now all you'll need to do is 
+															//reference the src url from storage.. which is now your value within your database :)
 															(pictureData) => console.log("Get request from storage: ", pictureData)
 														);													
 												}
@@ -43,7 +56,6 @@ app.factory("HandleFBDataFactory", function($q, $http, FBCreds, AuthUserFactory,
 			}
 
 			if (createdObj.drink_image) delete createdObj.drink_image;
-
 		  updates[`/${location}/` + newKey] = createdObj;
 		  fbRef.database().ref().update(updates);
 		  fbRef.database().ref(`${location}`).once('value').then(
@@ -54,34 +66,6 @@ app.factory("HandleFBDataFactory", function($q, $http, FBCreds, AuthUserFactory,
 	  	);
 		});
 	};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -169,7 +153,6 @@ app.factory("HandleFBDataFactory", function($q, $http, FBCreds, AuthUserFactory,
 
 						//Trying to utilize firebase's built in crud application
 						createNewFirebaseEntry
-
 					};
 
 });

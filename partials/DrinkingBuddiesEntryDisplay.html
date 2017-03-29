@@ -1,0 +1,24 @@
+
+<div class="col-xs-10 col-xs-offset-1 drinking-buddies-entry-display drinking-buddies-individual-search">
+	<div class="row text-center drinking-buddies-entry-display-img-row">
+		<h4>{{$parent.entry.review_title}}/{{entry.category}}</h4>
+		<div class="col thumbnail drinking-buddies-individual-image-thumbnail">
+		  <img class="drinking-buddies-individual-image" ng-src="{{$parent.entry.drink_image ? '../../images/no_image_available.jpeg' : '../../images/no_image_available.jpeg' }}">
+		</div>		
+	</div>
+	<div class="row text-center drinking-buddies-entry-progress-bar">
+		<div class="col-xs-10 col-xs-offset-1">
+		  <uib-progress max="10">
+		  	<uib-bar value="5"><span>{{entry.user_name}}: {{entry.user_rating}}</span></uib-bar>
+		  	<uib-bar value="5" type="warning"><span>Google: {{entry.google_rating}}</span></uib-bar>
+		  </uib-progress>				    					
+		</div>
+	</div>
+	<div class="row drinking-buddies-individual-description lead">
+	  <p>{{$parent.entry.review_description}}</p>				    	
+	  <p ng-show="!$parent.entry.review_description">Whoops! No description :(</p>
+	</div>
+	<div class="row drinking-buddies-list-header">
+	  <p>Location: <a ng-click="openMapModal({lat: $parent.entry.lat, lng: $parent.entry.lng, place_id: $parent.entry.place_id})">{{$parent.entry.location_title}}</a></p>    
+	</div>		
+</div>
