@@ -1,6 +1,23 @@
 <h3 class="text-center"><a ui-sref="home()">Globe State</a></h3>
 
 <div class="row">
+	<div class="col-xs-1">
+		<button ng-click="changeBackground('drinking-buddies')" type="button" class="btn btn-default pull-right"
+						uib-popover="Drinking Buddies"
+						popover-placement="top-right"
+						popover-trigger="'mouseenter'"><span class="glyphicon glyphicon-chevron-left"></span></button>
+	</div>
+	<div class="col-xs-1 pull-right">
+		<button ng-click="changeBackground('main')" type="button" class="btn btn-default"
+						uib-popover="Main"
+						popover-placement="top-left"
+						popover-trigger="'mouseenter'"><span class="glyphicon glyphicon-chevron-right"></span></button>
+	</div>
+	
+</div>
+
+
+<div class="col-xs-10 col-xs-offset-1 state-views">
 	<div class="row">
 		<div class="col-xs-4">	
 	    <input  ng-model="globeInput" ng-keyup="GooglePlacesRequest(globeInput)" id="globe-input" type="text"
@@ -18,31 +35,20 @@
 			<li ng-repeat="prediction in predictions" ng-click="displayCoord(prediction)">{{prediction.description}}</li>
 		</ul>		
 	</div>
-</div>
 
-<div style="width: 100%; height: 500px" id="map"></div>
+	<div style="width: 100%; height: 500px" id="map"></div>
 
-
-
-<div ng-show="displayFieldJournals" class="row">
-	<div class="col-xs-4">Here are your reviews on {{selectedGlobeLocation[0].location_title}}</div>
-	<div ng-repeat="location in selectedGlobeLocation" class="row globe-selected-fieldJournal-location">
-		<h3 class="text-middle">{{location.review_title}}</h3>
-		<p>Rating: {{location.user_rating}}/Google Rating: {{location.google_rating}}</p>
-		<p>Senses: {{location.user_senses}}</p>
-		<p>Review Description: {{location.review_description}}</p>
+	<div ng-show="displayFieldJournals" class="row">
+		<div class="col-xs-4">Here are your reviews on {{selectedGlobeLocation[0].location_title}}</div>
+		<div ng-repeat="location in selectedGlobeLocation" class="row globe-selected-fieldJournal-location">
+			<h3 class="text-middle">{{location.review_title}}</h3>
+			<p>Rating: {{location.user_rating}}/Google Rating: {{location.google_rating}}</p>
+			<p>Senses: {{location.user_senses}}</p>
+			<p>Review Description: {{location.review_description}}</p>
+		</div>
 	</div>
+
 </div>
-
-
-
-
-
-
-
-
-
-
 
 
 

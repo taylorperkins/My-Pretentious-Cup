@@ -1,21 +1,30 @@
 <div class="row">
-	<div class="col-sm-10 col-sm-offset-1 well">
-		
+
+	<div class="modal-parent">
+  </div>
+	
+	<div class="col-sm-10 col-sm-offset-1">
 		<div class="well home-margin-bottom">
 			<a ng-click="logout()">Logout</a>
-		</div>
-		<div id="main-view" target="main-view" class="well home-margin-bottom">
-			<div class="row main-row" ui-view="main"></div>
-		</div>
-		<div id="fieldJournal-view" target="fieldJournal-view" class="well home-margin-bottom">
-				<div class="row fieldJournal-row" ui-view="fieldJournal"></div>
-		</div>
-		<!-- <div class="well home-margin-bottom" ui-view="recipes"></div> -->
-		<div id="drinkingBuddies-view" target="drinkingBuddies-view" class="well home-margin-bottom">
-			<div class="row drinkingBuddies-row" ui-view="drinkingBuddies"></div>
-		</div>
-		<div id="globe-view" target="globe-view" class="well home-margin-bottom">
-			<div class="row globe-row" ui-view="globeView"></div>
+			<div class="col-xs-1 pull-right">
+				<button type="button" class="btn btn-xs btn-primary btn-block" ng-click="openSettings()"
+								uib-popover="Click me to edit your profile!!" 
+								popover-trigger="'mouseenter'"
+								popover-placement="bottom-right">
+					<span class="glyphicon glyphicon-cog"></span>
+				</button>
+			</div>
 		</div>
 	</div>
+
+	<div id="home-container" class="col-sm-10 col-sm-offset-1 well">
+		<div id="main-view" target="main-view" class="well">
+			<div ng-show="background === 'main'" class="row main-row" ui-view="main"></div>
+			<div ng-show="background === 'field-journal'" class="row fieldJournal-row" ui-view="fieldJournal"></div>
+			<div ng-show="background === 'drinking-buddies'" class="row drinkingBuddies-row" ui-view="drinkingBuddies"></div>
+			<div ng-show="background === 'globe'" class="row globe-row" ui-view="globeView"></div>
+		</div>		
+	</div>
+
 </div>
+

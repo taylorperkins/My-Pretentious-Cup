@@ -1,18 +1,33 @@
 
-
-
 "use strict";
 
 console.log("DrinkingBuddiesCtrl.js is connected");
 
-app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, TransferDataFactory, drinkingBuddiesCoords) {
+app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $uibModal, TransferDataFactory, drinkingBuddiesCoords, UserStorageFactory) {
 	let s = $scope;
 	console.log("DrinkingBuddiesCtrl.js is working");
 
 	s.currentSearch = false;
+	s.drinkingBuddiesListReusable = '../../partials/Reusables/DrinkingBuddiesList.html';
+	s.drinkingBuddiesEntryDisplay = '../../partials/DrinkingBuddiesEntryDisplay.html';
+
+	console.log("This is referencing HomeCtrl.js from DrinkingBuddiesCtrl.js: ", s.currentUser);
+
 
 	//This is an array that contains all possible searches for a user
 	s.userSearch = [];
+
+
+	//Take firebase friendsList obj and turns it into an arrayit
+	let transposeFriendsList = (friendsListObj) => {
+		s.selectedUser.friendsListArr = [];
+		for (var friend in friendsListObj) {
+			let uglyId = friend;
+			friendsListObj[uglyId].uglyId = uglyId;
+			s.selectedUser.friendsListArr.push(friendsListObj[uglyId]);
+		}
+		return s.selectedUser.friendsListArr;
+	};
 
 	s.firebaseCallToUsers = () => {
 		fbRef.database().ref('users').once('value').then(
@@ -57,7 +72,8 @@ app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, Tra
 		fbRef.database().ref(`users/${filteredFriend.uglyId}`).once('value').then(
 				(snapshot) => {
 					console.log("Here is your selected user: ", snapshot.val());
-					s.selectedUser = snapshot.val();
+					s.selectedUser = snapshot.val();		
+					s.selectedUser.friendsList = transposeFriendsList(s.selectedUser.friendsList);
 					var ref = fbRef.database().ref('fieldJournal');
 					ref.orderByChild("uid").equalTo(s.selectedUser.uid).on("value", function(snapshot) {
   					console.log("Here is a snapshot of the user's fieldJournal entries: ", snapshot.val());
@@ -65,7 +81,7 @@ app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, Tra
   					s.selectedUser.fieldJournal = [];
   					for (var entry in fieldJournalEntries) {
   						fieldJournalEntries[entry].uglyId = entry;
-  						s.selectedUser.fieldJournal.push(fieldJournalEntries[entry]);
+  						s.selectedUser.fieldJournal.unshift(fieldJournalEntries[entry]);
   					}
   					console.log("Here is your selected user with field journal entries: ", s.selectedUser);
   					s.currentSearch = true;
@@ -77,40 +93,40 @@ app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, Tra
 
 	s.sendCoordsToGlobeView = (selectedCoords) => drinkingBuddiesCoords.Coords = selectedCoords;			
 
+	s.openMapModal = (selectedCoords) => {
+		console.log("Here are your selected coords: ", selectedCoords);	
+		
+    var modalInstance = $uibModal.open({
+      animation: true,
+      ariaLabelledBy: 'drinkingBuddies-modal-title',
+      ariaDescribedBy: 'drinkingBuddies-modal-body',
+      templateUrl: '../../partials/DrinkingBuddiesMapModal.html',      
+      controller: 'DrinkingBuddiesMapModalCtrl',
+      controllerAs: 's',
+      size: 'lg',
+      appendTo: $(".drinkingBuddies-modal-parent"),  
+      resolve: {
+      	locationCoordsPlaceId: function() {      		
+      		return selectedCoords;
+      	},
+      	currentLocationCoords: function() {
+      		let lat = UserStorageFactory.getUserCurrentLocation().lat,
+      				lng = UserStorageFactory.getUserCurrentLocation().lng,
+      				currentLocation = {
+      					lat, lng
+      				};
+      		return currentLocation;
+      	}
+      }
+    }); 
+
+    modalInstance.result.then(function (selectedItem) {
+      s.selected = selectedItem;
+    }, function () {
+      console.log("Dismissed");
+    });
+
+	};
+
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-				// if ($("#drinking-buddies-searchFriends").popover()) $("#drinking-buddies-searchFriends").popover("destroy");
-
-				// $( "#drinking-buddies-searchFriends" ).popover({
-				// 				html: true, 
-				// 				animation: true, 
-				// 				placement: "bottom", 
-				// 				template: '',
-				// 				content: "<div ng-repeat='user in filteredSearches' ng-click='searchFriends(user)'>Name: {{user.firstName}} {{user.lastName}}</div>"
-				// 			});
-				// 		// .parent().on('click', '#location-popover', function() {
-				// 		// 	$("#drinking-buddies-searchFriends").val(s.predictions[0].description);
-				// 		// 	$("#drinking-buddies-searchFriends").popover("destroy");
-				// 		// 	s.logSelectedLocation(s.predictions[0]);
-				// 		// }); 
-				// $( "#drinking-buddies-searchFriends" ).popover("show");

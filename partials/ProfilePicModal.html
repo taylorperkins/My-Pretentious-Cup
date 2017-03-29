@@ -1,0 +1,37 @@
+<div class="modal-header text-center">
+    <h3 class="modal-title" id="modal-title">Looks like you need some new scenery!</h3>
+</div>
+<div class="modal-body" id="modal-body">
+    
+  <div class="container-fluid">
+		<div class="row choose-profile-pic-row text-center">		
+			<div class="col-xs-6 col-md-6 profile-pic-modal-col">
+		    <h4>Here ya go hon.</h4>	    
+				<div class="form-group">
+					Go ahead, DO IT
+			    <input img-cropper-fileread class="col" type="file" id="new-profile-pic" image="cropper.sourceImage">
+			  </div> 
+				<div class="profile-pic-modal-pic-example">
+					<canvas image-cropper width="275" height="275" id="canvas" image="cropper.sourceImage" cropped-image="cropper.croppedImage" crop-width="275" crop-height="275" keep-aspect="true" touch-radius="30" crop-area-bounds="bounds"></canvas>
+				</div>			      
+			</div>
+
+			<div class="col-xs-6 col-md-6 profile-pic-modal-col">
+				<h4>Just like Bob Ross paints his happy trees..</h4>
+				<p class="lead">How about you crop a happy picture?</p>
+				<div class="bob-ross-example">
+					<div ng-show="cropper.croppedImage!=null">
+						<img id="cropped-image" ng-src="{{cropper.croppedImage}}" />
+					</div>					
+				</div>
+			</div>			
+		</div>  	
+  </div>
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="saveProfilePic()">Save</button>
+    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+</div>
+
+

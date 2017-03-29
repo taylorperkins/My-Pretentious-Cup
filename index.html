@@ -10,7 +10,7 @@
 </head>
 <body ng-app="MyPretentiousCup">
 
-<div class="container">
+<div class="container-fluid">
 	<div ui-view>				
 	</div>
 </div>
@@ -26,11 +26,14 @@
 <script type="text/javascript" src="lib/node_modules/angular-ui-router/release/angular-ui-router.min.js"></script>
 <script type="text/javascript" src="lib/node_modules/angular-animate/angular-animate.min.js"></script>
 <script type="text/javascript" src="lib/node_modules/angular-aria/angular-aria.min.js"></script>
-<!-- <script type="text/javascript" src="lib/node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js"></script> -->
+<script type="text/javascript" src="lib/node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js"></script>
 <script type="text/javascript" src="lib/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
 <script type="text/javascript" src="lib/node_modules/angular-ui-bootstrap/src/popover/popover.js"></script>
+<script type="text/javascript" src="lib/node_modules/angular-ui-bootstrap/src/modal/modal.js"></script>
 <script type="text/javascript" src="lib/node_modules/d3/build/d3.min.js"></script>
 <script type="text/javascript" src="lib/node_modules/color-scheme/lib/color-scheme.min.js"></script>
+<script type="text/javascript" src="lib/node_modules/angular-img-cropper/dist/angular-img-cropper.min.js"></script>
+<!-- <script type="text/javascript" nsrc="lib/node_modules/twilio/examples/example.js"></script> -->
 
 <!-- MODULES -->
 <script type="text/javascript" src="app/modules/d3Module.js"></script>
@@ -39,6 +42,7 @@
 <script type="text/javascript" src="app/app.js"></script>
 <script type="text/javascript" src="app/values/FBConfig.js"></script>
 <script type="text/javascript" src="app/values/GoogleMapsConfig.js"></script>
+<script type="text/javascript" src="app/values/TwilioCreds.js"></script>
 
 <!--FACTORIES-->
 <script type="text/javascript" src="app/factories/AuthUserFactory.js"></script>
@@ -60,6 +64,10 @@
 <script type="text/javascript" src="app/controllers/RegisterCtrl.js"></script>
 <script type="text/javascript" src="app/controllers/SampleCtrl.js"></script>
 <script type="text/javascript" src="app/controllers/MainCtrl.js"></script>
+<script type="text/javascript" src="app/controllers/UserSettingsCtrl.js"></script>
+<script type="text/javascript" src="app/controllers/DrinkingBuddiesMapModalCtrl.js"></script>
+<script type="text/javascript" src="app/controllers/FieldJournalDetailedPicModalCtrl.js"></script>
+<script type="text/javascript" src="app/controllers/ProfilePicCtrl.js"></script>
 
 </body>
 </html>

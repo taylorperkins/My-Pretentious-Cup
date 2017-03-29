@@ -1,0 +1,17 @@
+
+<div class="row text-center align-middle">
+	<div class="col-xs-12 fieldJournal-pic-details-titleLocation">
+		<h4><u>{{$parent.entry.review_title}}</u> <br>
+			<small><button type="button" class="btn btn-link fieldJournal-pic-detail-location-btn"
+							ng-click="openMapModal({lat: $parent.entry.lat, lng: $parent.entry.lng, place_id: $parent.entry.place_id})">{{$parent.entry.location_title}}</button></small>
+		</h4>					
+	</div>	
+	<div class="col-xs-8 col-xs-offset-2 fieldJournal-pic-detail-likeComment align-text-bottom">
+		<button type="button" class="btn btn-link pull-left">C {{$parent.entry.comments}}</button>
+		<button type="button" class="btn btn-link pull-right">L {{$parent.entry.likes}}</button>
+	</div>		
+</div>
+
+
+
+

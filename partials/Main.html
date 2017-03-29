@@ -1,32 +1,112 @@
+<h3 class="text-center"><a>Profile Page</a></h3>
 
+<div class="modal-profile-pic"></div>
 
-	<div class="col-md-3 home-books-container">
-		This is going to contain my books
-		<div class="row home-books">
-			<div class="col-md-8 col-md-offset-4 text-center"><a ui-sref="drinkingBuddies">Drinking Buddies</a></div>			
-			<div class="col-md-9 col-md-offset-3 text-center"><a ui-sref="fieldJournal">Field Journal</a></div>
-		</div>
-	</div>
-	<div class="col-md-3 col-md-offset-1 home-newsfeed" ng-click="imConnected()">
-		This will contain my news feed
-		<div ng-repeat="fieldJournalEntry in fieldJournalEntries" class="row main-newsfeed-fieldjournal" ng-click="showFieldNote(fieldJournalEntry)" ng-show="newsfeed">
-			<div class="col-xs-8 col-xs-offset-2 main-newsfeed-fieldnote">
-				<p>Title: {{fieldJournalEntry.review_title}}</p>
-				<p>User: {{fieldJournalEntry.user_name}}</p>				
-				<p>Date Created: {{fieldJournalEntry.entry_created}}</p>
-			</div>
-		</div>
-		<div class="row" ng-show="!newsfeed">
-			<div class="main-selected-fieldnote">
-				<h2>Title: {{selectedFieldNote.review_title}}</h2>
-				<p>by: {{selectedFieldNote.user_name}}/{{selectedFieldNote.first_name}}</p>
-				<p>Location: {{selectedFieldNote.location_title}}/Rating: {{selectedFieldNote.user_rating}}</p>
-				<p>Review: {{selectedFieldNote.review_description}}</p>
-				<img class="main-selected-fieldnote-image" ng-if="selectedFieldNote.drink_image" ng-src="{{selectedFieldNote.drink_image}}" alt="">
-				<button type="button" class="btn btn-primary btn-block" ng-click="newsFeedView()">News Feed</button>
-			</div>
-		</div>
+<div class="row">
+	<div class="col-xs-1">
+		<button ng-click="changeBackground('drinking-buddies')" type="button" class="btn btn-default pull-right"
+						uib-popover="Drinking Buddies"
+						popover-placement="top-right"
+						popover-trigger="'mouseenter'"><span class="glyphicon glyphicon-chevron-left"></span></button>
 	</div>
 
-	<a ui-sref="globeView"><div class="col-md-4 col-md-offset-1 home-globe"></div></a>
+	<div class="col-xs-1 pull-right">
+		<button ng-click="changeBackground('field-journal')" type="button" class="btn btn-default"
+						uib-popover="Field Journal"
+						popover-placement="top-left"
+						popover-trigger="'mouseenter'"><span class="glyphicon glyphicon-chevron-right"></span></button>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-xs-10 col-xs-offset-1 main-content d-flex state-views">		
+		<div class="row">
+
+			<!-- HERE IS YOUR PROFILE DISPLAY -->
+			<div class="col-xs-4 main-profile-display text-center">	
+				<div class="row">
+					<div ng-if="!currentUser.profile_picture" class="main-profile-image thumbnail" style="background-image: url('../../images/bob-ross.jpg')">					
+						<button ng-click="changeProfilePicture()" type="button" class="btn btn-default pull-right main-profile-image-camera"
+										uib-popover="How about uploading a pic!" 
+										popover-trigger="'mouseenter'">
+							<span class="glyphicon glyphicon-camera"></span>
+						</button>					
+					</div>
+					<div ng-if="currentUser.profile_picture" class="main-profile-image thumbnail">
+						<img id="main-profile-picture" ng-src="{{currentUser.profile_picture}}" alt="">
+						<button ng-click="changeProfilePicture()" type="button" class="btn btn-default pull-right main-profile-image-camera profile-image-1"
+										uib-popover="Pic change?" 
+										popover-trigger="'mouseenter'">
+							<span class="glyphicon glyphicon-camera"></span>
+						</button>			
+					</div>					
+				</div>	
+				<div class="row">
+					<div class="col-xs-10 col-xs-offset-1 main-profile-user-description">
+						<h3>Welcome back {{currentUser.firstName}}!!</h3>
+						<p>Followers: </p>
+						<p>Field Journal Entries: </p>
+						<p>Places Visited: </p>
+					</div>					
+				</div>		
+			</div>
+
+			<!-- HERE IS YOUR NEWS FEED-->
+			<div class="col-xs-8 home-newsfeed" ng-click="imConnected()">			
+				<div ng-repeat="entry in fieldJournalEntries" class="row main-newsfeed-fieldjournal" ng-click="showFieldNote(entry)" ng-show="newsfeed">
+
+					<div class="col-xs-7 col-xs-offset-1 main-newsfeed-content-row">
+						<div class="row">
+							<div class="col-xs-2 main-news-feed-profile-image">
+								<img class="main-newsfeed-profile-picture" ng-src="{{entry.profile_picture}}" alt="">						
+							</div>
+
+							<div class="col-xs-8 main-newsfeed-entry-descriptions">
+							  <h2><u>{{entry.review_title}}/{{entry.category}}</u></h2>
+							  <p><a ng-click="openMapModal({lat: entry.lat, lng: entry.lng, place_id: entry.place_id})">Location: {{entry.location_title}}</a></p>
+							  <div class="drinking-buddies-individual-description lead">
+							    <p>{{entry.review_description}}</p>				    	
+							  </div>							  
+							</div>						
+						</div>					
+					</div>
+					
+					<div class="col-xs-3 col-xs-offset-1 thumbnail drinking-buddies-individual-image-thumbnail">
+					  <img class="drinking-buddies-individual-image" ng-src="{{entry.drink_image ? '../../images/no_image_available.jpeg' : '../../images/no_image_available.jpeg' }}">
+					</div>
+				</div>
+
+				<!-- This is for showing a more detailed version of the user's field journal entry -->
+				<div class="row" ng-show="!newsfeed">
+					<div class="main-selected-fieldnote">
+						<h2>Title: {{selectedFieldNote.review_title}}</h2>
+						<p>by: {{selectedFieldNote.user_name}}/{{selectedFieldNote.first_name}}</p>
+						<p>Location: {{selectedFieldNote.location_title}}/Rating: {{selectedFieldNote.user_rating}}</p>
+						<p>Review: {{selectedFieldNote.review_description}}</p>
+						<img class="main-selected-fieldnote-image" ng-if="selectedFieldNote.drink_image" ng-src="{{selectedFieldNote.drink_image}}" alt="">
+						<button type="button" class="btn btn-primary btn-block" ng-click="newsFeedView()">News Feed</button>
+					</div>
+				</div>					
+			</div>	
+		</div>		
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+<!-- <div class="drinking-buddies-rating-published">
+							    <h4>Published on <i>{{entry.entry_created | date}}</i>  <br>  				    
+							    	<small>Ratings!</small>
+							    </h4>
+							    <uib-progress max="10">
+							    	<uib-bar value="entry.user_rating"><span>{{entry.user_name}}: {{entry.user_rating}}</span></uib-bar>
+							    	<uib-bar value="entry.google_rating" type="warning"><span>Google: {{entry.google_rating}}</span></uib-bar>
+							    </uib-progress>				    	
+							  </div>			 -->				
 

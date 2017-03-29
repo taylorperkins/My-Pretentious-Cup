@@ -29,8 +29,8 @@ app.controller("GlobeViewCtrl", function($scope, $http, $sce, $window, $timeout,
 				console.log("Your data has changed!");
 				let currentLocation = UserStorageFactory.getUserCurrentLocation();
 				let origin = {
-					lat: currentLocation.lat(),
-					lng: currentLocation.lng()
+					lat: currentLocation.lat,
+					lng: currentLocation.lng
 				};				
 				console.log("destination: ", newValue, " origin: ", origin);				
 				// GoogleMapsFactory.GoogleMapsDrivingDirections(origin, newValue).then(
@@ -70,29 +70,29 @@ app.controller("GlobeViewCtrl", function($scope, $http, $sce, $window, $timeout,
 	//As soon as the controller loads, grab the user's current location, and display an info-window 
 	//showing their current location. Also, send the coords to be saved within 
 	//UserStorageFactory.js to be referrenced by other controllers
-	$window.navigator.geolocation.getCurrentPosition(function(position) {	   
-  	s.myLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);	    	
-  	console.log("Here is my location: ", s.myLocation);
+	// $window.navigator.geolocation.getCurrentPosition(function(position) {	   
+ //  	s.myLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);	    	
+ //  	console.log("Here is my location: ", s.myLocation);
 
-  	UserStorageFactory.setUserCurrentLocation(s.myLocation);
+ //  	UserStorageFactory.setUserCurrentLocation(s.myLocation);
 
-  	//create a map based off of my location
-  	//This is set up as soon as the ctrl loads. 
-  	//You can refer to s.map anywhere else on the page
-  	s.map = new google.maps.Map(document.getElementById("map"), {
-  		center: s.myLocation,
-  		zoom: 15
-  	});   
-  	//create a custom request based off of my current location
-  	var request = GoogleMapsFactory.getRequest(s.myLocation);
+ //  	//create a map based off of my location
+ //  	//This is set up as soon as the ctrl loads. 
+ //  	//You can refer to s.map anywhere else on the page
+ //  	s.map = new google.maps.Map(document.getElementById("map"), {
+ //  		center: s.myLocation,
+ //  		zoom: 15
+ //  	});   
+ //  	//create a custom request based off of my current location
+ //  	var request = GoogleMapsFactory.getRequest(s.myLocation);
 
-	  //Set up a pop-up for my current location
-    var infoWindow = new google.maps.InfoWindow({map: s.map});
-    infoWindow.setPosition(s.myLocation);
-    infoWindow.setContent('You are here.');	
+	//   //Set up a pop-up for my current location
+ //    var infoWindow = new google.maps.InfoWindow({map: s.map});
+ //    infoWindow.setPosition(s.myLocation);
+ //    infoWindow.setContent('You are here.');	
 
 
-  });		
+ //  });		
 
 	/*
 		These next few functions are designed to only clear markers from the map and also clear the designated arrays

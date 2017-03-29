@@ -1,0 +1,39 @@
+
+<div class="row drinkingBudies-modal-header text-center">
+  <h2 class="drinkingBudies-modal-title" id="modal-title">{{locationDetails.name}}</h2>	
+</div>
+
+<div class="modal-body" id="drinkingBudies-modal-body"> 
+<!-- 	<div class="row drinking-buddies-map-modal-details">		
+	</div> -->
+
+	<div class="row drinking-buddies-map-and-details">
+		<div class="col-xs-4 drinking-buddies-map-modal-details">
+			<h3 class="text-center">
+				<u>Location Details</u>
+				<button type="button" class="btn btn-link btn-xs"
+						uib-popover="Click me for directions via SMS!" 
+						popover-trigger="'mouseenter'"><i>Want to go here??</i></button>
+			</h3>			
+			<ul>
+				<li>Phone number: <br>
+				{{locationDetails.formatted_phone_number}}</li>	
+				<li><a target="_blank" href="{{locationDetails.website}}">{{locationDetails.website}}</a></li>		
+				<li>Number of entries: {{locationFieldJournal.length}}</li>
+				<li>Average Rating: {{locationAverageRating}}</li>							
+			</ul>				
+		
+		</div>
+
+		<div class="col-xs-7 col-xs-offset-1">
+		  <div style="width: 100%; height: 275px" id="drinkingBuddies-map"></div>			
+		</div>
+	</div>
+
+  <div class="row map-modal-entry-list">
+      <div class="row map-modal-entry-list-individual" ng-repeat="entry in locationFieldJournal" ng-include="fieldJournalListPartial" scope="" onload=""></div>      
+  </div>
+</div>
+<div class="drinkingBudies-modal-footer">    
+    <button class="btn btn-warning btn-block" type="button" ng-click="cancel()">Peace out!</button>
+</div>

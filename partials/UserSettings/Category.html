@@ -1,0 +1,12 @@
+<form class="form-horizontal register-form">
+  <div class="row">          
+    <div class="col-xs-8 col-xs-offset-4">
+      <button type="button" value="input" class="btn btn-default btn-block dropdown-toggle le-drank" data-toggle="dropdown">{{user.favoriteDrink}} <span class="caret"></span></button>
+      <ul class="dropdown-menu scrollable-menu">
+        <li ng-repeat="drink in drinks" ng-model="user.favoriteDrink"><a>{{drink}}</a></li>   
+      </ul>            
+    </div>
+  </div>
+
+  <button ng-click="update()" class="btn btn-default pull-right" type="submit">Update!</button>
+</form>

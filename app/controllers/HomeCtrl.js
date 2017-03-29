@@ -2,19 +2,76 @@
 
 console.log("HomeCtrl.js is connected");
 
-app.controller("HomeCtrl", function($scope, $sce, $timeout, AuthUserFactory, GoogleMapsConfig, fbRef) {
+app.controller("HomeCtrl", function($scope, $sce, $timeout, $uibModal, $window, AuthUserFactory, GoogleMapsConfig, fbRef, UserStorageFactory) {
 	let s = $scope;
 	console.log("HomeCtrl.js is working");
 
-	s.logout = () => AuthUserFactory.logoutUser();
-	console.log(window.innerHeight);
-	var windowHeight = window.innerHeight - 200;
+	s.background = 'main';
+  let user = UserStorageFactory.getCurrentUserInfo();
+  s.currentUser = user[Object.keys(user)[0]];
+	console.log(s.background);
+
+	var windowHeight = window.innerHeight - 400;
 	$timeout(function() {
 		$(".main-row").height(windowHeight);
 		$(".fieldJournal-row").height(windowHeight);
 		$(".drinkingBuddies-row").height(windowHeight);
 		$(".globe-row").height(windowHeight);
-
 	}, 100);
 
+  //As soon as the controller loads, grab the user's current location, and display an info-window 
+  //showing their current location. Also, send the coords to be saved within 
+  //UserStorageFactory.js to be referrenced by other controllers
+  $window.navigator.geolocation.getCurrentPosition(function(position) {    
+    s.myLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);       
+
+    let myLocation = {
+      lat: s.myLocation.lat(),
+      lng: s.myLocation.lng()
+    };
+
+    console.log("Here is my location from HomeCtrl.js: ", myLocation);
+    UserStorageFactory.setUserCurrentLocation(myLocation);    
+  });   
+
+
+	s.changeBackground = (whichPic) => {
+		s.background = whichPic;
+		console.log(s.background);
+		let backgroundImage = `../../images/${s.background}.jpg`;
+		$("#home-container").css("background-image", 'url(' + backgroundImage + ')');
+	};
+
+	s.logout = () => AuthUserFactory.logoutUser();
+
+	s.openSettings = () => {
+		console.log("Here is where you should edit your user's settings");    
+		
+    var modalInstance = $uibModal.open({
+      animation: true,
+      ariaLabelledBy: 'modal-title',
+      ariaDescribedBy: 'modal-body',
+      templateUrl: '../../partials/UserSettingsModal.html',      
+      controller: 'UserSettingsCtrl',
+      controllerAs: 's',
+      size: 'lg',
+      appendTo: $(".modal-parent"),  
+      resolve: {
+      	user: function() {
+      		let user = UserStorageFactory.getCurrentUserInfo(),
+      				uglyId = Object.keys(user)[0];
+      		user = user[uglyId];
+      		user.ugly_id = uglyId;
+      		return user;
+      	}
+      }
+    }); 
+
+    modalInstance.result.then(function (selectedItem) {
+      s.selected = selectedItem;
+    }, function () {
+      console.log("Dismissed");
+    });
+	};
 });
+

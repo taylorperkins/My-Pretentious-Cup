@@ -14,7 +14,7 @@ The user's information will include:
 		Ratings and Reviews for specific Locations
 */
 
-var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bootstrap', 'd3'])
+var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bootstrap', 'd3', 'angular-img-cropper'])
 
 .service('fbRef', function(FBCreds) {
 	return firebase.initializeApp(FBCreds);
@@ -110,12 +110,28 @@ var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bo
 	
 })
 
-.run((fbRef, $http) => {
+.run((fbRef, $http, TwilioCreds, UserStorageFactory) => {
 	console.log("You are connected");
 	fbRef.database().ref('users').once('value').then(
 			(snapshot) => console.log(snapshot.val())
 		);
 	console.log(google);
+
+	// let userData = UserStorageFactory.getCurrentUserInfo();
+	// let user = userData[Object.keys(userData)[0]];
+
+	// fbRef.database().ref('fieldJournal').orderByChild('uid').equalTo(user.uid).once('value').then(
+	// 		(snapshot) => console.log("Here's your snapshot: ", snapshot.val())
+	// 	);
+
+	// var client = new twilio.RestClient(TwilioCreds.accountSid, TwilioCreds.authToken);
+	// client.messages.create({
+	//     body: 'Hello from Node',
+	//     to: '+16156894486',  // Text this number
+	//     from: TwilioCreds.accountPhoneNumber // From a valid Twilio number
+	// }, function(err, message) {
+	//     console.log(message.sid);
+	// });
 });
 
 
