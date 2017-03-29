@@ -15,8 +15,10 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
 	console.log("FieldJournalCtrl.js is working");	
 	s.pages = pages;
 	s.category = 'Coffee';
+	s.drinkTypes = ['Espresso', 'Drip', 'Cold Brew'];
 	s.saveEdit = true;
 	s.senses= [];
+	s.oneAtATime = true;
 
 	s.newDrink = {										//This obj is created to be sent to /fieldJournal collection within firebase
 																		//It should be referenced by uid
@@ -56,10 +58,6 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
 	};
 	s.newDrink = {};	
 
-	s.currentUser = () => {
-		let myUser = UserStorageFactory.getCurrentUserInfo();
-		return myUser[Object.keys(myUser)[0]];
-	};
 
 	s.fieldJournal = [];
 	s.drinkForm = `partials/drink-forms/${s.category}Form.html`;
@@ -69,8 +67,6 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
 
 	s.coffeeStyles = ['Latte', 'Macchiato', 'Cortado', 'Flat White', 'Espresso', 'Cappucino'];
 	s.coffeeMethods = ['Drip', 'French Press', 'Cold Brew'];	  
-
-	console.log(s.pages);
 
 	let updateCurrentFieldJournal = () => {
 		HandleFBDataFactory.getItemList('fieldJournal').then(
@@ -95,7 +91,11 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
 
 	s.picDetailsDisplay = (index) => s.displayDetails = index;
 	s.removeDetailsDisplay = () => s.displayDetails = -1;
-	s.updateTastingWheel = (event) => console.log(event);		
+	s.updateTastingWheel = (event) => console.log(event);			
+	s.logD = (dElement) => console.log(dElement);
+	s.getCurrentLocation = () => s.myLocation = UserStorageFactory.getUserCurrentLocation(); 		
+	s.changeViews = (myString) => s.subPage = myString;	
+	s.updateEntry = (myDrinkEntry) => s.entry = myDrinkEntry;			
 	
 	//Sense don't update if this isnt here
 	s.checkForSenses = (event) => {
@@ -117,24 +117,7 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
 			s.senses.push(newValue);			
 			s.user_senses = s.senses.join(' ');
 			console.log("Here are your user's senses: ", s.user_senses);
-		});
-
-	s.logD = (dElement) => {
-		console.log(dElement);
-	};	
-
-	s.getCurrentLocation = () => {
-		s.myLocation = UserStorageFactory.getUserCurrentLocation(); 
-		console.log(s.myLocation);
-	};
-
-	s.changeViews = (myString) => s.subPage = myString;	
-
-	//Triggered whenever you click an existing note from the list view
-	s.updateEntry = (myDrinkEntry) => {
-		s.entry = myDrinkEntry;	
-		console.log(s.entry);	
-	};
+		});	
 
 	s.logSelectedLocation = (mySelectedLocation) => {
 		$("#newDrinkLocation").val(mySelectedLocation.description);
@@ -155,10 +138,10 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
         s.newDrink.location_phone_number = place.formatted_phone_number;
         s.newDrink.lat = place.geometry.location.lat();
         s.newDrink.lng = place.geometry.location.lng();
-        s.newDrink.uid = s.currentUser().uid;
-        s.newDrink.user_name = s.currentUser().userName;
-        s.newDrink.first_name = s.currentUser().firstName;
-        s.newDrink.last_name = s.currentUser().lastName;
+        s.newDrink.uid = s.currentUser.uid;
+        s.newDrink.user_name = s.currentUser.userName;
+        s.newDrink.first_name = s.currentUser.firstName;
+        s.newDrink.last_name = s.currentUser.lastName;
         s.newDrink.marker_color = GoogleMapsFactory.setMarkerColor(s.category);
         s.newDrink.store_hours = {};
         let storeHours = place.opening_hours.weekday_text;
@@ -189,8 +172,8 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
 			console.log("I am about to make a request");
 			console.log("Here is my current location: ", s.myLocation);
 			let latLng = {
-				lat: s.myLocation.lat(),
-				lng: s.myLocation.lng()
+				lat: s.myLocation.lat,
+				lng: s.myLocation.lng
 			};
 			if(!placesSearchInput) return;
 			GoogleMapsFactory.GoogleMapsAutoComplete(placesSearchInput.toLowerCase(), latLng).then(
@@ -246,11 +229,6 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
 	s.deleteFieldJournalEntry = () => {
 		fbRef.database().ref(`fieldJournal/${s.entry.uglyId}`).remove();			
 		$state.reload();
-	};
-
-	s.showPicture = () => {
-		let file = document.getElementById("new-fieldJournal-picture").files;
-		console.log(file[0]);
 	};
 
 	s.openMapModal = (selectedCoords) => {
@@ -311,7 +289,6 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
     }, function () {
       console.log("Dismissed");
     });
-
 	};
 
 });
