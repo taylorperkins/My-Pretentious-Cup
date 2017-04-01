@@ -24,19 +24,11 @@ app.controller("ProfilePicCtrl", function($scope, $http, $state, fbRef, $uibModa
 			alert("How about you upload a pic and crop it!");			
 		} else {
 			let user = UserStorageFactory.getCurrentUserInfo(),
-					key = Object.keys(user)[0],
-					storageLocation = 'profile-image' + key.toString();
+					key = Object.keys(user)[0];					
 
-			let imageName = document.getElementById('new-profile-pic').files[0].name;
-
-			console.log(user, key, storageLocation);		
-			// console.log(imageName);
-			// console.log(typeof s.cropper.croppedImage);	
-			// console.log("Here is your untouched cropped image data: ", s.cropper.croppedImage);		
-			// var blob = new Blob(JSON.parse(s.cropper.croppedImage), {type : 'image/png'});
+			console.log("User and key from ProfilePicCtrl.js: ", user, key);					
 			let imagePlacement = {};
-			imagePlacement[`/users/${key}/profile_picture`] = s.cropper.croppedImage;
-			
+			imagePlacement[`/users/${key}/profile_picture`] = s.cropper.croppedImage;			
 			
 			fbRef.database().ref().update(imagePlacement).then(
 					() => {

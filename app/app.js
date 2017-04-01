@@ -14,7 +14,7 @@ The user's information will include:
 		Ratings and Reviews for specific Locations
 */
 
-var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bootstrap', 'd3', 'angular-img-cropper'])
+var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bootstrap', 'd3', 'angular-img-cropper', 'rzModule'])
 
 .service('fbRef', function(FBCreds) {
 	return firebase.initializeApp(FBCreds);
