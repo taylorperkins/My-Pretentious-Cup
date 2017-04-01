@@ -13,6 +13,7 @@ app.controller("MainCtrl", function($scope, $uibModal, fbRef, UserStorageFactory
 	let updateFieldJournalEntries = (databaseSnapshot) => {
 		console.log("Your database was updated: ");
 		console.log("databaseSnapshot: ", databaseSnapshot);
+		s.fieldJournalEntries = [];
 		for (var entry in databaseSnapshot) {
 			s.fieldJournalEntries.unshift(databaseSnapshot[entry]);
 		}	
@@ -23,11 +24,12 @@ app.controller("MainCtrl", function($scope, $uibModal, fbRef, UserStorageFactory
 	  updateFieldJournalEntries(snapshot.val());
 	});
 
-	let user = UserStorageFactory.getCurrentUserInfo();
-	console.log(user);
-	s.currentUser = user[Object.keys(user)[0]];
-	console.log(s.currentUser);
+	// let user = UserStorageFactory.getCurrentUserInfo();
+	// console.log(user);
+	// s.currentUser = user[Object.keys(user)[0]];
+	// console.log(s.currentUser);
 
+	console.log("here is my current user: ", s.currentUser);
 	
 	s.newsFeedView = () => {
 		s.newsfeed = true;

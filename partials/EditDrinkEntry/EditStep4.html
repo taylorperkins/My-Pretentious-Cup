@@ -1,0 +1,26 @@
+<div class="text-center" style="margin-top: 1em">
+  <h3>You're right. That latte art sucked.</h3>
+  <div class="form-group">
+    <input img-cropper-fileread class="col" type="file" id="step4-img-file" image="editCropper.sourceImage">
+  </div> 
+</div>
+    
+<div class="row text-center">		
+	<div class="col-md-6 step4-left-side">
+		<div class="step4-canvas-container">
+			<canvas image-cropper width="208" height="275" id="canvas" image="editCropper.sourceImage" cropped-image="editCropper.croppedImage" crop-width="170" crop-height="224.67" keep-aspect="true" touch-radius="30" crop-area-bounds="editBounds"></canvas>
+		</div>			      		    
+	</div>
+
+	<div class="col-md-6 step4-left-side">	
+		<div class="thumbnail step4-canvas-container">
+		  <img class="step4-canvas-container" style="margin-top: 0 !important;" 
+		  		 ng-if="entry.drink_image"
+		  		 ng-src="{{editCropper.croppedImage ? editCropper.croppedImage : entry.drink_image }}">
+			<img class="step4-canvas-container" style="margin-top: 0 !important;" 
+		  		 ng-if="!entry.drink_image"
+		  		 ng-src="{{editCropper.croppedImage ? editCropper.croppedImage : '../../images/no_image_available.jpeg' }}">	  		 
+		</div>	
+	</div>			
+</div>  	
+

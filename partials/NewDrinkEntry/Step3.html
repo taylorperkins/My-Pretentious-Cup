@@ -1,0 +1,25 @@
+
+<div class="row text-center step3-row1">
+	<h3>What else did you find?</h3>
+	<small>Use this space to finish your drink entry!!</small>
+</div>
+
+<textarea class="form-control" rows="6" ng-model="$parent.newDrink.review_description"
+					placeholder="Anything left? This is what handles your 'overall status'."></textarea>  
+
+<div class="row text-center step3-row2">
+	<h4>What's your rating?</h4>
+	<div class="row">
+		<div class="col-xs-2" style="height: 54px">
+			<h3 class="fieldjournal-new-entry-rating" style="color: #f0ad4e; text-align: right">0</h3>
+		</div>
+		<div class="col-xs-8">
+			<rzslider class="custom-slider"
+								rz-slider-model="newDrink.user_rating"																	
+	      				rz-slider-options="slider1.options"></rzslider>						
+		</div>
+		<div class="col-xs-2" style="height: 54px">
+			<h3 class="fieldjournal-new-entry-rating" style="color: #337ab7">5</h3>
+		</div>					
+	</div>
+</div>

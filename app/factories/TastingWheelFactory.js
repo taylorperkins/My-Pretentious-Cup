@@ -54,11 +54,11 @@ app.factory("TastingWheelFactory", function($http, fieldJournalWheel) {
 
 
 	//creds --> https://bl.ocks.org/maybelinot/5552606564ef37b5de7e47ed2b7dc099
-	let createWheel = (myColors) => {		
+	let createWheel = (whereToAppend) => {				
 
-		var width = 460,
-		    height = 460,
-		    radius = (Math.min(width, height) / 2 - 75);
+		var width = 359.41,
+		    height = 359.41,
+		    radius = (Math.min(width, height) / 2 - 10);
 
 		var formatNumber = d3.format(",d");
 
@@ -78,11 +78,11 @@ app.factory("TastingWheelFactory", function($http, fieldJournalWheel) {
 		    .innerRadius(function(d) { return Math.max(0, y(d.y0)); })
 		    .outerRadius(function(d) { return Math.max(0, y(d.y1)); });
 
-		var div = d3.select("#tastingWheel").append("div")
+		var div = d3.select(`#${whereToAppend}`).append("div")
 					.attr("class", "tooltip")				
     			.style("opacity", 0);
 
-		var svg = d3.select("#tastingWheel").append("svg")
+		var svg = d3.select(`#${whereToAppend}`).append("svg")
 		    .attr("width", width)
 		    .attr("height", height)
 		  .append("g")

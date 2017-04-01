@@ -272,9 +272,129 @@ h1, h2, h3, h4, h5, h6 li, ol, ul p, a {
 	margin-bottom: 1em;
 }
 
+.fieldjournal-new-entry-rating {
+	margin-top: 20px !important;
+	font-weight: bold;
+	bottom: 0
+}
 
 svg {
 	font: 10px sans-serif;
+}
+
+.step3-row1 {
+	margin-top: 1em;
+}
+
+.step3-row1 small {
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+.step3-row2 {
+	margin-top: 2em;
+}
+
+/*========================================*/
+/*========New Field Journal Entry=========*/
+/*========================================*/
+
+.new-fieldJournal-overall-row {
+	min-height: 400px;
+}
+
+.new-fieldJournal-overall-row .btn-group-vertical {
+	margin-top: 100px;
+}
+
+.fieldJournal-create-details-row {
+	height: 365px;
+}
+
+.fieldJournal-new-dummy-layout {
+	bottom: 0;
+}
+
+.dummyView-col {
+	background-color: white;
+	padding: 1em;
+	border-radius: 5px;
+}
+
+.step1-row {
+	margin-top: 10em;
+}
+
+.dummyView-senses {
+	height: 200px;
+	display: table;
+}
+
+.dummyView-senses p {
+	vertical-align: middle;
+  display: table-cell;
+}
+
+.step4-canvas-container {
+	width: 208px;
+	height: 275px;
+	margin: auto;
+	margin-top: 1em !important;
+	background-color: lightgrey;
+}
+
+.step4-left-side {
+	margin-top: 4em !important;
+}
+
+
+/*===============================*/
+/*========Custom Slider==========*/
+/*===============================*/
+
+/*pre-slide bar*/
+.custom-slider.rzslider .rz-bar {
+  background: #337ab7;
+  height: 2px;
+}
+
+/*post-slide*/
+.custom-slider.rzslider .rz-selection {
+  background: #f0ad4e;
+}
+
+.custom-slider.rzslider .rz-pointer {
+  width: 8px;
+  height: 16px;
+  top: auto; /* to remove the default positioning */
+  bottom: 0;
+  background-color: #333;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+}
+
+.custom-slider.rzslider .rz-pointer:after {
+  display: none;
+}
+
+.custom-slider.rzslider .rz-bubble {
+  bottom: 14px;
+}
+
+.custom-slider.rzslider .rz-ceil {
+  font-weight: bold;
+  color: #337ab7;
+  display: none;
+}
+
+.custom-slider.rzslider .rz-floor {
+  font-weight: bold;
+  color: #f0ad4e;
+  display: none;
+}
+
+.custom-slider.rzslider .rz-tick.rz-selected {
+  background: orange;
 }
 
 
@@ -336,9 +456,7 @@ svg {
 }
 
 .drinking-buddies-individual-image-thumbnail {
-	margin-bottom: 0;
-	margin-left: 2em;
-	margin-right: 2em;
+	margin-bottom: 0;	
 	margin-bottom: 1em;
 	min-height: 184px;
 	padding: 0 4px;
@@ -482,6 +600,8 @@ svg {
 	border: 1px solid tan;
 	margin: auto;
 }
+
+
 
 
 
