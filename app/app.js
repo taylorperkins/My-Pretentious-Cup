@@ -14,16 +14,32 @@ The user's information will include:
 		Ratings and Reviews for specific Locations
 */
 
+let isAuth = (AuthUserFactory, $location) => new Promise ((resolve, reject) => {
+	console.log("I am here");
+	AuthUserFactory.isAuthenticated()
+		.then((userExists) => {
+			console.log("userExists", userExists);
+			if (userExists) {
+				AuthUserFactory.changeLogin(true);
+				console.log("Authenticated, go ahead");
+				resolve();
+			} else {
+				AuthUserFactory.changeLogin(false);
+				console.log("Authentication rejected, go away. Fucker.");
+				$location.path('/login');
+				reject();
+			}
+		});
+});
+
 var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bootstrap', 'd3', 'angular-img-cropper', 'rzModule'])
 
 .service('fbRef', function(FBCreds) {
 	return firebase.initializeApp(FBCreds);
 })
-
 .service('drinkingBuddiesCoords', function() {
 	this.Coords = {};
 })
-
 .service('fieldJournalWheel', function() {
 	this.Sense = {};
 })
@@ -58,6 +74,7 @@ var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bo
 					.state('home', {			
 						url: '/home',
 						resolve: {
+							isAuth,
 							pages: function() {
 								return {
 									'newFieldJournal': '../partials/NewFieldJournal.html',

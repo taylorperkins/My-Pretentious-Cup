@@ -19,65 +19,60 @@
 	</div>
 </div>
 
-<div class="col-xs-10 col-xs-offset-1 state-views">
-	<form>
-	  <div class="form-group">
-	    <label for="drinking-buddies-searchFriends">Search for yo buddies</label>
-	    <input ng-keyup="updatePopover($event)" ng-model="searchText" ng-focus="firebaseCallToUsers()" type="text" id="drinking-buddies-searchFriends" placeholder="Username/First Name/Last Name" 
-	    uib-popover-template="hey"  
-	    popover-placement="bottom-left"
-	    popover-trigger="'focus'" class="form-control">        
-	  </div>
-	</form>
+<uib-tabset active="activeJustified" justified="true">
 
-	<div ng-hide="currentSearch" class="row drinking-buddies-my-friends">
-		
-	</div>
+  <uib-tab index="0" heading="Drinking Buddies"
+  				 ng-click="resetSearchInput()">
+  	<div class="col-xs-10 col-xs-offset-1 state-views">
+			<form>
+			  <div class="form-group">
+			    <label for="drinking-buddies-searchFriends">Search for yo buddies</label>
+			    <input type="text" class="drinking-buddies-searchFriends"
+			    			 ng-model="searchText">        
+			  </div>
+			</form>	
+			<div class="row">
+				<div ng-if="!selectFollower"
+						 ng-repeat="buddy in drinkingBuddies | filter:searchText"
+						 ng-include="'partials/DrinkingBuddiesFollowingList.html'" scope="" onload=""></div>						
+			</div>
 
-
-	<!-- THIS IS A DISPLAY FOR AN INDIVIDUAL SEARCH -->
-	<div class="row drinkingBuddies-search-result" ng-show="currentSearch">
-		<div class="row">
-			<div class="col-xs-3 col-xs-offset-1 drinking-buddies-selected-profile-pic">
-				<a ng-if="selectedUser.profile_picture" href="#" class="thumbnail">
-		      <img ng-src="{{selectedUser.profile_picture}}" alt="...">
-		    </a>
-		  </div>
-		  <div class="col-xs-3">
-		    <div class="caption">
-	        <h3>{{selectedUser.userName.toUpperCase()}}/ <br>
-						<small>{{selectedUser.firstName.toUpperCase()}} {{selectedUser.lastName.toUpperCase()}}</small>
-	        </h3>
-				  <p class="lead">{{selectedUser.profile_description}}</p>
-	      </div>		  	
-		  </div>
-		  <div class="col-xs-3">
-		  	<p>Entries: {{selectedUser.fieldJournal.length}}</p>
-		  	<p>Locations: {{selectedUser.NumOfLocations}}</p>
-		  	<p>Buddies? (true or false)
-					<span ng-show="selectedUser.uid === currentUser.uid">Looks like you!</span>
-					<span ng-show="selectedUser.uid !== currentUser.uid">
-						<!-- IF YOU ARENT FRIENDS -->
-						<span ng-show="selectedUser.friendsList.indexOf(currentUser.uid) === -1">Follow</span>
-						<!-- IF YOU ARE FRIENDS -->
-						<span ng-show="selectedUser.friendsList.indexOf(currentUser.uid) !== -1">Following</span>
-					</span>
-		  	</p>
-		  </div>			
-		</div>
-
-		<div class="row">
-			<div ng-repeat="entry in selectedUser.fieldJournal">	  	  
-				<div class="clearfix" ng-if="$index % 3 == 0"></div>
-				<!-- <div ng-include="drinkingBuddiesListReusable" scope="" onload=""></div>					 -->
-				<div class="col-xs-4">
-					<div ng-include="drinkingBuddiesEntryDisplay" scope="" onload=""></div>					
+			<div ng-if="selectFollower">
+				<div class="row">
+					<div class="col-xs-3">
+						<button type="button" class="btn btn-default"
+										ng-click="backToDisplayAllView()">Back</button>
+					</div>
 				</div>
+				<div ng-include="'partials/IndividualProfileSearch.html'" scope="" onload=""></div>
+			</div> 
 
-			</div>				
-		</div>		
-	</div>
-</div>
+		</div>
+  </uib-tab>
+
+
+
+  <uib-tab index="1" heading="Search All">
+  	<div class="col-xs-10 col-xs-offset-1 state-views">
+			<form>
+			  <div class="form-group">
+			    <label for="drinking-buddies-searchFriends">Search for yo buddies</label>
+			    <input type="text" class="drinking-buddies-searchFriends" placeholder="Username/First Name/Last Name" 
+			    			 ng-keyup="updatePopover($event)" 
+			    			 ng-model="searchText" 
+			    			 ng-focus="firebaseCallToUsers()"
+			    			 uib-popover-template="hey"  
+			    			 popover-placement="bottom-left"
+			    			 popover-trigger="'focus'" class="form-control">        
+			  </div>
+			</form>			
+			<div  ng-include="'partials/IndividualProfileSearch.html'" scope="" onload=""
+						ng-show="currentSearch"></div>
+		</div>
+  </uib-tab> 
+
+</uib-tabset>
+
 
 
 

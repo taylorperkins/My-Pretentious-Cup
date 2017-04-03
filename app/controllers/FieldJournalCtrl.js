@@ -17,6 +17,28 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
 	s.pages = pages;
 	s.category = 'Coffee';
 	s.drinkTypes = ['Espresso', 'Drip', 'Cold Brew'];
+	s.tabs = [
+		{
+			name: 'Date Created',
+			model: 'entry_created',
+			number: true
+		},
+		{	
+			name: 'Title',
+			model: 'review_title',
+			number: false			
+		},
+		{
+			name: 'Location',
+			model: 'location_title',
+			number: false		
+		},
+		{
+			name: 'Rating',
+			model: 'user_rating',
+			number: true			
+		}
+	];
 	s.saveEdit = true;
 	s.senses = [];
 	s.oneAtATime = true;
@@ -139,8 +161,16 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
 	};
 
 
-	s.picDetailsDisplay = (index) => s.displayDetails = index;
-	s.removeDetailsDisplay = () => s.displayDetails = -1;
+	s.picDetailsDisplay = (index) => {
+		s.displayDetails = index;		
+		$('.img-frame-' + index).fadeTo('fast', 0.3).css('background-color', '#000');
+		$('.list-field-journal-pics-img-' + index).fadeTo('fast', 0.5);
+	};
+	s.removeDetailsDisplay = (index) => {
+		s.displayDetails = -1;
+		$('.img-frame-' + index).fadeTo('fast', 1).css('background-color', '');
+		$('.list-field-journal-pics-img-' + index).fadeTo('fast', 1);
+	};
 	s.updateTastingWheel = (event) => console.log(event);			
 	s.logD = (dElement) => console.log(dElement);
 	s.getCurrentLocation = () => s.myLocation = UserStorageFactory.getUserCurrentLocation(); 		
@@ -361,6 +391,9 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
       	},
       	slider: function() {
       		return s.slider1;
+      	},
+      	location: function() {
+      		return true;
       	}
       }
     }); 
@@ -373,23 +406,3 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
 	};
 
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
