@@ -8,8 +8,10 @@ app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $ui
 	console.log("DrinkingBuddiesCtrl.js is working");
 
 	s.currentSearch = false;
+	s.selectFollower = false;
 	s.drinkingBuddiesListReusable = '../../partials/Reusables/DrinkingBuddiesList.html';
 	s.drinkingBuddiesEntryDisplay = '../../partials/DrinkingBuddiesEntryDisplay.html';
+	s.drinkingBuddies = [];
 
 	console.log("This is referencing HomeCtrl.js from DrinkingBuddiesCtrl.js: ", s.currentUser);
 
@@ -17,6 +19,49 @@ app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $ui
 	//This is an array that contains all possible searches for a user
 	s.userSearch = [];
 
+	let updateFollowingList = () => {
+
+		if (s.currentUser.hasOwnProperty('following')) {
+			console.log(s.currentUser.following);
+			let usersUIDs = [];
+			for (var user in s.currentUser.following) {
+				let uid = s.currentUser.following[user].uid;
+				usersUIDs.push(uid);
+			}
+			let searchFollowing = (uid) => {
+				return new Promise((resolve, reject) => {
+					fbRef.database().ref('users').orderByChild('uid').equalTo(uid).once('value').then(
+							(snapshot) => {
+								let result = snapshot.val(),
+										uglyId = Object.keys(result)[0],
+										user = result[uglyId];
+								user.uglyId = uglyId;
+								s.drinkingBuddies.push(user);
+								resolve();
+							}
+						);					
+				});	
+			};
+
+			s.drinkingBuddies = [];
+			Promise.all(usersUIDs.map((uid) => searchFollowing(uid))).then(
+					(status) => {
+						console.log("Your Promise.all should be finished: ", status);
+						console.log("Here are your drinkingBuddies: ", s.drinkingBuddies);
+						s.$apply();
+					}
+				);		
+		}
+	};
+
+	s.$watch(
+		function() { return s.currentUser; },
+		function(oldValue, newValue) { 
+			if (oldValue !== newValue) {
+				updateFollowingList(); 
+			}	
+		}
+	);
 
 	//Take firebase friendsList obj and turns it into an arrayit
 	let transposeFriendsList = (friendsListObj) => {
@@ -36,15 +81,13 @@ app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $ui
 					s.userSearch = [];
 					console.log(myUsers);
 					for (var user in myUsers) {
-
-						let currentUser = myUsers[user];
-
-						let editedUser = {
-							firstName: currentUser.firstName,
-							lastName: currentUser.lastName,
-							userName: currentUser.userName,
-							uglyId: user 
-						};						
+						let currentUser = myUsers[user],
+								editedUser = {
+									firstName: currentUser.firstName,
+									lastName: currentUser.lastName,
+									userName: currentUser.userName,
+									uglyId: user 
+								};						
 						s.userSearch.push( editedUser);
 					}
 					s.$apply();
@@ -68,7 +111,7 @@ app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $ui
 	//After a user selects a friend, make another call to firebase to get that full user's info
 	s.searchFriends = (filteredFriend) => {		
 		console.log(filteredFriend);	
-		$("#drinking-buddies-searchFriends").val(filteredFriend.firstName);		
+		$(".drinking-buddies-searchFriends").val(filteredFriend.firstName);		
 		fbRef.database().ref(`users/${filteredFriend.uglyId}`).once('value').then(
 				(snapshot) => {
 					console.log("Here is your selected user: ", snapshot.val());
@@ -92,6 +135,54 @@ app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $ui
 	};
 
 	s.sendCoordsToGlobeView = (selectedCoords) => drinkingBuddiesCoords.Coords = selectedCoords;			
+
+	s.followUser = (selectedUser) => {
+		console.log("Here is your selected user! You want to be their friend: ", selectedUser);
+
+		fbRef.database().ref('users').orderByChild('uid').equalTo(selectedUser.uid).once('value').then(
+				(snapshot) => {
+					console.log('here is your user from firebase: ', snapshot.val());
+					console.log('here is your currentUser: ', s.currentUser);
+					let FBSelectedUser = snapshot.val(),
+							selectedUserKey = Object.keys(FBSelectedUser)[0],
+							updates = {},
+							selectedUserFollowedByKey = fbRef.database().ref('users').child(selectedUserKey).child('followed_by').push().key,
+							currentUserFollowingKey = fbRef.database().ref('users').child(s.currentUser.ugly_id).child('following').push().key;
+				
+					updates[`/users/${selectedUserKey}/followed_by/${selectedUserFollowedByKey}`] = {'uid': s.currentUser.uid};
+					updates[`/users/${s.currentUser.ugly_id}/following/${currentUserFollowingKey}`] = {'uid': FBSelectedUser[selectedUserKey].uid};
+
+					fbRef.database().ref().update(updates);
+					fbRef.database().ref('users').once('value').then(
+							(snapshot) => s.searchFriends({firstName: selectedUser.firstName, uglyId: selectedUserKey})					
+						);
+				}
+			);
+	};
+
+	s.showBuddyInfo = (buddy) => {
+		console.log("Here is your buddie's info: ", buddy);
+		s.selectFollower = true;
+		s.selectedUser = buddy;
+		s.selectedUser.fieldJournal = [];
+
+		fbRef.database().ref('fieldJournal').orderByChild('uid').equalTo(buddy.uid).once('value').then(
+				(snapshot) => {
+					let fieldJournal = snapshot.val();	
+					console.log(fieldJournal);
+					for (var entry in fieldJournal) {
+						s.selectedUser.fieldJournal.unshift(fieldJournal[entry]);
+					}
+					s.$apply();
+				}
+			);
+	};
+
+	s.resetSearchInput = () => $(".drinking-buddies-searchFriends").val('');
+
+	s.backToDisplayAllView = () => {
+		s.selectFollower = false;		
+	};
 
 	s.openMapModal = (selectedCoords) => {
 		console.log("Here are your selected coords: ", selectedCoords);	

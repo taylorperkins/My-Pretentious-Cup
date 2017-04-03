@@ -2,7 +2,7 @@
 
 console.log("FieldJournalDetailedPicModalCtrl.js is connected");
 
-app.controller("FieldJournalDetailedPicModalCtrl", function($scope, $timeout, $uibModalInstance, fieldJournalEntry, currentLocation, fieldJournalGooglePlacesRequest, fbRef, TastingWheelFactory, fieldJournalWheel, slider) {
+app.controller("FieldJournalDetailedPicModalCtrl", function($scope, $timeout, $uibModalInstance, fieldJournalEntry, currentLocation, fieldJournalGooglePlacesRequest, fbRef, TastingWheelFactory, fieldJournalWheel, slider, location) {
 	console.log("FieldJournalDetailedPicModalCtrl.js is working, and here is my entry: ", fieldJournalEntry);
 	let s = $scope;
 
@@ -35,6 +35,7 @@ app.controller("FieldJournalDetailedPicModalCtrl", function($scope, $timeout, $u
   s.newFieldJournalPopup = "../../partials/BootstrapTemplates/NewFieldJournalPopup.html";
   s.editedSenses = [];
   s.slider1 = slider;
+  s.location = location;
 
   s.editCropper = {};
   s.editCropper.sourceImage = null;

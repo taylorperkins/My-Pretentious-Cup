@@ -9,6 +9,16 @@ app.controller("HomeCtrl", function($scope, $sce, $timeout, $uibModal, $window, 
 	s.background = 'main';
   let user = UserStorageFactory.getCurrentUserInfo();
   s.currentUser = user[Object.keys(user)[0]];
+  s.currentUser.ugly_id = Object.keys(user)[0];
+
+  var userRef = fbRef.database().ref('users/').child(s.currentUser.ugly_id);
+  userRef.on('value', function(snapshot) {
+    console.log(snapshot.val());
+    let user = snapshot.val();
+    user.ugly_id = s.currentUser.ugly_id;
+    console.log("Your user is changing!", user);
+    s.currentUser = user;
+  });
 	console.log(s.background);
 
 	var windowHeight = window.innerHeight - 400;

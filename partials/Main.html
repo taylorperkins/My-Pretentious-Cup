@@ -1,6 +1,8 @@
 <h3 class="text-center"><a>Profile Page</a></h3>
 
 <div class="modal-profile-pic"></div>
+<div class="detailedEntry-modal-parent"></div>
+<div class="mainMap-modal-parent"></div>
 
 <div class="row">
 	<div class="col-xs-1">
@@ -53,7 +55,7 @@
 
 			<!-- HERE IS YOUR NEWS FEED-->
 			<div class="col-xs-8 home-newsfeed" ng-click="imConnected()">			
-				<div ng-repeat="entry in fieldJournalEntries" class="row main-newsfeed-fieldjournal" ng-click="showFieldNote(entry)" ng-show="newsfeed">
+				<div ng-repeat="entry in fieldJournalEntries" class="row main-newsfeed-fieldjournal" ng-click="showFieldNote(entry, $event)" ng-show="newsfeed">
 
 					<div class="col-xs-7 col-xs-offset-1 main-newsfeed-content-row">
 						<div class="row">
@@ -62,8 +64,11 @@
 							</div>
 
 							<div class="col-xs-8 main-newsfeed-entry-descriptions">
-							  <h2><u>{{entry.review_title}}/{{entry.category}}</u></h2>
-							  <p><a ng-click="openMapModal({lat: entry.lat, lng: entry.lng, place_id: entry.place_id})">Location: {{entry.location_title}}</a></p>
+							  <h2><u>{{entry.review_title}}</u></h2>
+							  <p>
+							  	<a class="newsfeed-entry-location"
+							  		 ng-click="openMapModal({lat: entry.lat, lng: entry.lng, place_id: entry.place_id})">Location: {{entry.location_title}}</a>
+							 	</p>
 							  <div class="drinking-buddies-individual-description lead">
 							    <p>{{entry.review_description}}</p>				    	
 							  </div>							  
@@ -71,21 +76,15 @@
 						</div>					
 					</div>
 					
-					<div class="col-xs-3 col-xs-offset-1 thumbnail drinking-buddies-individual-image-thumbnail">
-					  <img class="drinking-buddies-individual-image" ng-src="{{entry.drink_image ? '../../images/no_image_available.jpeg' : '../../images/no_image_available.jpeg' }}">
+					<div class="col-xs-3 thumbnail drinking-buddies-individual-image-thumbnail">
+					  <img class="drinking-buddies-individual-image" style="border: 0;" 
+					  		 ng-src="{{entry.drink_image ? entry.drink_image : '../../images/no_image_available.jpeg' }}">
 					</div>
 				</div>
 
 				<!-- This is for showing a more detailed version of the user's field journal entry -->
 				<div class="row" ng-show="!newsfeed">
-					<div class="main-selected-fieldnote">
-						<h2>Title: {{selectedFieldNote.review_title}}</h2>
-						<p>by: {{selectedFieldNote.user_name}}/{{selectedFieldNote.first_name}}</p>
-						<p>Location: {{selectedFieldNote.location_title}}/Rating: {{selectedFieldNote.user_rating}}</p>
-						<p>Review: {{selectedFieldNote.review_description}}</p>
-						<img class="main-selected-fieldnote-image" ng-if="selectedFieldNote.drink_image" ng-src="{{selectedFieldNote.drink_image}}" alt="">
-						<button type="button" class="btn btn-primary btn-block" ng-click="newsFeedView()">News Feed</button>
-					</div>
+					<div class="newsFeed-detailed-view" ng-include="newsFeedDetails" scope="" onload=""></div>		
 				</div>					
 			</div>	
 		</div>		

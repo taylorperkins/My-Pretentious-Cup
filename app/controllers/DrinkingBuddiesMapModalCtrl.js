@@ -1,6 +1,5 @@
 
 
-
 "use strict";
 
 console.log("DrinkingBuddiesMapModalCtrl.js is connected");
@@ -26,13 +25,17 @@ app.controller("DrinkingBuddiesMapModalCtrl", function($scope, $timeout, $uibMod
 			(snapshot) => {
 				console.log("Here is your location's field Journal data: ", snapshot.val());
 				let fieldJournalEntries = snapshot.val();
-				let combinedRating = 0;
+				let combinedRating = 0,
+						numOfRates = 0;
 				for (var entry in fieldJournalEntries) {
 					fieldJournalEntries[entry].uglyId = entry;
-					combinedRating += fieldJournalEntries[entry].user_rating;
-					s.locationFieldJournal.push(fieldJournalEntries[entry]);
+					s.locationFieldJournal.push(fieldJournalEntries[entry]);					
+					if (fieldJournalEntries[entry].user_rating) {
+						combinedRating += fieldJournalEntries[entry].user_rating;
+						numOfRates++;						
+					}
 				}
-				s.locationAverageRating = combinedRating / s.locationFieldJournal.length;				
+				s.locationAverageRating = combinedRating / numOfRates;				
 				console.log("here is your stuff from the firebase request: ", s.locationFieldJournal, s.locationAverageRating);
 			}
 		);

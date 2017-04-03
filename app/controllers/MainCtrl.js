@@ -8,6 +8,7 @@ app.controller("MainCtrl", function($scope, $uibModal, fbRef, UserStorageFactory
 
 	s.newsfeed = true;
 	s.fieldJournalEntries = [];
+	s.newsFeedDetails = '../../partials/NewsFeedDetails.html';
 	s.reader = new FileReader();
 
 	let updateFieldJournalEntries = (databaseSnapshot) => {
@@ -24,11 +25,6 @@ app.controller("MainCtrl", function($scope, $uibModal, fbRef, UserStorageFactory
 	  updateFieldJournalEntries(snapshot.val());
 	});
 
-	// let user = UserStorageFactory.getCurrentUserInfo();
-	// console.log(user);
-	// s.currentUser = user[Object.keys(user)[0]];
-	// console.log(s.currentUser);
-
 	console.log("here is my current user: ", s.currentUser);
 	
 	s.newsFeedView = () => {
@@ -36,15 +32,7 @@ app.controller("MainCtrl", function($scope, $uibModal, fbRef, UserStorageFactory
 		s.selectedFieldNote = null;
 	};
 
-	s.showFieldNote = (selectedFieldNote) => {
-		console.log("Selected from main.ctrl: ", selectedFieldNote);
-		s.newsfeed = false;
-		s.selectedFieldNote = selectedFieldNote;
-	};
-
-	s.imConnected = () => {
-		console.log("I am here");
-	};
+	s.imConnected = () => console.log("I am here");
 
 	s.changeProfilePicture = () => {
 		console.log("Here is where you should change your user's profile pic!");    
@@ -65,6 +53,81 @@ app.controller("MainCtrl", function($scope, $uibModal, fbRef, UserStorageFactory
       		user = user[uglyId];
       		user.ugly_id = uglyId;
       		return user;
+      	}
+      }
+    }); 
+
+    modalInstance.result.then(function (selectedItem) {
+      s.selected = selectedItem;
+    }, function () {
+      console.log("Dismissed");
+    });
+	};
+
+  s.openMapModal = (selectedCoords) => {
+    console.log("Here are your selected coords: ", selectedCoords); 
+    
+    var modalInstance = $uibModal.open({
+      animation: true,
+      ariaLabelledBy: 'drinkingBuddies-modal-title',
+      ariaDescribedBy: 'drinkingBuddies-modal-body',
+      templateUrl: '../../partials/DrinkingBuddiesMapModal.html',      
+      controller: 'DrinkingBuddiesMapModalCtrl',
+      controllerAs: 's',
+      size: 'lg',
+      appendTo: $(".mainMap-modal-parent"),  
+      resolve: {
+        locationCoordsPlaceId: function() {         
+          return selectedCoords;
+        },
+        currentLocationCoords: function() {
+          let lat = UserStorageFactory.getUserCurrentLocation().lat,
+              lng = UserStorageFactory.getUserCurrentLocation().lng,
+              currentLocation = {
+                lat, lng
+              };
+          return currentLocation;
+        }
+      }
+    });
+
+    modalInstance.result.then(function (selectedItem) {
+      s.selected = selectedItem;
+    }, function () {
+      console.log("Dismissed");
+    }); 
+  };
+
+	s.showFieldNote = (entry, event) => {
+		console.log("Selected from main.ctrl: ", entry);
+		// s.newsfeed = false;
+		// s.selectedFieldNote = selectedFieldNote;
+
+  	if ($(event.target).hasClass('newsfeed-entry-location')) return;
+
+    var modalInstance = $uibModal.open({
+      animation: true,      
+      ariaDescribedBy: 'modal-body',
+      templateUrl: '../../partials/FieldJournalDetailedPicModal.html',      
+      controller: 'FieldJournalDetailedPicModalCtrl',
+      controllerAs: 's',
+      size: 'lg',
+      appendTo: $(".detailedEntry-modal-parent"),  
+      resolve: {
+      	fieldJournalEntry: function() {      		
+      		return entry;
+      	},
+      	currentLocation: function() {
+      		return s.currentLocation;
+      	},
+      	fieldJournalGooglePlacesRequest: function() {
+      		return s.GooglePlacesRequest;
+      	},
+      	slider: function() {
+      		return s.slider1;
+      	},
+      	location: function() {
+      		return false;
       	}
       }
     }); 

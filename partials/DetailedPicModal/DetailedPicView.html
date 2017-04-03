@@ -1,14 +1,15 @@
 <div id="detailed-pic-modal" class="row">
 	<div class="col-xs-8">
 		<div class="detailed-pic-modal-img">
-			<img ng-src="../images/no_image_available.jpeg" alt="">											
+			<img ng-src="{{entry.drink_image ? entry.drink_image : '../images/no_image_available.jpeg'}}" alt="">											
 		</div>
 	</div>
 	<div class="col-xs-4 detailed-pic-modal-right">
 		<div class="row">
 			<div class="col-xs-10 col-xs-offset-1">
 				<h3 style="display: inline-block;">{{entry.review_title}}</h3>
-				<button type="button" class="btn btn-link pull-right fieldJournal-pic-detail-edit-btn">
+				<button type="button" class="btn btn-link pull-right fieldJournal-pic-detail-edit-btn"
+								ng-if="location">
 					<span class="glyphicon glyphicon-option-horizontal"
 							ng-click="changeView('EditEntryView.html')"></span>
 				</button>					

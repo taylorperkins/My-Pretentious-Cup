@@ -1,16 +1,38 @@
 
-<div class="row text-center align-middle">
-	<div class="col-xs-12 fieldJournal-pic-details-titleLocation">				
-		<h4><u>{{$parent.entry.review_title}}</u> <br>
-			<small><button type="button" class="btn btn-link fieldJournal-pic-detail-location-btn"
-							ng-click="openMapModal({lat: $parent.entry.lat, lng: $parent.entry.lng, place_id: $parent.entry.place_id})">{{$parent.entry.location_title}}</button></small>
-		</h4>					
-	</div>	
-	<div class="col-xs-8 col-xs-offset-2 fieldJournal-pic-detail-likeComment align-text-bottom">
-		<button type="button" class="btn btn-link pull-left">C {{$parent.entry.comments}}</button>
-		<button type="button" class="btn btn-link pull-right">L {{$parent.entry.likes}}</button>
-	</div>		
+<!-- 'fieldJournal' is my array to iterate through -->
+<div class="row">
+	<!-- <div class="clearfix"></div>	 -->
+	<div ng-repeat="entry in $parent.fieldJournal | orderBy: tab.model: (tab.number ? true : false)">
+		<div id="{{'fieldJournal-list-pic-' + $index}}" class="col-md-4 list-field-journal-pics text-center">			
+			<div ng-mouseenter="picDetailsDisplay($index)"
+					 ng-mouseleave="removeDetailsDisplay($index)">
+				<div class="{{'img-frame-' + $index}} img-frame">
+					<img class="{{'list-field-journal-pics-img-' + $index}}"
+							 ng-src="{{entry.drink_image}}" alt="">											
+				</div>						
+				<div class="fieldJournal-list-pic-details">
+					<div class="fieldJournal-list-pic-details-container align-middle" 							 
+							 ng-click="detailedPicModal(entry, $event, 'fieldJournal')"
+							 ng-show="displayDetails === $index">
+						<div class="row text-center align-middle">
+							<div class="col-xs-12 fieldJournal-pic-details-titleLocation">				
+								<h2><u><b>{{entry.review_title}}</b></u> <br>
+									<button type="button" class="btn btn-link fieldJournal-pic-detail-location-btn"
+													ng-click="openMapModal({lat: entry.lat, lng: entry.lng, place_id: entry.place_id})">{{entry.location_title}}</button>
+								</h2>					
+							</div>	
+							<div class="col-xs-8 col-xs-offset-2 fieldJournal-pic-detail-likeComment align-text-bottom">
+								<button type="button" class="btn btn-link pull-left">C {{entry.comments}}</button>
+								<button type="button" class="btn btn-link pull-right">L {{entry.likes}}</button>
+							</div>		
+						</div>							 	
+					</div>
+				</div>				
+			</div>
+		</div>
+	</div>
 </div>
+
 
 
 

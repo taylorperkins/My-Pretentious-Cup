@@ -145,6 +145,11 @@ h1, h2, h3, h4, h5, h6 li, ol, ul p, a {
 	padding: 1em !important;
 }
 
+.main-newsfeed-fieldjournal .thumbnail {
+	margin-left: 25px;
+	margin-bottom: 0;
+}
+
 .main-selected-fieldnote-image {
 	max-width: 50px;
 	max-height: 50px;
@@ -193,17 +198,12 @@ h1, h2, h3, h4, h5, h6 li, ol, ul p, a {
 	overflow: scroll !important;
 }
 
-.home-globe {
-	padding: 0;
-	background-image: url('../images/home-globe.jpeg');
-	min-height: 340px;
-	background-size: contain;
-	background-repeat: no-repeat;
-	border-radius: 300px; 
+.newsFeed-detailed-view .thumbnail {
+	object-fit: cover;
 }
 
-#map {
-	margin-bottom: 10em;
+.newsFeed-detailed-view .row1 img {
+	height: 100%;
 }
 
 
@@ -218,17 +218,24 @@ h1, h2, h3, h4, h5, h6 li, ol, ul p, a {
 }
 
 .list-field-journal-pics {
-	height: 300px;
+	height: 396.63px;
 	margin: 2em auto;
 	padding: 0 !important;
 	position: relative;	
 }
 
 .list-field-journal-pics img {
-	height: 300px;
+	height: 396.63px;
 	width: 300px;
 	margin: auto;
 	border: 1px solid tan;
+}
+
+.img-frame {
+	opacity: 1;
+	height: 396.63px;
+	width: 300px;
+	margin: auto;
 }
 
 .fieldJournal-list-pic-details {
@@ -263,6 +270,11 @@ h1, h2, h3, h4, h5, h6 li, ol, ul p, a {
   vertical-align:middle;
   text-align:center;
   margin-top: 7em;
+}
+
+.fieldJournal-list-pic-details-container .btn {
+	font-size: 20px;
+	color: #285a85;
 }
 
 .fieldJournal-pic-detail-likeComment {	
@@ -408,7 +420,7 @@ svg {
 }
 
 .detailed-pic-modal-img img {
-	height: 500px;
+	height: 100%;
 	width: 500px;
 }
 

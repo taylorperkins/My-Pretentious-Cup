@@ -44,11 +44,8 @@ app.factory("AuthUserFactory", function(fbRef, $window) {
 		return new Promise ( (resolve, reject) => {
 			fbRef.auth().onAuthStateChanged( (user) => {
 				if (user){
-					isLoggedIn = true;
-					console.log("Here is your var currentUser from AuthUserFactory.js isAuthenticated(): ", user);
-					resolve(isLoggedIn);
-				}else {
-					isLoggedIn = false;
+					resolve(true);
+				}else {					
 					resolve(false);
 				}
 			});
