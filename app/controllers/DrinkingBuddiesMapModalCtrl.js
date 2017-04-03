@@ -36,7 +36,7 @@ app.controller("DrinkingBuddiesMapModalCtrl", function($scope, $timeout, $uibMod
 					}
 				}
 				s.locationAverageRating = combinedRating / numOfRates;				
-				console.log("here is your stuff from the firebase request: ", s.locationFieldJournal, s.locationAverageRating);
+				console.log("here is your stuff from the firebase request: ", s.locationFieldJournal, s.locationAverageRating);				
 			}
 		);
 
@@ -78,7 +78,10 @@ app.controller("DrinkingBuddiesMapModalCtrl", function($scope, $timeout, $uibMod
       } else {
         window.alert('Directions request failed due to ' + status);
       }
-    });	
+    });	  
+
+    s.$apply();
+      
 	}, 100);		
 
 	s.cancel = function () {

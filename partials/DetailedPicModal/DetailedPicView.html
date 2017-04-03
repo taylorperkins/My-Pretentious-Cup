@@ -1,13 +1,13 @@
 <div id="detailed-pic-modal" class="row">
 	<div class="col-xs-8">
 		<div class="detailed-pic-modal-img">
-			<img ng-src="{{entry.drink_image ? entry.drink_image : '../images/no_image_available.jpeg'}}" alt="">											
+			<img ng-src="{{entry.drink_image ? entry.drink_image : '../images/no_image_available.jpeg'}}" alt="">
 		</div>
 	</div>
 	<div class="col-xs-4 detailed-pic-modal-right">
 		<div class="row">
 			<div class="col-xs-10 col-xs-offset-1">
-				<h3 style="display: inline-block;">{{entry.review_title}}</h3>
+				<h3 style="display: inline-block;">{{entry.drink_type}}/{{entry.review_title}}</h3>
 				<button type="button" class="btn btn-link pull-right fieldJournal-pic-detail-edit-btn"
 								ng-if="location">
 					<span class="glyphicon glyphicon-option-horizontal"
@@ -15,9 +15,9 @@
 				</button>					
 			</div>
 		</div>
-		<div class="row">
+		<div class="row text-center">
 			<div class="col-xs-10 col-xs-offset-1">
-				<p>{{entry.location_title}}</p>
+				<p>From {{entry.location_title}}</p>
 			</div>
 		</div>
 		<div class="row">
@@ -29,8 +29,8 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-xs-10 col-xs-offset-1">
-				<p>Put my senses in hereeeee</p>
+			<div class="col-xs-10 col-xs-offset-1" style="margin-bottom: 1em;">
+				<b><i>{{entry.senses}}</i></b>
 			</div>
 		</div>
 		<div class="row">

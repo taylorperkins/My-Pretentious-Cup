@@ -44,7 +44,7 @@ app.controller("LoginCtrl", function($scope, $location, AuthUserFactory, HandleF
 		    	UserStorageFactory.setCurrentUserInfo({uid: s.userUID});		    	
 		    	HandleFBDataFactory.getItemList('users').then(
 	    			(profileObjData) => {
-		    			console.log("This is where it ends: ", profileObjData);
+		    			console.log("Here is your profileObj from firebase LoginCtrl.js: ", profileObjData);
 		    			UserStorageFactory.setCurrentUserInfo(profileObjData);
 	    				$location.path('/home');
 	    			}

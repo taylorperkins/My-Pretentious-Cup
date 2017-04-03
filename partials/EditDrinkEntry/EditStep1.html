@@ -8,12 +8,7 @@
 			</form>			
 		</div>
 	</div>
-
-	<div class="row">
-		<div class="col-xs-10 col-xs-offset-1">
-			<p>I need to put my types in here</p>		
-		</div>
-	</div>
+	
 	<!-- $parent.GooglePlacesRequest(drinkLocationInput) -->
 	<div class="row">
 		<div class="col-xs-10 col-xs-offset-1">
@@ -34,5 +29,22 @@
 			</div>									    					
 		</div>
 	</div>	
+
+	<div class="row">
+		<div class="col-xs-10 col-xs-offset-1">
+			<div class="col-xs-4"
+					 ng-repeat="drink in drinkTypes">
+				<div class="radio">
+				  <label>
+				    <input type="radio" name="drinkTypeRadio" id="optionsRadios-{{$index}}" value="{{drink}}"
+				    			 ng-model="newDrink.drink_type">
+				    			 {{drink}}
+				  </label>
+				</div>								
+			</div>
+		</div>
+	</div>
+
+	
 </div>
 	

@@ -7,13 +7,13 @@
 </div>
 
 <div class="row">
-	<div class="col-xs-8">
+	<div class="col-xs-8" style="padding: 0 !important;">
 		<div id="tastingWheel"
 				 ng-mousemove="checkForSenses($event)" 
 				 ng-click="updateTastingWheel($event)">			
 		</div>		
 	</div>
-	<div class="col-xs-2 col-xs-offset-1">
+	<div class="col-xs-3">
 		<div ng-repeat="sense in $parent.senses">
 		  <p>{{sense}} <span ng-click="removeSense(sense)" class="glyphicon glyphicon-remove"></span></p>
 		</div>		

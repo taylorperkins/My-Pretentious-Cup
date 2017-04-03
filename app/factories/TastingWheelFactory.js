@@ -56,8 +56,8 @@ app.factory("TastingWheelFactory", function($http, fieldJournalWheel) {
 	//creds --> https://bl.ocks.org/maybelinot/5552606564ef37b5de7e47ed2b7dc099
 	let createWheel = (whereToAppend) => {				
 
-		var width = 359.41,
-		    height = 359.41,
+		var width = 294.16,
+		    height = 294.16,
 		    radius = (Math.min(width, height) / 2 - 10);
 
 		var formatNumber = d3.format(",d");
