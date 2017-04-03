@@ -2,7 +2,7 @@
 
 console.log("RegisterCtrl.js is connected");
 
-app.controller("RegisterCtrl", function($scope, $location, AuthUserFactory, HandleFBDataFactory, UserStorageFactory) {
+app.controller("RegisterCtrl", function($scope, $location, fbRef, AuthUserFactory, HandleFBDataFactory, UserStorageFactory) {
 	let s = $scope;
 	console.log("RegisterCtrl.js is working");
 
@@ -27,7 +27,7 @@ app.controller("RegisterCtrl", function($scope, $location, AuthUserFactory, Hand
 
 	s.registerNewUser = () => {
 
-		if (s.userInfo.firstName === "" || s.userInfo.lastName === "" || s.userInfo.userName === "" || s.userInfo.email === "" || s.userInfo.password.length < 6 || s.userInfo.favoriteDrink === "Fave Le Drank" ) {
+		if (s.userInfo.firstName === "" || s.userInfo.lastName === "" || s.userInfo.userName === "" || s.userInfo.email === "" || s.userInfo.password.length < 6 ) {
 			console.log("Here is your user info: ", s.userInfo);
 			alert("Please fill out the required fields");
 			//Check to make sure that both passwords are the same
@@ -40,28 +40,46 @@ app.controller("RegisterCtrl", function($scope, $location, AuthUserFactory, Hand
 			} else {
 				console.log("This is ready to be sent to firebase!! ", s.userInfo);			
 				AuthUserFactory.createUser({email: s.userInfo.email, password: s.userInfo.password}).then(
-
 					// Update uid, remove passwords, and join interests to string instead of array to make Firebase happy
 					(userData) => {
 						console.log("RegisterCtrl new user: ", userData);
 						// AuthUserFactory.changeLogin(true);
 						s.userInfo.uid = userData.uid;
 						s.myUser = s.userInfo;
+						let userPassword = s.myUser.password,
+								userEmail = s.myUser.email;
 						delete s.myUser.password;
 						delete s.myUser.reEnterPassword;
 						console.log("Here is my user after password deletion: ", s.myUser);
-						HandleFBDataFactory.postNewItem(s.myUser, 'users').then(
-							(profileObjFromFirebase) => {
-								console.log("Here is your profile info from firebase: ", profileObjFromFirebase);									// send User Info from firebase to be stored within localstorage
-								UserStorageFactory.setUserInfo(s.myUser, 'user');
-								s.userInfo = {};
-								$location.path('/home');
-							});
-					},
-					(error) => console.log("Error creating user: ", error)
+						var newKey = fbRef.database().ref().child('users').push().key,
+								updates = {};
+						updates[`/users/${newKey}`] = s.myUser;
+						fbRef.database().ref().update(updates).then(
+								() => {
+									AuthUserFactory.loginUser({email: userEmail, password: userPassword}).then( 
+							  		(userData) => {
+											console.log("LoginCtrl.js login user: ", userData.uid);
+											AuthUserFactory.changeLogin(true);
+											UserStorageFactory.setCurrentUserInfo({uid: userData.uid});				
+											HandleFBDataFactory.getItemList('users').then(
+												(profileObjFromFirebase) => {
+													console.log("Here is your profile info from firebase: ", profileObjFromFirebase);
+													UserStorageFactory.setCurrentUserInfo(profileObjFromFirebase);
+													$location.path('/home');													
+												});				
+										},
+										(error) => console.log("Error creating user: ", error)										
+									);						
+								},
+								(error) => console.log("Error creating user: ", error)
+						);
+
+					}			
 				);
-			}			
+			}
 		}
 	};
 
 });
+
+

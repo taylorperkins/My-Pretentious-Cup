@@ -1,13 +1,19 @@
 <div class="row">	
 	<div class="col-xs-10 col-xs-offset-1">
 
+		<div class="row fieldJournal-new-dummy-layout">
+			<div class="col-xs-10 col-xs-offset-1 dummyView-col">
+				<div ng-include="dummyView" scope="" onload=""></div>				
+			</div>
+		</div>
+
 		<div class="row new-fieldJournal-overall-row">
 			<!-- THIS IS YOUR SIDEBAR -->
 			<div class="col-xs-3" style="height: 370px">
 				<div class="btn-group-vertical" role="group" aria-label="...">
 				 	<button type="button" class="btn btn-default btn-lg btn-block"
 				 					ng-repeat="step in steps"
-				 					ng-click="changeStep(step)" >{{step.name}}</button>	
+				 					ng-click="changeStep(step)">{{step.name}}</button>	
 				 	<button type="button" class="btn btn-primary btn-lg btn-block"
 				 					ng-click="newFieldJournalEntry()">All done!</button>			 	
 				</div>
@@ -21,23 +27,7 @@
 					</div>
 				</div>				
 			</div>
-		</div>
-
-		
-		<div class="row fieldJournal-new-dummy-layout">
-			<div class="col-xs-10 col-xs-offset-1 dummyView-col">
-				<div ng-include="dummyView" scope="" onload=""></div>				
-			</div>
-		</div>
-	
-
-
-
-	<!-- <div class="col-xs-6 col-xs-offset-2">
-		<div class="row">
-			<ng-include src="drinkForm" scope="" onload=""></ng-include>			
-		</div>
-	</div> -->
+		</div>	
 
 	</div>
 </div>

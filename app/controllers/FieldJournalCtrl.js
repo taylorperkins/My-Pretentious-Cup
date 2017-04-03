@@ -320,6 +320,8 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
 		console.log("Here is your drink entry: ", s.newDrink);		
 		console.log("This should be your pic: ", s.cropper);
 		if (s.cropper.croppedImage) s.newDrink.drink_image = s.cropper.croppedImage;
+		console.log("Here are your senses: ", s.senses);
+		s.newDrink.senses = s.senses.join(", ");
 		HandleFBDataFactory.createNewFirebaseEntry(s.newDrink, "fieldJournal").then(
 				(fieldJournalStatus) => {
 					updateCurrentFieldJournal();

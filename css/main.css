@@ -36,6 +36,10 @@ h1, h2, h3, h4, h5, h6 li, ol, ul p, a {
 	margin-top: 2em;
 }
 
+.lead {
+	font-size: 16px;
+}
+
 /*=================================*/
 /*==========Register Page==========*/
 /*=================================*/
@@ -219,14 +223,14 @@ h1, h2, h3, h4, h5, h6 li, ol, ul p, a {
 
 .list-field-journal-pics {
 	height: 396.63px;
-	margin: 2em auto;
-	padding: 0 !important;
+	margin: .5em auto;
+	padding: .5em;
 	position: relative;	
 }
 
 .list-field-journal-pics img {
-	height: 396.63px;
-	width: 300px;
+	height: 100%;
+	width: 100%;
 	margin: auto;
 	border: 1px solid tan;
 }
@@ -234,7 +238,7 @@ h1, h2, h3, h4, h5, h6 li, ol, ul p, a {
 .img-frame {
 	opacity: 1;
 	height: 396.63px;
-	width: 300px;
+	width: 100%;
 	margin: auto;
 }
 

@@ -36,6 +36,7 @@ app.controller("FieldJournalDetailedPicModalCtrl", function($scope, $timeout, $u
   s.editedSenses = [];
   s.slider1 = slider;
   s.location = location;
+  s.drinkTypes = ['Espresso', 'Drip', 'Cold Brew'];
 
   s.editCropper = {};
   s.editCropper.sourceImage = null;
@@ -45,6 +46,7 @@ app.controller("FieldJournalDetailedPicModalCtrl", function($scope, $timeout, $u
   s.editBounds.right = 0;
   s.editBounds.top = 0;
   s.editBounds.bottom = 0;
+
 
 
 

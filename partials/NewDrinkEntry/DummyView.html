@@ -9,7 +9,7 @@
   </div>
   <div class="row drinking-buddies-rating-published" style="width: 100%">
     <h4>Published on <i>{{$parent.newDrink.entry_created | date}}</i></h4> 
-    <p class="drinking-buddies-rating-small"><i>Ratings!</i></p>    
+    <p class="drinking-buddies-rating-small">Drink type: <i>{{$parent.newDrink.drink_type}}</i></p>    
     <uib-progress max="10">
     	<uib-bar value="5">
         <span>{{currentUser.userName}}: 
