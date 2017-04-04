@@ -178,6 +178,9 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
 		if (myString === 'listFieldJournal') {
 			s.cropper.croppedImage = null;
 		}
+		s.newDrink = {
+			user_rating: 0
+		};	
 		s.subPage = myString;	
 	};
 	s.updateEntry = (myDrinkEntry) => s.entry = myDrinkEntry;			
