@@ -1,4 +1,4 @@
-<h3 class="text-center"><a>Drinking Buddies State</a></h3>
+<h2 class="text-center"><a class="state-heading">Drinking Buddies</a></h2>
 
 <div class="drinkingBuddies-modal-parent">
 </div>
@@ -19,56 +19,66 @@
 	</div>
 </div>
 
-<uib-tabset active="activeJustified" justified="true">
+<uib-tabset style="margin-top: 2em;" active="activeForm">
 
   <uib-tab index="0" heading="Drinking Buddies"
   				 ng-click="resetSearchInput()">
-  	<div class="col-xs-10 col-xs-offset-1 state-views">
-			<form>
-			  <div class="form-group">
-			    <label for="drinking-buddies-searchFriends">Search for yo buddies</label>
-			    <input type="text" class="drinking-buddies-searchFriends"
-			    			 ng-model="searchText">        
-			  </div>
-			</form>	
-			<div class="row">
-				<div ng-if="!selectFollower"
-						 ng-repeat="buddy in drinkingBuddies | filter:searchText"
-						 ng-include="'partials/DrinkingBuddiesFollowingList.html'" scope="" onload=""></div>						
-			</div>
-
-			<div ng-if="selectFollower">
-				<div class="row">
-					<div class="col-xs-3">
-						<button type="button" class="btn btn-default"
+  	<div class="row">
+	  	<div class="col-xs-6 col-xs-offset-1 state-views drinkingBuddies-input">
+	  		<div class="col-xs-8">
+					<form>
+					  <div class="form-group">
+					    <label for="drinking-buddies-searchFriends">Search for yo buddies</label>
+					    <input type="text" class="drinking-buddies-searchFriends"
+					    			 ng-model="searchText">        
+					  </div>
+					</form>		  			
+	  		</div>
+				<div ng-if="selectFollower">
+					<div class="col-xs-3 pull-right">
+						<button type="button" class="btn btn-default text-right" 
 										ng-click="backToDisplayAllView()">Back</button>
 					</div>
 				</div>
-				<div ng-include="'partials/IndividualProfileSearch.html'" scope="" onload=""></div>
-			</div> 
+			</div>
+  		
+  	</div>
 
+		<div class="row" style="margin-top: 2em">
+			<div ng-if="!selectFollower"
+					 ng-repeat="buddy in drinkingBuddies | filter:searchText"
+					 ng-include="'partials/DrinkingBuddiesFollowingList.html'" scope="" onload=""></div>						
 		</div>
+
+		<div ng-if="selectFollower">			
+			<div ng-include="'partials/IndividualProfileSearch.html'" scope="" onload=""></div>
+		</div> 
   </uib-tab>
 
 
 
-  <uib-tab index="1" heading="Search All">
-  	<div class="col-xs-10 col-xs-offset-1 state-views">
-			<form>
-			  <div class="form-group">
-			    <label for="drinking-buddies-searchFriends">Search for yo buddies</label>
-			    <input type="text" class="drinking-buddies-searchFriends" placeholder="Username/First Name/Last Name" 
-			    			 ng-keyup="updatePopover($event)" 
-			    			 ng-model="searchText" 
-			    			 ng-focus="firebaseCallToUsers()"
-			    			 uib-popover-template="hey"  
-			    			 popover-placement="bottom-left"
-			    			 popover-trigger="'focus'" class="form-control">        
-			  </div>
-			</form>			
+  <uib-tab index="1" heading="Search All"
+  				 ng-click="resetSearchInput()">
+  	<div class="row">
+	  	<div class="col-xs-6 col-xs-offset-1 state-views drinkingBuddies-input">
+				<form>
+				  <div class="form-group">
+				    <label for="drinking-buddies-searchFriends">Search for yo buddies</label>
+				    <input type="text" class="drinking-buddies-searchFriends"
+				    			 ng-keyup="updatePopover($event)" 
+				    			 ng-model="searchText" 
+				    			 ng-focus="firebaseCallToUsers()"
+				    			 uib-popover-template="hey"  
+				    			 popover-placement="bottom-left"
+				    			 popover-trigger="'focus'" class="form-control">        
+				  </div>
+				</form>			
+			</div>  		
+  	</div>
+  	<div class="row" style="margin-top: 2em">
 			<div  ng-include="'partials/IndividualProfileSearch.html'" scope="" onload=""
-						ng-show="currentSearch"></div>
-		</div>
+						ng-show="currentSearch"></div>  		
+  	</div>
   </uib-tab> 
 
 </uib-tabset>

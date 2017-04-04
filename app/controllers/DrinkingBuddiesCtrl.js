@@ -12,14 +12,17 @@ app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $ui
 	s.drinkingBuddiesListReusable = '../../partials/Reusables/DrinkingBuddiesList.html';
 	s.drinkingBuddiesEntryDisplay = '../../partials/DrinkingBuddiesEntryDisplay.html';
 	s.drinkingBuddies = [];
+	s.uidArray = [];
 
 	console.log("This is referencing HomeCtrl.js from DrinkingBuddiesCtrl.js: ", s.currentUser);
-
 
 	//This is an array that contains all possible searches for a user
 	s.userSearch = [];
 
 	let updateFollowingList = () => {
+
+		s.drinkingBuddies = [];
+		s.uidArray = [];
 
 		if (s.currentUser.hasOwnProperty('following')) {
 			console.log(s.currentUser.following);
@@ -48,6 +51,9 @@ app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $ui
 					(status) => {
 						console.log("Your Promise.all should be finished: ", status);
 						console.log("Here are your drinkingBuddies: ", s.drinkingBuddies);
+						s.drinkingBuddies.forEach((buddy) => {
+							s.uidArray.push(buddy.uid);
+						});
 						s.$apply();
 					}
 				);		
@@ -178,7 +184,10 @@ app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $ui
 			);
 	};
 
-	s.resetSearchInput = () => $(".drinking-buddies-searchFriends").val('');
+	s.resetSearchInput = () => {
+		$(".drinking-buddies-searchFriends").val('');
+		s.selectedUser = {};
+	};
 
 	s.backToDisplayAllView = () => {
 		s.selectFollower = false;		
