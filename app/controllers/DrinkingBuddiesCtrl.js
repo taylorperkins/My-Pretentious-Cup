@@ -187,6 +187,7 @@ app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $ui
 	s.resetSearchInput = () => {
 		$(".drinking-buddies-searchFriends").val('');
 		s.selectedUser = {};
+		s.currentSearch = null;
 	};
 
 	s.backToDisplayAllView = () => {
