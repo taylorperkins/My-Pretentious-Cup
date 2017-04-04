@@ -16,8 +16,8 @@
 							 ng-show="displayDetails === $index">
 						<div class="row text-center align-middle">
 							<div class="col-xs-12 fieldJournal-pic-details-titleLocation">				
-								<h2><u><b>{{entry.review_title}}</b></u> <br>
-									<button type="button" class="btn btn-link fieldJournal-pic-detail-location-btn"
+								<h2><u><b style="color: white">{{entry.review_title}}</b></u> <br>
+									<button type="button" class="btn btn-link fieldJournal-pic-detail-location-btn" style="color: white"
 													ng-click="openMapModal({lat: entry.lat, lng: entry.lng, place_id: entry.place_id})">{{entry.location_title}}</button>
 								</h2>					
 							</div>	

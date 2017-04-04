@@ -25,16 +25,18 @@
   				 ng-click="resetSearchInput()">
   	<div class="row">
 	  	<div class="col-xs-6 col-xs-offset-1 state-views drinkingBuddies-input">
-				<form>
-				  <div class="form-group">
-				    <label for="drinking-buddies-searchFriends">Search for yo buddies</label>
-				    <input type="text" class="drinking-buddies-searchFriends"
-				    			 ng-model="searchText">        
-				  </div>
-				</form>	
+	  		<div class="col-xs-8">
+					<form>
+					  <div class="form-group">
+					    <label for="drinking-buddies-searchFriends">Search for yo buddies</label>
+					    <input type="text" class="drinking-buddies-searchFriends"
+					    			 ng-model="searchText">        
+					  </div>
+					</form>		  			
+	  		</div>
 				<div ng-if="selectFollower">
 					<div class="col-xs-3 pull-right">
-						<button type="button" class="btn btn-default"
+						<button type="button" class="btn btn-default text-right" 
 										ng-click="backToDisplayAllView()">Back</button>
 					</div>
 				</div>
@@ -48,20 +50,15 @@
 					 ng-include="'partials/DrinkingBuddiesFollowingList.html'" scope="" onload=""></div>						
 		</div>
 
-		<div ng-if="selectFollower">
-			<div class="row" style="margin-top: 2em">
-				<div class="col-xs-3">
-					<button type="button" class="btn btn-default"
-									ng-click="backToDisplayAllView()">Back</button>
-				</div>
-			</div>
+		<div ng-if="selectFollower">			
 			<div ng-include="'partials/IndividualProfileSearch.html'" scope="" onload=""></div>
 		</div> 
   </uib-tab>
 
 
 
-  <uib-tab index="1" heading="Search All">
+  <uib-tab index="1" heading="Search All"
+  				 ng-click="resetSearchInput()">
   	<div class="row">
 	  	<div class="col-xs-6 col-xs-offset-1 state-views drinkingBuddies-input">
 				<form>

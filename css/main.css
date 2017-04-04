@@ -68,6 +68,15 @@ h1, h2, h3, h4, h5, h6 li, ol, ul p, a {
 	color: white;
 }
 
+.nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover {
+	background-color: white;
+	color: black;
+}
+
+a:hover {
+	color: white !important;
+}
+
 
 /*=================================*/
 /*==========Register Page==========*/
@@ -354,6 +363,9 @@ svg {
 
 .fieldJournal-create-details-row {
 	height: 365px;
+	background-color: white;
+	border-radius: 5px;
+	margin-top: 2em;
 }
 
 .fieldJournal-new-dummy-layout {
@@ -486,8 +498,13 @@ svg {
 	padding: 1em;
 }
 
+.drinking-buddies-entry-display-img-row {
+	padding-right: 1px;
+	padding-left: 1px;
+}
+
 .drinking-buddies-entry-display-img-row h4 {
-	margin: .3em auto !important;
+	margin: .3em auto !important;	
 }
 
 .drinking-buddies-list-header {	
@@ -551,7 +568,8 @@ svg {
 }
 
 .drinkingBuddies-search-result {
-	margin-top: 2em;
+	padding: 2em;
+	padding-top: 0;
 }
 
 .drinkingBuddies-input {
@@ -574,6 +592,12 @@ svg {
 .individual-search-row {
 	margin-left: 2em;
 	margin-right: 2em;
+}
+
+.individual-search-details-col {
+	background-color: white;
+	padding: 2em;
+	border-radius: 5px;
 }
 
 
