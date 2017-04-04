@@ -40,6 +40,35 @@ h1, h2, h3, h4, h5, h6 li, ol, ul p, a {
 	font-size: 16px;
 }
 
+#main-view {
+	background-color: rgba(0,0,0,0.4);
+}
+
+.state-heading {
+	color: white;
+}
+
+.nav-tabs {
+	border-bottom: 2px solid #f0ad4e;
+	margin-left: 10em;
+	margin-right: 10em;
+}
+
+.nav-item {	
+	width: 20%;
+	text-align: center;
+}
+
+.nav-item:nth-child(2) {
+	margin-left: 2em;
+}
+
+.nav-link {
+	font-size: 20px;
+	color: white;
+}
+
+
 /*=================================*/
 /*==========Register Page==========*/
 /*=================================*/
@@ -524,6 +553,29 @@ svg {
 .drinkingBuddies-search-result {
 	margin-top: 2em;
 }
+
+.drinkingBuddies-input {
+	background-color: white;
+	border-radius: 5px;
+	padding-top: 1em;
+}
+
+.drinking-buddies-following-list-col {
+	padding: 2em;
+}
+
+.drinking-buddies-individual-row {
+	background-color: white;
+	margin-left: 1em;
+	margin-right: 1em;
+	border-radius: 5px;
+}
+
+.individual-search-row {
+	margin-left: 2em;
+	margin-right: 2em;
+}
+
 
 
 /*=================================*/

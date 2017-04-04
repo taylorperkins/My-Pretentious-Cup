@@ -1,13 +1,13 @@
-<div class="col-xs-6"
+<div class="col-xs-6 drinking-buddies-following-list-col"
 		 ng-click="showBuddyInfo(buddy)">
-	<div class="row">
+	<div class="row drinking-buddies-individual-row">
 		<div class="col-xs-6">
 			<img ng-src="{{$parent.buddy.profile_picture ? $parent.buddy.profile_picture : '../../images/bob-ross.jpg'}}" alt="">						
 		</div>
 
-		<div class="col-xs-6 text-center">
-		  <h2><u>{{$parent.buddy.userName}} / <br>
-		  <small>{{$parent.buddy.firstName}} {{$parent.buddy.lastName}}</small></u></h2>	
+		<div class="col-xs-6 text-center" style="margin-top: 2em">
+		  <h4><u>{{$parent.buddy.userName}} / <br>
+		  <small>{{$parent.buddy.firstName}} {{$parent.buddy.lastName}}</small></u></h4>	
 		</div>						
 	</div>					
 </div>
