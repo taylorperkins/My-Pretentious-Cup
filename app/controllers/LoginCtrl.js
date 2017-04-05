@@ -2,7 +2,7 @@
 
 console.log("LoginCtrl.js is connected");
 
-app.controller("LoginCtrl", function($scope, $location, AuthUserFactory, HandleFBDataFactory, UserStorageFactory) {
+app.controller("LoginCtrl", function($scope, $location, fbRef, AuthUserFactory, HandleFBDataFactory, UserStorageFactory) {
 	let s = $scope;
 	console.log("LoginCtrl.js is working");
 
@@ -20,7 +20,7 @@ app.controller("LoginCtrl", function($scope, $location, AuthUserFactory, HandleF
   		(userData) => {
 				console.log("LoginCtrl.js login user: ", userData.uid);
 				AuthUserFactory.setLogin(true);
-				UserStorageFactory.setCurrentUserInfo({uid: userData.uid});				
+				UserStorageFactory.setCurrentUserInfo({uid: userData.uid});								
 				HandleFBDataFactory.getItemList('users').then(
 					(profileObjFromFirebase) => {
 						console.log("Here is your profile info from firebase: ", profileObjFromFirebase);
@@ -42,6 +42,14 @@ app.controller("LoginCtrl", function($scope, $location, AuthUserFactory, HandleF
 		    	AuthUserFactory.setLogin(true);
 		    	s.userUID = userInfo.user.uid;	
 		    	UserStorageFactory.setCurrentUserInfo({uid: s.userUID});		    	
+
+		    	fbRef.database().ref('users').orderByChild('uid').equalTo(s.userUID).once('value').then(
+		    			(snapshot) => {
+			    			console.log("Compare this snapshot to the next line: ", snapshot.val());
+		    				
+		    			}
+		    		);
+
 		    	HandleFBDataFactory.getItemList('users').then(
 	    			(profileObjData) => {
 		    			console.log("Here is your profileObj from firebase LoginCtrl.js: ", profileObjData);

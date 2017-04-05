@@ -138,8 +138,7 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
 						fieldJournals[fieldJournalEntry].uglyId = fieldJournalEntry;
 						s.fieldJournal.unshift(fieldJournals[fieldJournalEntry]);					
 					}		
-					console.log("Here is your field journal: ", s.fieldJournal);
-					UserStorageFactory.setCurrentFieldJournal(s.fieldJournal);
+					console.log("Here is your field journal: ", s.fieldJournal);					
 					s.$apply();
 				}
 			);		
