@@ -1,23 +1,19 @@
 
 "use strict";
 
-console.log("DrinkingBuddiesCtrl.js is connected");
+app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $uibModal, drinkingBuddiesCoords, UserStorageFactory) {
+	let s = $scope	
 
-app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $uibModal, TransferDataFactory, drinkingBuddiesCoords, UserStorageFactory) {
-	let s = $scope;
-	console.log("DrinkingBuddiesCtrl.js is working");
+	s.drinkingBuddiesListReusable = '../../partials/Reusables/DrinkingBuddiesList.html';
+	s.drinkingBuddiesEntryDisplay = '../../partials/DrinkingBuddiesEntryDisplay.html';
 
 	s.currentSearch = false;
 	s.selectFollower = false;
-	s.drinkingBuddiesListReusable = '../../partials/Reusables/DrinkingBuddiesList.html';
-	s.drinkingBuddiesEntryDisplay = '../../partials/DrinkingBuddiesEntryDisplay.html';
-	s.drinkingBuddies = [];
-	s.uidArray = [];
-
-	console.log("This is referencing HomeCtrl.js from DrinkingBuddiesCtrl.js: ", s.currentUser);
-
-	//This is an array that contains all possible searches for a user
+	
 	s.userSearch = [];
+	s.drinkingBuddies = [];
+	s.uidArray = [];	
+
 
 	let updateFollowingList = () => {
 
