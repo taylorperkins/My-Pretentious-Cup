@@ -1,17 +1,16 @@
 "use strict";
-console.log("App.js is connected!");
 
 /*
 An Angular application designed to allow users the ability to create a 
-field journal of drink experiences. 
+field journal of drink experiences, as well as display them 
+to other users. 
 
 The app will attach to firebase to store all of the user's information.
 The user's information will include:
 	
-		Field Journal,
-		Recipes Information,
+		Field Journal,		
 		Personal Information,
-		Ratings and Reviews for specific Locations
+		Ratings and Reviews for specific locations
 */
 
 
@@ -21,10 +20,10 @@ let isAuth = (AuthUserFactory, $location) => new Promise ((resolve, reject) => {
 	AuthUserFactory.isAuthenticated()
 		.then((userExists) => {		
 			if (userExists) {
-				AuthUserFactory.changeLogin(true);			
+				AuthUserFactory.setLogin(true);			
 				resolve();
 			} else {
-				AuthUserFactory.changeLogin(false);			
+				AuthUserFactory.setLogin(false);			
 				$location.path('/login');
 				reject();
 			}

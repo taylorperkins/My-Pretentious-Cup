@@ -2,7 +2,7 @@
 "use strict";
 
 app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $uibModal, drinkingBuddiesCoords, UserStorageFactory) {
-	let s = $scope	
+	let s = $scope;
 
 	s.drinkingBuddiesListReusable = '../../partials/Reusables/DrinkingBuddiesList.html';
 	s.drinkingBuddiesEntryDisplay = '../../partials/DrinkingBuddiesEntryDisplay.html';

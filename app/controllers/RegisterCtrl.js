@@ -43,7 +43,7 @@ app.controller("RegisterCtrl", function($scope, $location, fbRef, AuthUserFactor
 					// Update uid, remove passwords, and join interests to string instead of array to make Firebase happy
 					(userData) => {
 						console.log("RegisterCtrl new user: ", userData);
-						// AuthUserFactory.changeLogin(true);
+						// AuthUserFactory.setLogin(true);
 						s.userInfo.uid = userData.uid;
 						s.myUser = s.userInfo;
 						let userPassword = s.myUser.password,
@@ -59,7 +59,7 @@ app.controller("RegisterCtrl", function($scope, $location, fbRef, AuthUserFactor
 									AuthUserFactory.loginUser({email: userEmail, password: userPassword}).then( 
 							  		(userData) => {
 											console.log("LoginCtrl.js login user: ", userData.uid);
-											AuthUserFactory.changeLogin(true);
+											AuthUserFactory.setLogin(true);
 											UserStorageFactory.setCurrentUserInfo({uid: userData.uid});				
 											HandleFBDataFactory.getItemList('users').then(
 												(profileObjFromFirebase) => {

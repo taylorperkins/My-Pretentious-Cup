@@ -79,7 +79,6 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
 		review_description: '',					//user's review
 		lat: '',												//second_call_obj.geometry.location.lat()
 		lng: '',												//second_call_obj.geometry.location.lng()
-		marker_color: GoogleMapsFactory.setMarkerColor(s.category),								//switch case based off of category
 		store_hours: {}									/*
 																			second_call_obj.opening_hours.weekday_text = [strings of each days hours]
 																			let days = {};
@@ -238,8 +237,7 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
         s.newDrink.uid = s.currentUser.uid;
         s.newDrink.user_name = s.currentUser.userName;
         s.newDrink.first_name = s.currentUser.firstName;
-        s.newDrink.last_name = s.currentUser.lastName;
-        s.newDrink.marker_color = GoogleMapsFactory.setMarkerColor(s.category);
+        s.newDrink.last_name = s.currentUser.lastName;        
         s.newDrink.store_hours = {};
         s.newDrink.profile_picture = s.currentUser.profile_picture;
         let storeHours = place.opening_hours.weekday_text;
@@ -320,17 +318,22 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
 	};
 
 	s.newFieldJournalEntry = () => {
-		console.log("Here is your drink entry: ", s.newDrink);		
-		console.log("This should be your pic: ", s.cropper);
-		if (s.cropper.croppedImage) s.newDrink.drink_image = s.cropper.croppedImage;
-		console.log("Here are your senses: ", s.senses);
+		if (s.cropper.croppedImage) s.newDrink.drink_image = s.cropper.croppedImage;		
 		s.newDrink.senses = s.senses.join(", ");
-		HandleFBDataFactory.createNewFirebaseEntry(s.newDrink, "fieldJournal").then(
-				(fieldJournalStatus) => {
+
+		//get a reference to a new key from the location you're wanting to push to 			
+		var newKey = fbRef.database().ref().child("fieldJournal").push().key,
+				updates = {};
+
+		// if (createdObj.drink_image) delete createdObj.drink_image;
+	  updates['/fieldJournal/' + newKey] = s.newDrink;
+	  fbRef.database().ref().update(updates);
+	  fbRef.database().ref('fieldJournal/' + newKey).once('value').then(
+	  		(snapshot) => {
 					updateCurrentFieldJournal();
-					s.subPage = 'listFieldJournal';				
-				}
-			);
+					s.subPage = 'listFieldJournal';					  			
+	  		}
+	  	);		
 	};
 
 	s.deleteFieldJournalEntry = () => {

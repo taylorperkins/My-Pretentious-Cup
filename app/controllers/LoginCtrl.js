@@ -19,7 +19,7 @@ app.controller("LoginCtrl", function($scope, $location, AuthUserFactory, HandleF
   	AuthUserFactory.loginUser(s.account).then( 
   		(userData) => {
 				console.log("LoginCtrl.js login user: ", userData.uid);
-				AuthUserFactory.changeLogin(true);
+				AuthUserFactory.setLogin(true);
 				UserStorageFactory.setCurrentUserInfo({uid: userData.uid});				
 				HandleFBDataFactory.getItemList('users').then(
 					(profileObjFromFirebase) => {
@@ -39,7 +39,7 @@ app.controller("LoginCtrl", function($scope, $location, AuthUserFactory, HandleF
 			.then(
 				(userInfo) => {
 		    	console.log("logged in user:", userInfo);
-		    	AuthUserFactory.changeLogin(true);
+		    	AuthUserFactory.setLogin(true);
 		    	s.userUID = userInfo.user.uid;	
 		    	UserStorageFactory.setCurrentUserInfo({uid: s.userUID});		    	
 		    	HandleFBDataFactory.getItemList('users').then(
@@ -54,7 +54,7 @@ app.controller("LoginCtrl", function($scope, $location, AuthUserFactory, HandleF
 				(error) => {
 		    	// Handle the Errors.
 		    	console.log("error with google login", error);
-		    	AuthUserFactory.changeLogin(false);
+		    	AuthUserFactory.setLogin(false);
 		    	var errorCode = error.code;
 		    	var errorMessage = error.message;
 		    	// The email of the user's account used.
