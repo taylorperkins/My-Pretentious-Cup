@@ -9,7 +9,7 @@
 
 console.log("FieldJournalCtrl.js is connected");
 
-app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal, pages, UserStorageFactory, HandleFBDataFactory, fbRef, GoogleMapsFactory, TastingWheelFactory, fieldJournalWheel) {
+app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal, pages, UserStorageFactory, fbRef, GoogleMapsFactory, TastingWheelFactory, fieldJournalWheel) {
 	let s = $scope;
 	let request;
 	console.log("FieldJournalCtrl.js is working");	

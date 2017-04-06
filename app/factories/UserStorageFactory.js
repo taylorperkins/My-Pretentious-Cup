@@ -17,8 +17,7 @@ app.factory("UserStorageFactory", function() {
 	//userCurrentLocation is an object given by google.maps.LatLng which displays the object with 
 	//lat and lng properties as functions to be called. 
 	//Ex: userCurrentLocation.lat()
-	let userCurrentLocation = {};
-	let currentUserUid = '';
+	let userCurrentLocation = {};	
 
 	//variables to hold users' info
 	let getCurrentUserInfo = () => angular.fromJson(localStorage.getItem('user'));

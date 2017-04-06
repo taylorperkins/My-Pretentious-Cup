@@ -1,62 +1,54 @@
 "use strict";
 
-console.log("LoginCtrl.js is connected");
+app.controller("LoginCtrl", function($scope, $location, fbRef, AuthUserFactory, UserStorageFactory) {
+	let s = $scope;	
 
-app.controller("LoginCtrl", function($scope, $location, fbRef, AuthUserFactory, HandleFBDataFactory, UserStorageFactory) {
-	let s = $scope;
-	console.log("LoginCtrl.js is working");
-
+	//setting up initial account obj
 	s.account = {
 		email: '',
 		password: ''
 	};
 
-	//takes s.account and sends the obj to AuthUserFactory.js to log the user in. 
-	//Also changes the window to /list view
+	//when login button is clicked	
 	s.login = () => {
-  	console.log("you clicked login");
-  	console.log("Here is my account info: ", s.account);
+		//takes user's account information and passes it to get authenticated through firebase
   	AuthUserFactory.loginUser(s.account).then( 
-  		(userData) => {
-				console.log("LoginCtrl.js login user: ", userData.uid);
-				AuthUserFactory.setLogin(true);
-				UserStorageFactory.setCurrentUserInfo({uid: userData.uid});								
-				HandleFBDataFactory.getItemList('users').then(
-					(profileObjFromFirebase) => {
-						console.log("Here is your profile info from firebase: ", profileObjFromFirebase);
-						UserStorageFactory.setCurrentUserInfo(profileObjFromFirebase);
-						$location.path('/home');													
-					});				
+  		(userData) => {		  				
+  			//if the user is logged in, define that user login is true
+				AuthUserFactory.setLogin(true);				
+				//Go to firebase to reference that user's information, then store it all within
+				//local storage
+				fbRef.database().ref('users').orderByChild('uid').equalTo(userData.uid).once('value').then(
+		    			(snapshot) => {			    						    			
+			    			let user = snapshot.val();
+			    			UserStorageFactory.setCurrentUserInfo(user);
+			    			//Once the user's information has been set, change the location to /home
+		    				$location.path('/home');		    				
+		    				s.$apply();
+		    			}
+		    		);		  					
 			},
 			(error) => console.log("Error creating user: ", error)
     );
 	};
 
-	//
-	s.loginGoogle = () => {
-		console.log("you clicked login with Google");
+	//When you choose to login with google
+	s.loginGoogle = () => {				
 		AuthUserFactory.authWithProvider()
 			.then(
-				(userInfo) => {
-		    	console.log("logged in user:", userInfo);
-		    	AuthUserFactory.setLogin(true);
-		    	s.userUID = userInfo.user.uid;	
-		    	UserStorageFactory.setCurrentUserInfo({uid: s.userUID});		    	
-
+				(userInfo) => {		  
+					//if a user, set user login to true  	
+		    	AuthUserFactory.setLogin(true);		    	
+		    	//reference the user's stored informtion from within firebase
 		    	fbRef.database().ref('users').orderByChild('uid').equalTo(s.userUID).once('value').then(
-		    			(snapshot) => {
-			    			console.log("Compare this snapshot to the next line: ", snapshot.val());
-		    				
+		    			(snapshot) => {			    						    			
+			    			let user = snapshot.val();
+			    			//set the user's information within local storage
+			    			UserStorageFactory.setCurrentUserInfo(user);
+		    				$location.path('/home');		    				
+		    				s.$apply();
 		    			}
-		    		);
-
-		    	HandleFBDataFactory.getItemList('users').then(
-	    			(profileObjData) => {
-		    			console.log("Here is your profileObj from firebase LoginCtrl.js: ", profileObjData);
-		    			UserStorageFactory.setCurrentUserInfo(profileObjData);
-	    				$location.path('/home');
-	    			}
-	    		);
+		    		);		    
 
 			}).catch(
 				(error) => {
