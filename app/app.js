@@ -30,6 +30,10 @@ let isAuth = (AuthUserFactory, $location) => new Promise ((resolve, reject) => {
 		});
 });
 
+let confirmGoogle = (googleStatus) => {
+	console.log("Here is your googleStatus from callback: ", googleStatus);
+};
+
 var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bootstrap', 'd3', 'angular-img-cropper', 'rzModule'])
 
 .service('fbRef', function(FBCreds) {
@@ -42,11 +46,11 @@ var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bo
 	this.Sense = {};
 })
 
+//This controller wraps the <head> tags. The only purpose is to dynamically inject
+//Google Maps Api Key into the <script> tag
 .controller('HandleGoogleMapsRequest', function($scope, $sce, GoogleMapsConfig) {
-	let s = $scope;
-  s.GoogleMapsApiRequest = $sce.trustAsResourceUrl(`https://my-pretentious-cup.herokuapp.com/api/googleMaps/js?key=${GoogleMapsConfig.googlePlacesAPIKey}&libraries=places`);
+	$scope.GoogleMapsApiRequest = $sce.trustAsResourceUrl(`https://my-pretentious-cup.herokuapp.com/api/googleMaps/js?key=${GoogleMapsConfig.googlePlacesAPIKey}&libraries=places&`);	
 })
-
 .config(function($stateProvider, $urlRouterProvider, GoogleMapsConfig) {
 				
 				$urlRouterProvider.otherwise('/login');
@@ -123,11 +127,7 @@ var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bo
 	
 })
 
-.run((GoogleMapsFactory) => {
-
-	// GoogleMapsFactory.GoogleMapsRequest().then(
-	// 		(google) => console.log(JSON.parse(google.data))
-	// 	);
+.run(() => {
 	
 	/*
 		I am choosing to leave this section for development later on

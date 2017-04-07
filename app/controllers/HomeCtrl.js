@@ -4,6 +4,7 @@ console.log("HomeCtrl.js is connected");
 
 app.controller("HomeCtrl", function($scope, $sce, $timeout, $uibModal, $window, AuthUserFactory, GoogleMapsConfig, fbRef, UserStorageFactory) {
 	let s = $scope;
+
 	console.log("HomeCtrl.js is working");
 
 	s.background = 'main';
