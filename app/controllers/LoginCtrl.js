@@ -38,9 +38,10 @@ app.controller("LoginCtrl", function($scope, $location, fbRef, AuthUserFactory, 
 			.then(
 				(userInfo) => {		  
 					//if a user, set user login to true  	
-		    	AuthUserFactory.setLogin(true);		    	
+		    	AuthUserFactory.setLogin(true);
+		    	console.log(userInfo);		    	
 		    	//reference the user's stored informtion from within firebase
-		    	fbRef.database().ref('users').orderByChild('uid').equalTo(s.userUID).once('value').then(
+		    	fbRef.database().ref('users').orderByChild('uid').equalTo(userInfo.user.uid).once('value').then(
 		    			(snapshot) => {			    						    			
 			    			let user = snapshot.val();
 			    			//set the user's information within local storage

@@ -118,7 +118,11 @@ var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bo
 	
 })
 
-.run(() => {
+.run((GoogleMapsFactory) => {
+
+	GoogleMapsFactory.GoogleMapsRequest().then(
+			() => console.log(google)
+		);
 	
 	/*
 		I am choosing to leave this section for development later on

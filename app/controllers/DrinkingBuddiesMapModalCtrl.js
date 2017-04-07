@@ -1,14 +1,9 @@
-
-
 "use strict";
 
-console.log("DrinkingBuddiesMapModalCtrl.js is connected");
+
 
 app.controller("DrinkingBuddiesMapModalCtrl", function($scope, $timeout, $uibModalInstance, fbRef, locationCoordsPlaceId, currentLocationCoords) {
 	let s = $scope;
-	console.log("DrinkingBuddiesMapModalCtrl.js is working");
-	console.log("Here is your location's cootrds and place_id: ", locationCoordsPlaceId);
-	console.log("Here is your current location: ", currentLocationCoords);
 
 	s.locationAverageRating = '';
 	s.locationDetails = {};
@@ -22,11 +17,11 @@ app.controller("DrinkingBuddiesMapModalCtrl", function($scope, $timeout, $uibMod
 		};
 
 	fbRef.database().ref('fieldJournal').orderByChild('place_id').equalTo(locationCoordsPlaceId.place_id).once('value').then(
-			(snapshot) => {
-				console.log("Here is your location's field Journal data: ", snapshot.val());
-				let fieldJournalEntries = snapshot.val();
-				let combinedRating = 0,
+			(snapshot) => {				
+				let fieldJournalEntries = snapshot.val(),
+						combinedRating = 0,
 						numOfRates = 0;
+
 				for (var entry in fieldJournalEntries) {
 					fieldJournalEntries[entry].uglyId = entry;
 					s.locationFieldJournal.push(fieldJournalEntries[entry]);					
@@ -35,8 +30,7 @@ app.controller("DrinkingBuddiesMapModalCtrl", function($scope, $timeout, $uibMod
 						numOfRates++;						
 					}
 				}
-				s.locationAverageRating = combinedRating / numOfRates;				
-				console.log("here is your stuff from the firebase request: ", s.locationFieldJournal, s.locationAverageRating);				
+				s.locationAverageRating = combinedRating / numOfRates;								
 			}
 		);
 

@@ -20,8 +20,7 @@ app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $ui
 		s.drinkingBuddies = [];
 		s.uidArray = [];
 
-		if (s.currentUser.hasOwnProperty('following')) {
-			console.log(s.currentUser.following);
+		if (s.currentUser.hasOwnProperty('following')) {			
 			let usersUIDs = [];
 			for (var user in s.currentUser.following) {
 				let uid = s.currentUser.following[user].uid;
@@ -36,17 +35,15 @@ app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $ui
 										user = result[uglyId];
 								user.uglyId = uglyId;
 								s.drinkingBuddies.push(user);
-								resolve();
+								resolve(user);
 							}
 						);					
 				});	
-			};
+			};			
 
 			s.drinkingBuddies = [];
 			Promise.all(usersUIDs.map((uid) => searchFollowing(uid))).then(
-					(status) => {
-						console.log("Your Promise.all should be finished: ", status);
-						console.log("Here are your drinkingBuddies: ", s.drinkingBuddies);
+					(status) => {						
 						s.drinkingBuddies.forEach((buddy) => {
 							s.uidArray.push(buddy.uid);
 						});
@@ -80,8 +77,7 @@ app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $ui
 		fbRef.database().ref('users').once('value').then(
 				(snapshot) => {
 					let myUsers = snapshot.val();
-					s.userSearch = [];
-					console.log(myUsers);
+					s.userSearch = [];					
 					for (var user in myUsers) {
 						let currentUser = myUsers[user],
 								editedUser = {
@@ -92,18 +88,15 @@ app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $ui
 								};						
 						s.userSearch.push( editedUser);
 					}
-					s.$apply();
-					console.log(s.userSearch);
+					s.$apply();					
 				}
 			);			 
 	};
 
 	s.updatePopover = (event) => {
-		let myInput = $(event.target).val();
-		console.log("Here's your input value: ", myInput);
+		let myInput = $(event.target).val();		
 		if (myInput.length > 0) {
-			s.filteredSearches = $filter('filter')(s.userSearch, myInput);
-			console.log("Here are your filtered searches: ", s.filteredSearches);
+			s.filteredSearches = $filter('filter')(s.userSearch, myInput);			
 			if (s.filteredSearches.length > 0) {
 				s.hey = '../../partials/BootstrapTemplates/DrinkingBuddiesSearchPopover.html';
 			}
@@ -111,24 +104,19 @@ app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $ui
 	};	
 
 	//After a user selects a friend, make another call to firebase to get that full user's info
-	s.searchFriends = (filteredFriend) => {		
-		console.log(filteredFriend);	
+	s.searchFriends = (filteredFriend) => {				
 		$(".drinking-buddies-searchFriends").val(filteredFriend.firstName);		
 		fbRef.database().ref(`users/${filteredFriend.uglyId}`).once('value').then(
-				(snapshot) => {
-					console.log("Here is your selected user: ", snapshot.val());
+				(snapshot) => {					
 					s.selectedUser = snapshot.val();		
-					s.selectedUser.friendsList = transposeFriendsList(s.selectedUser.friendsList);
-					var ref = fbRef.database().ref('fieldJournal');
-					ref.orderByChild("uid").equalTo(s.selectedUser.uid).on("value", function(snapshot) {
-  					console.log("Here is a snapshot of the user's fieldJournal entries: ", snapshot.val());
+					s.selectedUser.friendsList = transposeFriendsList(s.selectedUser.friendsList);					
+					fbRef.database().ref('fieldJournal').orderByChild("uid").equalTo(s.selectedUser.uid).on("value", function(snapshot) {  					
   					let fieldJournalEntries = snapshot.val();
   					s.selectedUser.fieldJournal = [];
   					for (var entry in fieldJournalEntries) {
   						fieldJournalEntries[entry].uglyId = entry;
   						s.selectedUser.fieldJournal.unshift(fieldJournalEntries[entry]);
-  					}
-  					console.log("Here is your selected user with field journal entries: ", s.selectedUser);
+  					}  					
   					s.currentSearch = true;
   					s.$apply();
   				});
@@ -139,12 +127,8 @@ app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $ui
 	s.sendCoordsToGlobeView = (selectedCoords) => drinkingBuddiesCoords.Coords = selectedCoords;			
 
 	s.followUser = (selectedUser) => {
-		console.log("Here is your selected user! You want to be their friend: ", selectedUser);
-
 		fbRef.database().ref('users').orderByChild('uid').equalTo(selectedUser.uid).once('value').then(
-				(snapshot) => {
-					console.log('here is your user from firebase: ', snapshot.val());
-					console.log('here is your currentUser: ', s.currentUser);
+				(snapshot) => {					
 					let FBSelectedUser = snapshot.val(),
 							selectedUserKey = Object.keys(FBSelectedUser)[0],
 							updates = {},
@@ -162,16 +146,14 @@ app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $ui
 			);
 	};
 
-	s.showBuddyInfo = (buddy) => {
-		console.log("Here is your buddie's info: ", buddy);
+	s.showBuddyInfo = (buddy) => {		
 		s.selectFollower = true;
 		s.selectedUser = buddy;
 		s.selectedUser.fieldJournal = [];
 
 		fbRef.database().ref('fieldJournal').orderByChild('uid').equalTo(buddy.uid).once('value').then(
 				(snapshot) => {
-					let fieldJournal = snapshot.val();	
-					console.log(fieldJournal);
+					let fieldJournal = snapshot.val();						
 					for (var entry in fieldJournal) {
 						s.selectedUser.fieldJournal.unshift(fieldJournal[entry]);
 					}
@@ -186,13 +168,9 @@ app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $ui
 		s.currentSearch = null;
 	};
 
-	s.backToDisplayAllView = () => {
-		s.selectFollower = false;		
-	};
+	s.backToDisplayAllView = () => s.selectFollower = false;			
 
-	s.openMapModal = (selectedCoords) => {
-		console.log("Here are your selected coords: ", selectedCoords);	
-		
+	s.openMapModal = (selectedCoords) => {				
     var modalInstance = $uibModal.open({
       animation: true,
       ariaLabelledBy: 'drinkingBuddies-modal-title',
@@ -217,11 +195,10 @@ app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $ui
       }
     }); 
 
-    modalInstance.result.then(function (selectedItem) {
-      s.selected = selectedItem;
-    }, function () {
-      console.log("Dismissed");
-    });
+    modalInstance.result.then( 
+    	(selectedItem) => s.selected = selectedItem,
+    	() => console.log("Dismissed")
+    );
 
 	};
 
