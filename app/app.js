@@ -42,7 +42,12 @@ var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bo
 	this.Sense = {};
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.controller('HandleGoogleMapsRequest', function($scope, $sce, GoogleMapsConfig) {
+	let s = $scope;
+  s.GoogleMapsApiRequest = $sce.trustAsResourceUrl(`https://my-pretentious-cup.herokuapp.com/api/googleMaps/js?key=${GoogleMapsConfig.googlePlacesAPIKey}&libraries=places`);
+})
+
+.config(function($stateProvider, $urlRouterProvider, GoogleMapsConfig) {
 				
 				$urlRouterProvider.otherwise('/login');
 
@@ -120,9 +125,9 @@ var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bo
 
 .run((GoogleMapsFactory) => {
 
-	GoogleMapsFactory.GoogleMapsRequest().then(
-			() => console.log(google)
-		);
+	// GoogleMapsFactory.GoogleMapsRequest().then(
+	// 		(google) => console.log(JSON.parse(google.data))
+	// 	);
 	
 	/*
 		I am choosing to leave this section for development later on

@@ -1,18 +1,18 @@
 
 <!DOCTYPE html>
-<html>
-<head>
+<html ng-app="MyPretentiousCup">
+<head ng-controller="HandleGoogleMapsRequest">
 	<title>My Pretentious Cup</title>
 	<meta charset="utf-8">
 
 	<!-- For this app, I use google maps api and their places library. -->
 	<!-- You will need to get a personal key and insert it here for the features to work -->
-	<script type="text/javascript" src="https://my-pretentious-cup.herokuapp.com/api/googleMaps/js?key= insertYourKeyHere &libraries=places"></script>
+	<script type="text/javascript" ng-src={{GoogleMapsApiRequest}}></script>
 	<link rel="stylesheet" href="lib/node_modules/bootstrap/dist/css/bootstrap.min.css">	
 	<link rel="stylesheet" href="lib/node_modules/angularjs-slider/dist/rzslider.min.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
-<body ng-app="MyPretentiousCup">
+<body>
 
 <div class="container-fluid">
 	<div ui-view>				
