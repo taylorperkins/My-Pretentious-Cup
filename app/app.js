@@ -1,31 +1,29 @@
 "use strict";
-console.log("App.js is connected!");
 
 /*
 An Angular application designed to allow users the ability to create a 
-field journal of drink experiences. 
+field journal of drink experiences, as well as display them 
+to other users. 
 
 The app will attach to firebase to store all of the user's information.
 The user's information will include:
 	
-		Field Journal,
-		Recipes Information,
+		Field Journal,		
 		Personal Information,
-		Ratings and Reviews for specific Locations
+		Ratings and Reviews for specific locations
 */
 
+
+//This determines whether or not a user is signed up and logged in through firebase. If not, they are rejected and
+//sent back to the login page
 let isAuth = (AuthUserFactory, $location) => new Promise ((resolve, reject) => {
-	console.log("I am here");
 	AuthUserFactory.isAuthenticated()
-		.then((userExists) => {
-			console.log("userExists", userExists);
+		.then((userExists) => {		
 			if (userExists) {
-				AuthUserFactory.changeLogin(true);
-				console.log("Authenticated, go ahead");
+				AuthUserFactory.setLogin(true);			
 				resolve();
 			} else {
-				AuthUserFactory.changeLogin(false);
-				console.log("Authentication rejected, go away. Fucker.");
+				AuthUserFactory.setLogin(false);			
 				$location.path('/login');
 				reject();
 			}
@@ -45,14 +43,14 @@ var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bo
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
-
-				console.log("I am within the config");
+				
 				$urlRouterProvider.otherwise('/login');
 
 				// HOME STATES AND NESTED VIEWS ========================================
 
 				$stateProvider
 
+					//'landing' state handles both login and register pages
 					.state('landing', {
 						url: '/landing',
 						template: 
@@ -71,6 +69,9 @@ var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bo
             templateUrl: '../partials/Register.html',
             controller: "RegisterCtrl"
 					})
+
+					//'home' state handles everything else. 
+					//This includes 'home'-wrapper, 'main', 'drinkingBuddies', and 'fieldJournal' views
 					.state('home', {			
 						url: '/home',
 						resolve: {
@@ -97,26 +98,16 @@ var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bo
               	url: '/fieldJournal',
               	templateUrl: 'partials/FieldJournal.html',
               	controller: "FieldJournalCtrl"
-              },              
-              "recipes@home": {
-              	templateUrl: 'partials/Recipes.html',
-              	controller: "RecipesCtrl"
-              },
+              },                            
               "drinkingBuddies@home": {
               	templateUrl: 'partials/DrinkingBuddies.html',
               	controller: "DrinkingBuddiesCtrl"
-              },
-              "globeView@home": {
-              	templateUrl: 'partials/GlobeView.html',
-              	controller: "GlobeViewCtrl"
-              }
+              }            
             }						
 					})      		   		       
-	        .state('sample', {
-	        	url: '/sampleView',
-	        	templateUrl: '../partials/Sample.html',
-	        	controller: "SampleCtrl"		        				        
-	        })		        
+	        
+	        //This handles whether or not a user is on a correct path I have pre-defined. If not,
+	        //they are sent back to the most previos page they visited        
 	        .state('notARoute', {
 	        	url: '*path',
 	        	template: function($location, $scope) {
@@ -127,19 +118,15 @@ var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bo
 	
 })
 
-.run((fbRef, $http, TwilioCreds, UserStorageFactory) => {
-	console.log("You are connected");
-	fbRef.database().ref('users').once('value').then(
-			(snapshot) => console.log(snapshot.val())
+.run((GoogleMapsFactory) => {
+
+	GoogleMapsFactory.GoogleMapsRequest().then(
+			() => console.log(google)
 		);
-	console.log(google);
-
-	// let userData = UserStorageFactory.getCurrentUserInfo();
-	// let user = userData[Object.keys(userData)[0]];
-
-	// fbRef.database().ref('fieldJournal').orderByChild('uid').equalTo(user.uid).once('value').then(
-	// 		(snapshot) => console.log("Here's your snapshot: ", snapshot.val())
-	// 	);
+	
+	/*
+		I am choosing to leave this section for development later on
+	*/
 
 	// var client = new twilio.RestClient(TwilioCreds.accountSid, TwilioCreds.authToken);
 	// client.messages.create({
@@ -149,6 +136,7 @@ var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bo
 	// }, function(err, message) {
 	//     console.log(message.sid);
 	// });
+
 });
 
 

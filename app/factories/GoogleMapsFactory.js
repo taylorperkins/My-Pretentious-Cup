@@ -1,7 +1,5 @@
 "use strict";
 
-console.log("GoogleMapsFactory.js is connected");
-
 app.factory("GoogleMapsFactory", function($http, $sce, GoogleMapsConfig) {
 
 	//When passing in a param as the userInput, act as though 'https://maps.googleapis.com/maps/api/'
@@ -11,73 +9,16 @@ app.factory("GoogleMapsFactory", function($http, $sce, GoogleMapsConfig) {
 	//I am using Heroku as the middleman to get the request I want. 
 
 	//Thanks to Blaise Roberts --> https://github.com/BlaiseRoberts/proxy-server							
+	let GoogleMapsRequest = () => $http.get(`https://my-pretentious-cup.herokuapp.com/api/googleMaps/js?key=${GoogleMapsConfig.googlePlacesAPIKey}&libraries=places`);
 
-	let GoogleMapsRequest = () => $http.get("https://my-pretentious-cup.herokuapp.com/api/googleMaps/js?key=AIzaSyAhT4ILSuATDfD9y1k5Sx7HZNITgHj5e3U&libraries=places");
-
-	// userInput should be a string search result, and LatLngCoord should be an obj: {lat: '', lng: ''}
-	let GoogleMapsAutoComplete = (userInput, LatLngCoord) => $http.get(`https://my-pretentious-cup.herokuapp.com/api/googleMaps/place/autocomplete/json?input=${userInput}&types=establishment&location=${LatLngCoord.lat},${LatLngCoord.lng}&radius=1000&key=AIzaSyAhT4ILSuATDfD9y1k5Sx7HZNITgHj5e3U`);
-
-	//finding driving directions based off of two coords, origin and destination {lat: '', lng: ''}
-	let GoogleMapsDrivingDirections = (origin, destination) => $http.get(`https://my-pretentious-cup.herokuapp.com/api/googleMaps/directions/json?origin=${origin.lat},${origin.lng}&destination=${destination.lat},${destination.lng}&key=AIzaSyAhT4ILSuATDfD9y1k5Sx7HZNITgHj5e3U`);
-
-	let createMarkerContent = (results, status) => {
-		return new Promise((resolve, reject) => {
-			let myUpdatedresults = [];
-			if (status == google.maps.places.PlacesServiceStatus.OK) {
-		    for (var i = 0; i < results.length; i++) {
-		    	let newResult = {},		      
-		          myLatLng = {lat: results[i].geometry.location.lat(), lng: results[i].geometry.location.lng()},							  		      
-		          mySearch = results[i],						
-				      contentString = 
-					  		'<div class="content">'+			      
-					      	`<h1 class="firstHeading" class="firstHeading">${mySearch.name}</h1>`+
-					      	'<div class="bodyContent">'+
-					      		`<p><b>${mySearch.name}</b>` +
-					  				`<image src="${mySearch.icon}">` +
-					      		'(last visited June 22, 2009).</p>'+
-					      	'</div>'+
-					      '</div>';
-
-
-			    newResult = { myLatLng, mySearch, contentString };
-			    myUpdatedresults.push(newResult);				  
-		    }
-			}
-			resolve(myUpdatedresults);
-		});
-	};
-
-	let request = {
-		location: '',   //This is defined whenever you receive this request
-		radius: '2500',
-    types: ['bar', 'cafe', 'liquor_store', 'night_club', 'university']
-	};
-
-	//pass in a location to get baack the full obj to make google places requests (Ex: currentLocation obj)
-	let getRequest = (myLocation) => {
-		request.location = myLocation;
-		return request;
-	};
-
-	let setMarkerColor = (category) => {
-		switch (category) {
-			case 'Coffee': 
-				return 'brown';
-			case 'Beer':
-				return 'gold';
-			case 'Wine':
-				return 'purple';
-			case 'Tea':
-				return 'green';
-		}
-	};
+	//Args: 
+	//	userInput: string search result
+	//	LatLngCoords : {lat: '', lng: ''}
+	//Resolves with top 5 predictions from google maps autocompete
+	let GoogleMapsAutoComplete = (userInput, LatLngCoords) => $http.get(`https://my-pretentious-cup.herokuapp.com/api/googleMaps/place/autocomplete/json?input=${userInput}&types=establishment&location=${LatLngCoords.lat},${LatLngCoords.lng}&radius=1000&key=${GoogleMapsConfig.googlePlacesAPIKey}`);		
 
 	return {
 		GoogleMapsRequest,
 		GoogleMapsAutoComplete,
-		GoogleMapsDrivingDirections,
-		createMarkerContent,
-		getRequest,
-		setMarkerColor		
 	};
 });

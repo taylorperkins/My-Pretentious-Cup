@@ -3,90 +3,40 @@
 console.log("TastingWheelFactory.js is connected");
 
 app.factory("TastingWheelFactory", function($http, fieldJournalWheel) {
-	console.log("TastingWheelFactory.js is working");
-
-
-	let setUpColorWheel = (category) => {
-
-		return new Promise((resolve, reject) => {
-
-			d3.json(`../TastingWheels/${category}.json`, function(error, response){
-					if (error) throw error;
-					console.log("Here is your data: ", response);
-					let tastes = response;
-					let individuals = [];
-					let counter = 2;
-
-					
-						var scheme = new ColorScheme;
-						scheme.from_hue(counter)         // Start the scheme  
-						      .scheme('triade')     // Use the 'triade' scheme, that is, colors 
-						                            // selected from 3 points equidistant around 
-						                            // the color wheel. 
-						      .variation('soft');   // Use the 'soft' color variation 					 
-						var colors = scheme.colors();					
-						response.color = colors[0];
-						let colorCounter = 1;
-
-						let outerChildren = 0;
-
-						response.children.forEach((firstLevelTaste) => {
-							firstLevelTaste.color = colors[colorCounter];							
-							colorCounter++;
-							firstLevelTaste.children.forEach((secondLevelTaste) => {
-								secondLevelTaste.color = colors[colorCounter];
-								colorCounter++;
-								secondLevelTaste.children.forEach((thirdLevelTaste) => {
-									thirdLevelTaste.color = colors[colorCounter];
-									outerChildren++;
-									colorCounter++;
-								});
-							});
-						}); 
-						response.outerChildren = outerChildren;
-						individuals.push(response);
-						counter += 20; 
-					resolve(individuals);		
-					});	
-		});	
-	};
-
-
-
+	
 	//creds --> https://bl.ocks.org/maybelinot/5552606564ef37b5de7e47ed2b7dc099
 	let createWheel = (whereToAppend) => {				
 
 		var width = 294.16,
 		    height = 294.16,
-		    radius = (Math.min(width, height) / 2 - 10);
+		    radius = (Math.min(width, height) / 2 - 10),
 
-		var formatNumber = d3.format(",d");
+				formatNumber = d3.format(",d"),
 
-		var x = d3.scaleLinear()
-		    .range([0, 2 * Math.PI]);
+				x = d3.scaleLinear()
+		    	.range([0, 2 * Math.PI]),
+				y = d3.scaleSqrt()
+		    .range([0, radius]),
 
-		var y = d3.scaleSqrt()
-		    .range([0, radius]);
+			  color = d3.scaleOrdinal(d3.schemeCategory20),
 
-		var color = d3.scaleOrdinal(d3.schemeCategory20);
+				partition = d3.partition(),
 
-		var partition = d3.partition();
+				arc = d3.arc()
+		    	.startAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x0))); })
+		    	.endAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x1))); })
+		    	.innerRadius(function(d) { return Math.max(0, y(d.y0)); })
+		    	.outerRadius(function(d) { return Math.max(0, y(d.y1)); }),
 
-		var arc = d3.arc()
-		    .startAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x0))); })
-		    .endAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x1))); })
-		    .innerRadius(function(d) { return Math.max(0, y(d.y0)); })
-		    .outerRadius(function(d) { return Math.max(0, y(d.y1)); });
-
-		var div = d3.select(`#${whereToAppend}`).append("div")
+				div = d3.select(`#${whereToAppend}`).append("div")
 					.attr("class", "tooltip")				
-    			.style("opacity", 0);
+    			.style("opacity", 0),
 
-		var svg = d3.select(`#${whereToAppend}`).append("svg")
-		    .attr("width", width)
-		    .attr("height", height)
-		  .append("g")
-		    .attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
+				svg = d3.select(`#${whereToAppend}`).append("svg")
+			    .attr("width", width)
+			    .attr("height", height)
+			  .append("g")
+			    .attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
 
 
 
@@ -143,8 +93,7 @@ app.factory("TastingWheelFactory", function($http, fieldJournalWheel) {
 	};
 
 
-	return {
-		setUpColorWheel,
+	return {		
 		createWheel
 	};
 	

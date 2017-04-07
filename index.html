@@ -4,9 +4,11 @@
 <head>
 	<title>My Pretentious Cup</title>
 	<meta charset="utf-8">
-	<script type="text/javascript" src="https://my-pretentious-cup.herokuapp.com/api/googleMaps/js?key=AIzaSyAhT4ILSuATDfD9y1k5Sx7HZNITgHj5e3U&libraries=places"></script>
-	<link rel="stylesheet" href="lib/node_modules/bootstrap/dist/css/bootstrap.min.css">
-	<!-- <link rel="stylesheet" href="lib/node_modules/flexboxgrid/css/flexboxgrid.min.css"> -->
+
+	<!-- For this app, I use google maps api and their places library. -->
+	<!-- You will need to get a personal key and insert it here for the features to work -->
+	<script type="text/javascript" src="https://my-pretentious-cup.herokuapp.com/api/googleMaps/js?key= insertYourKeyHere &libraries=places"></script>
+	<link rel="stylesheet" href="lib/node_modules/bootstrap/dist/css/bootstrap.min.css">	
 	<link rel="stylesheet" href="lib/node_modules/angularjs-slider/dist/rzslider.min.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
@@ -20,7 +22,6 @@
 
 <!--ALL PACKAGES-->
 <script type="text/javascript" src="lib/node_modules/jquery/dist/jquery.min.js"></script>
-<!-- <script type="text/javascript" src="lib/node_modules/bootstrap/dist/js/bootstrap.min.js"></script> -->
 <script type="text/javascript" src="lib/node_modules/firebase/firebase.js"></script>
 
 <script type="text/javascript" src="lib/node_modules/angular/angular.min.js"></script>
@@ -36,35 +37,29 @@
 <script type="text/javascript" src="lib/node_modules/d3/build/d3.min.js"></script>
 <script type="text/javascript" src="lib/node_modules/color-scheme/lib/color-scheme.min.js"></script>
 <script type="text/javascript" src="lib/node_modules/angular-img-cropper/dist/angular-img-cropper.min.js"></script>
-<!-- <script type="text/javascript" nsrc="lib/node_modules/twilio/examples/example.js"></script> -->
-
-<!-- MODULES -->
-<script type="text/javascript" src="app/modules/d3Module.js"></script>
 
 <!--APP AND VALUES-->
 <script type="text/javascript" src="app/app.js"></script>
 <script type="text/javascript" src="app/values/FBConfig.js"></script>
 <script type="text/javascript" src="app/values/GoogleMapsConfig.js"></script>
-<script type="text/javascript" src="app/values/TwilioCreds.js"></script>
+
+<!--D3 MODULE-->
+<!--THIS IS NECESSARY FOR D3-->
+<script type="text/javascript" src="app/modules/d3Module.js"></script>
 
 <!--FACTORIES-->
 <script type="text/javascript" src="app/factories/AuthUserFactory.js"></script>
-<script type="text/javascript" src="app/factories/HandleFbDataFactory.js"></script>
 <script type="text/javascript" src="app/factories/UserStorageFactory.js"></script>
 <script type="text/javascript" src="app/factories/GoogleMapsFactory.js"></script>
-<script type="text/javascript" src="app/factories/TransferDataFactory.js"></script>
 <script type="text/javascript" src="app/factories/TastingWheelFactory.js"></script>
 
 <!--CONTROLLERS-->
 <script type="text/javascript" src="app/controllers/DrinkingBuddiesCtrl.js"></script>
 <script type="text/javascript" src="app/controllers/FieldJournalCtrl.js"></script>
-<script type="text/javascript" src="app/controllers/GlobeViewCtrl.js"></script>
 <script type="text/javascript" src="app/controllers/HomeCtrl.js"></script>
 <script type="text/javascript" src="app/controllers/LandingCtrl.js"></script>
 <script type="text/javascript" src="app/controllers/LoginCtrl.js"></script>
-<script type="text/javascript" src="app/controllers/RecipesCtrl.js"></script>
 <script type="text/javascript" src="app/controllers/RegisterCtrl.js"></script>
-<script type="text/javascript" src="app/controllers/SampleCtrl.js"></script>
 <script type="text/javascript" src="app/controllers/MainCtrl.js"></script>
 <script type="text/javascript" src="app/controllers/UserSettingsCtrl.js"></script>
 <script type="text/javascript" src="app/controllers/DrinkingBuddiesMapModalCtrl.js"></script>

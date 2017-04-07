@@ -9,20 +9,3 @@ angular.module("d3", [])
 		return d3;
 	}]
 );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
