@@ -43,7 +43,6 @@ app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $ui
 						);					
 				});	
 			};			
-
 			//iterate over your uid list and search for them within firebase
 			//when that is finished, move on
 			Promise.all(usersUIDs.map((uid) => searchFollowing(uid))).then(
