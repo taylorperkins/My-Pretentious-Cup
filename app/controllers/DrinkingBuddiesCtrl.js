@@ -1,7 +1,7 @@
 
 "use strict";
 
-app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $uibModal, drinkingBuddiesCoords, UserStorageFactory) {
+app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $uibModal, UserStorageFactory) {
 	let s = $scope;
 
 	s.drinkingBuddiesListReusable = '../../partials/Reusables/DrinkingBuddiesList.html';
@@ -15,17 +15,20 @@ app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $ui
 	s.uidArray = [];	
 
 
+	//updates your following list and displays them on your page
 	let updateFollowingList = () => {
-
 		s.drinkingBuddies = [];
 		s.uidArray = [];
-
+		//if your user is actually following someone 
 		if (s.currentUser.hasOwnProperty('following')) {			
+			//create new array to hold all available ids
 			let usersUIDs = [];
+			//for each user in following list.. push the uid to the userUids array
 			for (var user in s.currentUser.following) {
 				let uid = s.currentUser.following[user].uid;
 				usersUIDs.push(uid);
 			}
+			//create a function that grabs each user in following list from firebase and set up a resolve
 			let searchFollowing = (uid) => {
 				return new Promise((resolve, reject) => {
 					fbRef.database().ref('users').orderByChild('uid').equalTo(uid).once('value').then(
@@ -41,9 +44,11 @@ app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $ui
 				});	
 			};			
 
-			s.drinkingBuddies = [];
+			//iterate over your uid list and search for them within firebase
+			//when that is finished, move on
 			Promise.all(usersUIDs.map((uid) => searchFollowing(uid))).then(
-					(status) => {						
+					(status) => {	
+						//for each user you are following, push their id into the uid array					
 						s.drinkingBuddies.forEach((buddy) => {
 							s.uidArray.push(buddy.uid);
 						});
@@ -53,6 +58,8 @@ app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $ui
 		}
 	};
 
+	//watch for the s.currentUser to make a change to their profile.. 
+	//In this case, their following list. If it changes, updates their following profile
 	s.$watch(
 		function() { return s.currentUser; },
 		function(oldValue, newValue) { 
@@ -60,23 +67,15 @@ app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $ui
 				updateFollowingList(); 
 			}	
 		}
-	);
+	);	
 
-	//Take firebase friendsList obj and turns it into an arrayit
-	let transposeFriendsList = (friendsListObj) => {
-		s.selectedUser.friendsListArr = [];
-		for (var friend in friendsListObj) {
-			let uglyId = friend;
-			friendsListObj[uglyId].uglyId = uglyId;
-			s.selectedUser.friendsListArr.push(friendsListObj[uglyId]);
-		}
-		return s.selectedUser.friendsListArr;
-	};
-
+	//This is making an autocomplete for my popover. Im creating a list of all users from firebase
+	//I should probably re-factor this to firebase's querying method.. but nah
 	s.firebaseCallToUsers = () => {
 		fbRef.database().ref('users').once('value').then(
 				(snapshot) => {
 					let myUsers = snapshot.val();
+					//create a list of all available user-objects with specific search properties
 					s.userSearch = [];					
 					for (var user in myUsers) {
 						let currentUser = myUsers[user],
@@ -86,64 +85,93 @@ app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $ui
 									userName: currentUser.userName,
 									uglyId: user 
 								};						
-						s.userSearch.push( editedUser);
+						s.userSearch.push(editedUser);
 					}
 					s.$apply();					
 				}
 			);			 
 	};
 
+	//This updates your search popover to specific users from firebase based on input value
 	s.updatePopover = (event) => {
+		//grab input value
 		let myInput = $(event.target).val();		
 		if (myInput.length > 0) {
+			//ng-repeat search in filteredSearches. 
+			//s.filteredSearches is filtered based on user input and s.userSearch array
 			s.filteredSearches = $filter('filter')(s.userSearch, myInput);			
 			if (s.filteredSearches.length > 0) {
-				s.hey = '../../partials/BootstrapTemplates/DrinkingBuddiesSearchPopover.html';
+				s.drinkingBuddiesSearchPopover = '../../partials/BootstrapTemplates/DrinkingBuddiesSearchPopover.html';
 			}
 		}		
+	};		
+
+	//This function happens whenever you want to get mroe info on a selected user or their following/followed by
+	//colloection changes or updates
+	let updateSelectedUser = (selectedUser) => {
+		return new Promise((resolve, reject) => {
+			//Update input value
+			$(".drinking-buddies-searchFriends").val(selectedUser.firstName);		
+			//get your selected user's data from firebase
+			fbRef.database().ref(`users/${selectedUser.uglyId}`).once('value').then(
+				(firebaseUser) => {
+					let updatedSelectedUser = firebaseUser.val();					
+					//assign uglyId
+					updatedSelectedUser.uglyId = selectedUser.uglyId;
+					s.currentSearch = true;				
+					resolve(updatedSelectedUser);
+				}
+			);
+		});
 	};	
 
 	//After a user selects a friend, make another call to firebase to get that full user's info
-	s.searchFriends = (filteredFriend) => {				
-		$(".drinking-buddies-searchFriends").val(filteredFriend.firstName);		
-		fbRef.database().ref(`users/${filteredFriend.uglyId}`).once('value').then(
-				(snapshot) => {					
-					s.selectedUser = snapshot.val();		
-					s.selectedUser.friendsList = transposeFriendsList(s.selectedUser.friendsList);					
-					fbRef.database().ref('fieldJournal').orderByChild("uid").equalTo(s.selectedUser.uid).on("value", function(snapshot) {  					
-  					let fieldJournalEntries = snapshot.val();
-  					s.selectedUser.fieldJournal = [];
-  					for (var entry in fieldJournalEntries) {
-  						fieldJournalEntries[entry].uglyId = entry;
-  						s.selectedUser.fieldJournal.unshift(fieldJournalEntries[entry]);
-  					}  					
-  					s.currentSearch = true;
-  					s.$apply();
+	s.searchFriends = (selectedUser) => {			
+		$(".drinking-buddies-searchFriends").val(selectedUser.firstName);		
+		//make a call to firebase for the selected user 
+		updateSelectedUser(selectedUser).then(
+				(updatedSelectedUser) => {
+					fbRef.database().ref('fieldJournal').orderByChild("uid").equalTo(updatedSelectedUser.uid).once("value").then(
+						(snapshot) => {  					
+	  					let fieldJournalEntries = snapshot.val();	  					
+	  					//reset s.selectedUser
+							s.selectedUser = updatedSelectedUser;
+	  					//create a new array of fieldJournal entries, with the uglyId included and reversed 
+	  					s.selectedUser.fieldJournal = Object.keys(fieldJournalEntries).reverse().map((entry) => {
+	  						fieldJournalEntries[entry].uglyId = entry;
+	  						return fieldJournalEntries[entry];
+	  					});  					  					  						  						  				
+	  					s.$apply();
   				});
 				}
-			);
-	};
-
-	s.sendCoordsToGlobeView = (selectedCoords) => drinkingBuddiesCoords.Coords = selectedCoords;			
-
+			);		
+	};	
+	
+	//when you choose to follow a specific user
 	s.followUser = (selectedUser) => {
-		fbRef.database().ref('users').orderByChild('uid').equalTo(selectedUser.uid).once('value').then(
-				(snapshot) => {					
-					let FBSelectedUser = snapshot.val(),
-							selectedUserKey = Object.keys(FBSelectedUser)[0],
-							updates = {},
-							selectedUserFollowedByKey = fbRef.database().ref('users').child(selectedUserKey).child('followed_by').push().key,
-							currentUserFollowingKey = fbRef.database().ref('users').child(s.currentUser.ugly_id).child('following').push().key;
-				
-					updates[`/users/${selectedUserKey}/followed_by/${selectedUserFollowedByKey}`] = {'uid': s.currentUser.uid};
-					updates[`/users/${s.currentUser.ugly_id}/following/${currentUserFollowingKey}`] = {'uid': FBSelectedUser[selectedUserKey].uid};
+		//get a reference for the keys you will be creating
+		let updates = {},
+				selectedUserFollowedByKey = fbRef.database().ref('users').child(selectedUser.uglyId).child('followed_by').push().key,
+				currentUserFollowingKey 	= fbRef.database().ref('users').child(s.currentUser.ugly_id).child('following').push().key;
 
-					fbRef.database().ref().update(updates);
-					fbRef.database().ref('users').once('value').then(
-							(snapshot) => s.searchFriends({firstName: selectedUser.firstName, uglyId: selectedUserKey})					
-						);
+		//set up your update objects for both current user and selected user
+		updates[`/users/${selectedUser.uglyId}/followed_by/${selectedUserFollowedByKey}`] = {'uid': s.currentUser.uid};
+		updates[`/users/${s.currentUser.ugly_id}/following/${currentUserFollowingKey}`] 	= {'uid': selectedUser.uid};
+		
+		//Update your database
+		fbRef.database().ref().update(updates).then(
+				() => {	
+					//Update selectedUser
+					updateSelectedUser(selectedUser).then(
+							(updateSelectedUser) => {								
+								//Reset your s.selectedUser and s.selectedUser.fieldJournal
+								s.selectedUser = updateSelectedUser;
+								s.selectedUser.fieldJournal = selectedUser.fieldJournal;								
+								s.$apply();
+							}
+						);					
 				}
-			);
+			);							
 	};
 
 	s.showBuddyInfo = (buddy) => {		
