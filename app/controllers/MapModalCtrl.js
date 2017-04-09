@@ -1,7 +1,7 @@
 "use strict";
 
 
-app.controller("DrinkingBuddiesMapModalCtrl", function($scope, $timeout, $uibModalInstance, fbRef, locationCoordsPlaceId, currentLocationCoords) {
+app.controller("MapModalCtrl", function($scope, $timeout, $uibModalInstance, fbRef, locationCoordsPlaceId, currentLocationCoords) {
 	let s = $scope;
 
 	s.locationAverageRating = '';
