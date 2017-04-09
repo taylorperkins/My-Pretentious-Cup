@@ -176,26 +176,29 @@ app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $ui
 
 	s.showBuddyInfo = (buddy) => {		
 		s.selectFollower = true;
-		s.selectedUser = buddy;
-		s.selectedUser.fieldJournal = [];
-
+		s.selectedUser = buddy;		
+		//make a call to firebase to get selected users's field Journal entries
 		fbRef.database().ref('fieldJournal').orderByChild('uid').equalTo(buddy.uid).once('value').then(
 				(snapshot) => {
-					let fieldJournal = snapshot.val();						
-					for (var entry in fieldJournal) {
-						s.selectedUser.fieldJournal.unshift(fieldJournal[entry]);
-					}
+					let fieldJournal = snapshot.val();	
+					//reset your selecteduser's fieldJournal Array
+					s.selectedUser.fieldJournal = Object.keys(fieldJournal).reverse().map((entry) => {
+						fieldJournal[entry].uglyId = entry;
+						return fieldJournal[entry];																
+					});
 					s.$apply();
 				}
 			);
 	};
 
+	//This is to reset scope variables so that things refresh
 	s.resetSearchInput = () => {
 		$(".drinking-buddies-searchFriends").val('');
 		s.selectedUser = {};
 		s.currentSearch = null;
 	};
 
+	//Takes you back to your friendsList view
 	s.backToDisplayAllView = () => s.selectFollower = false;			
 
 	s.openMapModal = (selectedCoords) => {				
