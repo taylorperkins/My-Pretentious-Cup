@@ -30,27 +30,21 @@ let isAuth = (AuthUserFactory, $location) => new Promise ((resolve, reject) => {
 		});
 });
 
-let confirmGoogle = (googleStatus) => {
-	console.log("Here is your googleStatus from callback: ", googleStatus);
-};
-
 var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bootstrap', 'd3', 'angular-img-cropper', 'rzModule'])
 
 .service('fbRef', function(FBCreds) {
 	return firebase.initializeApp(FBCreds);
-})
-.service('drinkingBuddiesCoords', function() {
-	this.Coords = {};
 })
 .service('fieldJournalWheel', function() {
 	this.Sense = {};
 })
 
 //This controller wraps the <head> tags. The only purpose is to dynamically inject
-//Google Maps Api Key into the <script> tag
+//Google Maps Api Key into the <script> tag src attribute
 .controller('HandleGoogleMapsRequest', function($scope, $sce, GoogleMapsConfig) {
 	$scope.GoogleMapsApiRequest = $sce.trustAsResourceUrl(`https://my-pretentious-cup.herokuapp.com/api/googleMaps/js?key=${GoogleMapsConfig.googlePlacesAPIKey}&libraries=places&`);	
 })
+
 .config(function($stateProvider, $urlRouterProvider, GoogleMapsConfig) {
 				
 				$urlRouterProvider.otherwise('/login');

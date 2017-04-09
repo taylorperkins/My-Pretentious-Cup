@@ -1,7 +1,6 @@
 "use strict";
 
 
-
 app.controller("DrinkingBuddiesMapModalCtrl", function($scope, $timeout, $uibModalInstance, fbRef, locationCoordsPlaceId, currentLocationCoords) {
 	let s = $scope;
 
@@ -48,13 +47,7 @@ app.controller("DrinkingBuddiesMapModalCtrl", function($scope, $timeout, $uibMod
 				service = new google.maps.places.PlacesService(s.drinkingBuddiesMap);	        
 
 		service.getDetails({placeId: locationCoordsPlaceId.place_id}, function(place, status) {
-      if (status === google.maps.places.PlacesServiceStatus.OK) {
-        
-        console.log("Here is your place: ", place);
-        console.log("Here is your search coords: ", place.geometry.location);
-        console.log("Lat: ", place.geometry.location.lat());
-        console.log("Lat: ", place.geometry.location.lng());
-        console.log("=============================");       
+      if (status === google.maps.places.PlacesServiceStatus.OK) {   
         s.locationDetails = place;
       }		
     });	
