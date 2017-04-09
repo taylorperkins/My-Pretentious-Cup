@@ -201,37 +201,5 @@ app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $ui
 	//Takes you back to your friendsList view
 	s.backToDisplayAllView = () => s.selectFollower = false;			
 
-	s.openMapModal = (selectedCoords) => {				
-    var modalInstance = $uibModal.open({
-      animation: true,
-      ariaLabelledBy: 'drinkingBuddies-modal-title',
-      ariaDescribedBy: 'drinkingBuddies-modal-body',
-      templateUrl: '../../partials/DrinkingBuddiesMapModal.html',      
-      controller: 'DrinkingBuddiesMapModalCtrl',
-      controllerAs: 's',
-      size: 'lg',
-      appendTo: $(".drinkingBuddies-modal-parent"),  
-      resolve: {
-      	locationCoordsPlaceId: function() {      		
-      		return selectedCoords;
-      	},
-      	currentLocationCoords: function() {
-      		let lat = UserStorageFactory.getUserCurrentLocation().lat,
-      				lng = UserStorageFactory.getUserCurrentLocation().lng,
-      				currentLocation = {
-      					lat, lng
-      				};
-      		return currentLocation;
-      	}
-      }
-    }); 
-
-    modalInstance.result.then( 
-    	(selectedItem) => s.selected = selectedItem,
-    	() => console.log("Dismissed")
-    );
-
-	};
-
 });
 

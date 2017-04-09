@@ -64,40 +64,6 @@ app.controller("MainCtrl", function($scope, $uibModal, fbRef, UserStorageFactory
     });
 	};
 
-  s.openMapModal = (selectedCoords) => {
-    console.log("Here are your selected coords: ", selectedCoords); 
-    
-    var modalInstance = $uibModal.open({
-      animation: true,
-      ariaLabelledBy: 'drinkingBuddies-modal-title',
-      ariaDescribedBy: 'drinkingBuddies-modal-body',
-      templateUrl: '../../partials/DrinkingBuddiesMapModal.html',      
-      controller: 'DrinkingBuddiesMapModalCtrl',
-      controllerAs: 's',
-      size: 'lg',
-      appendTo: $(".mainMap-modal-parent"),  
-      resolve: {
-        locationCoordsPlaceId: function() {         
-          return selectedCoords;
-        },
-        currentLocationCoords: function() {
-          let lat = UserStorageFactory.getUserCurrentLocation().lat,
-              lng = UserStorageFactory.getUserCurrentLocation().lng,
-              currentLocation = {
-                lat, lng
-              };
-          return currentLocation;
-        }
-      }
-    });
-
-    modalInstance.result.then(function (selectedItem) {
-      s.selected = selectedItem;
-    }, function () {
-      console.log("Dismissed");
-    }); 
-  };
-
 	s.showFieldNote = (entry, event) => {
 		console.log("Selected from main.ctrl: ", entry);
 		// s.newsfeed = false;

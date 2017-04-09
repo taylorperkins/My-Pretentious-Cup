@@ -55,6 +55,38 @@ app.controller("HomeCtrl", function($scope, $sce, $timeout, $uibModal, $window, 
 
 	s.logout = () => AuthUserFactory.logoutUser();
 
+  s.openMapModal = (selectedCoords) => {        
+    var modalInstance = $uibModal.open({
+      animation: true,
+      ariaLabelledBy: 'drinkingBuddies-modal-title',
+      ariaDescribedBy: 'drinkingBuddies-modal-body',
+      templateUrl: '../../partials/DrinkingBuddiesMapModal.html',      
+      controller: 'DrinkingBuddiesMapModalCtrl',
+      controllerAs: 's',
+      size: 'lg',
+      appendTo: $(".home-map-modal-parent"),  
+      resolve: {
+        locationCoordsPlaceId: function() {         
+          return selectedCoords;
+        },
+        currentLocationCoords: function() {
+          let lat = UserStorageFactory.getUserCurrentLocation().lat,
+              lng = UserStorageFactory.getUserCurrentLocation().lng,
+              currentLocation = {
+                lat, lng
+              };
+          return currentLocation;
+        }
+      }
+    }); 
+
+    modalInstance.result.then( 
+      (selectedItem) => s.selected = selectedItem,
+      () => console.log("Dismissed")
+    );
+
+  };
+
 	s.openSettings = () => {
 		console.log("Here is where you should edit your user's settings");    
 		
