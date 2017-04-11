@@ -1,11 +1,10 @@
 "use strict";
 
-console.log("ProfilePicCtrl.js is connected");
 
-app.controller("ProfilePicCtrl", function($scope, $http, $state, fbRef, $uibModalInstance, UserStorageFactory) {
-	console.log("ProfilePicCtrl.js is working");
+app.controller("ProfilePicCtrl", function($scope, $http, $state, fbRef, $uibModalInstance, user) {
 	let s = $scope;	
 
+	//Set up initial cropper properties to reference
 	s.cropper = {};
   s.cropper.sourceImage = null;
   s.cropper.croppedImage   = null;
@@ -15,51 +14,52 @@ app.controller("ProfilePicCtrl", function($scope, $http, $state, fbRef, $uibModa
   s.bounds.top = 0;
   s.bounds.bottom = 0;
 
-	s.cancel = () => $uibModalInstance.dismiss('cancel');
+  console.log(user);
 
+  //cancel method for handling modal exits
+	s.cancel = () => $uibModalInstance.dismiss('cancel');	
+
+	//save cropped profile picture, while also updating all database fieldJournal entries related to that user
+	//you will be updating your user's info,
+	//then also updating all entries.profile_pic property
 	s.saveProfilePic = () => {
+		//check if you dont have a cropped image
 		if (s.cropper.croppedImage === null) {
 			alert("How about you upload a pic and crop it!");			
-		} else {
-			let user = UserStorageFactory.getCurrentUserInfo(),
-					key = Object.keys(user)[0];					
-
-			console.log("User and key from ProfilePicCtrl.js: ", user, key);					
+		//
+		} else {	
+			//create an image placement instance for your user collection profile_pic		
 			let imagePlacement = {};
-			imagePlacement[`/users/${key}/profile_picture`] = s.cropper.croppedImage;			
+			imagePlacement[`/users/${user.uglyId}/profile_picture`] = s.cropper.croppedImage;			
 			
+			//update your data base under users collection
 			fbRef.database().ref().update(imagePlacement).then(
-					() => {
-						console.log("you did it son");
-						fbRef.database().ref('users').child(key).once('value').then(
+					() => {			
+							//reference your current user's field journal collection													
+							fbRef.database().ref('fieldJournal').orderByChild('uid').equalTo(user.uid).once('value').then(
 								(snapshot) => {
-									console.log("Here's your user from fb: ", snapshot.val());
-									let userData = snapshot.val(),
-										  user = {};
+									//create nistances for your field Journal entries profile pic property
+									let fieldJournalEntries = snapshot.val(),
+											imageLocation = {};
 
-									userData.ugly_id = key;								
-									user[key] = userData;
-									UserStorageFactory.setCurrentUserInfo(user);									
+									//This is a function which is set up to be a resolve. 
+									//This function creates a new property on imageLocation object to be updated within firebase
+									let createImageLocationObject = (fieldJournalUglyId) => {
+										return new Promise((resolve, reject) => {
+											imageLocation[`/fieldJournal/${fieldJournalUglyId}/profile_picture`] = s.cropper.croppedImage;
+											resolve(imageLocation);
+										});
+									};
 
-									console.log("Here is your user from ProfilePicCtrl.js: ", userData);
-
-									fbRef.database().ref('fieldJournal').orderByChild('uid').equalTo(userData.uid).once('value').then(
-										(snapshot) => {
-											console.log("Here's your snapshot: ", snapshot.val());
-											let fieldJournalEntries = snapshot.val();
-											for (var entry in fieldJournalEntries) {
-												let imageLocation = {};
-												imageLocation[`/fieldJournal/${entry}/profile_picture`] = s.cropper.croppedImage;
+									//do a promise.all over your fieldJournal entries, updating your imageLocation Obj for each one
+									Promise.all(Object.keys(fieldJournalEntries).map((entry) => createImageLocationObject(entry))).then(
+											(snapshotArr) => {														
+												//then take your imageLocation and update firebase
 												fbRef.database().ref().update(imageLocation).then(
-														() => {
-															console.log("All your shit should be updated!");															
-														}
-													);
+														() => s.cancel()
+													);																												
 											}
-											$state.reload();															
-										}
-									);
-
+										);																																							
 								}
 							);
 					}
@@ -67,11 +67,6 @@ app.controller("ProfilePicCtrl", function($scope, $http, $state, fbRef, $uibModa
 		}
 	};
 
-	s.showDataURL = () => {
-		console.log("I am working");
-		let myCanvas = document.getElementById("cropped-image");
-		myCanvas.toDataURL(s.cropper.croppedImage);
-	};
 
 });
 

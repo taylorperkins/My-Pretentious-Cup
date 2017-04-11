@@ -6,7 +6,7 @@
 	ListFieldJournal partials. 
 */
 
-app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal, pages, UserStorageFactory, fbRef, GoogleMapsFactory, TastingWheelFactory, fieldJournalWheel) {
+app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal, pages, fbRef, GoogleMapsFactory, TastingWheelFactory, fieldJournalWheel) {
 	let s = $scope;			
 
 	s.pages = pages;

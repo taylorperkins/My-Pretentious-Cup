@@ -1,6 +1,6 @@
 "use strict";
 
-app.controller("RegisterCtrl", function($scope, $location, fbRef, AuthUserFactory, UserStorageFactory) {
+app.controller("RegisterCtrl", function($scope, $location, fbRef, AuthUserFactory, UserStorageObj) {
 	let s = $scope;	
 
 	s.currentUser = false;
@@ -55,9 +55,11 @@ app.controller("RegisterCtrl", function($scope, $location, fbRef, AuthUserFactor
 											//Once the user is logged in, go to firebase to retrieve the user's info									
 											fbRef.database().ref('users').orderByChild('uid').equalTo(userData.uid).once('value').then(
 								    			(snapshot) => {			    						    			
-									    			let user = snapshot.val();
+									    			let user = snapshot.val(),
+									    			    currentUser = user[Object.keys(user)[0]];
 									    			//set the user's info within local storage
-									    			UserStorageFactory.setCurrentUserInfo(user);
+									    			currentUser.uglyId = Object.keys(user)[0];
+									    			UserStorageObj.currentUser = currentUser;
 								    				$location.path('/home');		    				
 								    				s.$apply();
 								    			}

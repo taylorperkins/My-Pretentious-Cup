@@ -1,6 +1,6 @@
 "use strict";
 
-app.controller("LoginCtrl", function($scope, $location, fbRef, AuthUserFactory, UserStorageFactory) {
+app.controller("LoginCtrl", function($scope, $location, fbRef, AuthUserFactory, UserStorageObj) {
 	let s = $scope;	
 
 	//setting up initial account obj
@@ -20,8 +20,10 @@ app.controller("LoginCtrl", function($scope, $location, fbRef, AuthUserFactory, 
 				//local storage
 				fbRef.database().ref('users').orderByChild('uid').equalTo(userData.uid).once('value').then(
 		    			(snapshot) => {			    						    			
-			    			let user = snapshot.val();
-			    			UserStorageFactory.setCurrentUserInfo(user);
+			    			let user = snapshot.val(),
+			    					currentUser = user[Object.keys(user)[0]];
+			    			currentUser.uglyId = Object.keys(user)[0];
+			    			UserStorageObj.currentUser = currentUser;
 			    			//Once the user's information has been set, change the location to /home
 		    				$location.path('/home');		    				
 		    				s.$apply();
@@ -43,9 +45,11 @@ app.controller("LoginCtrl", function($scope, $location, fbRef, AuthUserFactory, 
 		    	//reference the user's stored informtion from within firebase
 		    	fbRef.database().ref('users').orderByChild('uid').equalTo(userInfo.user.uid).once('value').then(
 		    			(snapshot) => {			    						    			
-			    			let user = snapshot.val();
-			    			//set the user's information within local storage
-			    			UserStorageFactory.setCurrentUserInfo(user);
+			    			let user = snapshot.val(),
+			    					currentUser = user[Object.keys(user)[0]];
+			    			//set the user's information within local storag.
+			    			currentUser.uglyId = Object.keys(user)[0];
+			    			UserStorageObj.currentUser = currentUser;
 		    				$location.path('/home');		    				
 		    				s.$apply();
 		    			}
