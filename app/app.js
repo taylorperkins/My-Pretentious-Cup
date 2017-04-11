@@ -38,6 +38,9 @@ var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bo
 .service('fieldJournalWheel', function() {
 	this.Sense = {};
 })
+.service('UserStorageObj', function() {
+	this.currentUser = {};
+})
 
 //This controller wraps the <head> tags. The only purpose is to dynamically inject
 //Google Maps Api Key into the <script> tag src attribute

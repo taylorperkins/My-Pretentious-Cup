@@ -1,6 +1,6 @@
 "use strict";
 
-app.controller("MainCtrl", function($scope, $uibModal, fbRef, UserStorageFactory) {	
+app.controller("MainCtrl", function($scope, $uibModal, fbRef) {	
 	let s = $scope;
 
 	s.newsfeed = true;

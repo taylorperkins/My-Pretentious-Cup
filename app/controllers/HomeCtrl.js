@@ -1,15 +1,21 @@
 "use strict";
 
-app.controller("HomeCtrl", function($scope, $sce, $timeout, $uibModal, $window, AuthUserFactory, GoogleMapsConfig, fbRef, UserStorageFactory, GoogleMapsFactory) {
-	let s = $scope,
-      user = UserStorageFactory.getCurrentUserInfo(),
+app.controller("HomeCtrl", function($scope, $sce, $timeout, $uibModal, $window, AuthUserFactory, GoogleMapsConfig, fbRef, UserStorageObj, GoogleMapsFactory) {
+	let s = $scope,      
       request;
+
+  s.currentUser = UserStorageObj.currentUser;
+
+  // console.log(user);
 
   //gets set every time you switch views
   s.background = 'main';
-  s.currentUser = user[Object.keys(user)[0]];
-  s.currentUser.ugly_id = Object.keys(user)[0];
+  // s.currentUser = user[Object.keys(user)[0]];
+  // s.currentUser.uglyId = Object.keys(user)[0];
+  // s.currentUser = user;
   s.currentUserFieldJournal = [];
+
+  console.log(s.currentUser);
 
   //config for my slider
   s.slider1 = {     
@@ -36,10 +42,11 @@ app.controller("HomeCtrl", function($scope, $sce, $timeout, $uibModal, $window, 
     
   //this function listens to the current user's user collection obj within firebase for any changes, 
   //then updates s.current user based on those changes
-  fbRef.database().ref('users/').child(s.currentUser.ugly_id).on("value", function(snapshot) {
+  fbRef.database().ref('users/').child(s.currentUser.uglyId).on("value", function(snapshot) {
     //grab snapshot from firebase
     let user = snapshot.val();
-    user.ugly_id = s.currentUser.ugly_id;    
+    user.uglyId = UserStorageObj.currentUser.uglyId;  
+    UserStorageObj.currentUser = user;    
     s.currentUser = user;    
   });	
 
@@ -52,8 +59,7 @@ app.controller("HomeCtrl", function($scope, $sce, $timeout, $uibModal, $window, 
 	}, 100);
 
   //As soon as the controller loads, grab the user's current location, and display an info-window 
-  //showing their current location. Also, send the coords to be saved within 
-  //UserStorageFactory.js to be referrenced by other controllers
+  //showing their current location. 
   $window.navigator.geolocation.getCurrentPosition(function(position) {    
     let myLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);       
     s.myLocation = {

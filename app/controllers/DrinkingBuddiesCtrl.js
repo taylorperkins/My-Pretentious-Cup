@@ -1,7 +1,7 @@
 
 "use strict";
 
-app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $uibModal, UserStorageFactory) {
+app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $uibModal) {
 	let s = $scope;
 
 	s.drinkingBuddiesListReusable = '../../partials/Reusables/DrinkingBuddiesList.html';
@@ -151,11 +151,11 @@ app.controller("DrinkingBuddiesCtrl", function($scope, $sce, fbRef, $filter, $ui
 		//get a reference for the keys you will be creating
 		let updates = {},
 				selectedUserFollowedByKey = fbRef.database().ref('users').child(selectedUser.uglyId).child('followed_by').push().key,
-				currentUserFollowingKey 	= fbRef.database().ref('users').child(s.currentUser.ugly_id).child('following').push().key;
+				currentUserFollowingKey 	= fbRef.database().ref('users').child(s.currentUser.uglyId).child('following').push().key;
 
 		//set up your update objects for both current user and selected user
 		updates[`/users/${selectedUser.uglyId}/followed_by/${selectedUserFollowedByKey}`] = {'uid': s.currentUser.uid};
-		updates[`/users/${s.currentUser.ugly_id}/following/${currentUserFollowingKey}`] 	= {'uid': selectedUser.uid};
+		updates[`/users/${s.currentUser.uglyId}/following/${currentUserFollowingKey}`] 	= {'uid': selectedUser.uid};
 		
 		//Update your database
 		fbRef.database().ref().update(updates).then(
