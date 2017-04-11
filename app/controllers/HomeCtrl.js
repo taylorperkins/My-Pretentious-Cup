@@ -5,10 +5,11 @@ app.controller("HomeCtrl", function($scope, $sce, $timeout, $uibModal, $window, 
       user = UserStorageFactory.getCurrentUserInfo(),
       request;
 
+  //gets set every time you switch views
   s.background = 'main';
   s.currentUser = user[Object.keys(user)[0]];
-  s.currentUserFieldJournal = [];
   s.currentUser.ugly_id = Object.keys(user)[0];
+  s.currentUserFieldJournal = [];
 
   //config for my slider
   s.slider1 = {     
@@ -21,29 +22,33 @@ app.controller("HomeCtrl", function($scope, $sce, $timeout, $uibModal, $window, 
     }
   };
   
+  //this listens to this particular user's field journal collection within firebase and 
+  //updates s.fieldJournal upon change
   fbRef.database().ref('fieldJournal/').orderByChild('uid').equalTo(s.currentUser.uid).on("value", function(snapshot) {    
+    //val from firebase
     let  fieldJournals = snapshot.val();
+    //create a new array with all of your field journal entries, also adding in the uglyID per entry
     s.fieldJournal = Object.keys(fieldJournals).reverse().map((entry) => {
       fieldJournals[entry].uglyId = entry;
       return fieldJournals[entry];
     });
-    
   });
     
+  //this function listens to the current user's user collection obj within firebase for any changes, 
+  //then updates s.current user based on those changes
   fbRef.database().ref('users/').child(s.currentUser.ugly_id).on("value", function(snapshot) {
+    //grab snapshot from firebase
     let user = snapshot.val();
     user.ugly_id = s.currentUser.ugly_id;    
     s.currentUser = user;    
-  });
-  
-	console.log(s.background);
+  });	
 
+  //a nifty little jQuery method for setting the well height within the page
 	var windowHeight = window.innerHeight - 400;
 	$timeout(function() {
 		$(".main-row").height(windowHeight);
 		$(".fieldJournal-row").height(windowHeight);
-		$(".drinkingBuddies-row").height(windowHeight);
-		$(".globe-row").height(windowHeight);
+		$(".drinkingBuddies-row").height(windowHeight);		
 	}, 100);
 
   //As soon as the controller loads, grab the user's current location, and display an info-window 
@@ -89,14 +94,18 @@ app.controller("HomeCtrl", function($scope, $sce, $timeout, $uibModal, $window, 
     });
   };
 
+  //whenever you click between views, this function gets called. whichPic is a string the represents the 'view' of the page
 	s.changeBackground = (whichPic) => {
 		s.background = whichPic;		
 		let backgroundImage = `../../images/${s.background}.jpg`;
 		$("#home-container").css("background-image", 'url(' + backgroundImage + ')');
 	};
 
+  //Handles logout functions for the user
 	s.logout = () => AuthUserFactory.logoutUser();
 
+  //this gets called whenever you click on a specific locations name on a field journal entry
+  //It opens a modal with a map view and directions leading to that given place
   s.openMapModal = (selectedCoords) => {        
     var modalInstance = $uibModal.open({
       animation: true,
@@ -108,9 +117,11 @@ app.controller("HomeCtrl", function($scope, $sce, $timeout, $uibModal, $window, 
       size: 'lg',
       appendTo: $(".home-map-modal-parent"),  
       resolve: {
+        //pass in coords of  given location
         locationCoordsPlaceId: function() {         
           return selectedCoords;
         },
+        //also pass your current location coords
         currentLocationCoords: function() {          
           return s.myLocation;
         }
@@ -124,8 +135,8 @@ app.controller("HomeCtrl", function($scope, $sce, $timeout, $uibModal, $window, 
 
   };
 
-	s.openSettings = () => {
-		console.log("Here is where you should edit your user's settings");    
+  //openss a setting modal where you can adjust your user's personal settings
+	s.openSettings = () => {		
 		
     var modalInstance = $uibModal.open({
       animation: true,
@@ -135,14 +146,10 @@ app.controller("HomeCtrl", function($scope, $sce, $timeout, $uibModal, $window, 
       controller: 'UserSettingsCtrl',
       controllerAs: 's',
       size: 'lg',
-      appendTo: $(".modal-parent"),  
+      appendTo: $(".home-settings-modal-parent"),        
       resolve: {
-      	user: function() {
-      		let user = UserStorageFactory.getCurrentUserInfo(),
-      				uglyId = Object.keys(user)[0];
-      		user = user[uglyId];
-      		user.ugly_id = uglyId;
-      		return user;
+      	user: function() {      		
+      		return s.currentUseruser;
       	}
       }
     }); 
@@ -153,7 +160,7 @@ app.controller("HomeCtrl", function($scope, $sce, $timeout, $uibModal, $window, 
     );
 	};
 
-  //config for a more detailed 
+  //config for a more detailed view of any given field journal entry
   s.detailedPicModal = (entry, event) => {
     
     //check for specific html elements
