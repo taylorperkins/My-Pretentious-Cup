@@ -1,9 +1,6 @@
 "use strict";
 
-console.log("MainCtrl.js is connected");
-
-app.controller("MainCtrl", function($scope, $uibModal, fbRef, UserStorageFactory) {
-	console.log("MainCtrl.js is working");
+app.controller("MainCtrl", function($scope, $uibModal, fbRef, UserStorageFactory) {	
 	let s = $scope;
 
 	s.newsfeed = true;
@@ -22,8 +19,9 @@ app.controller("MainCtrl", function($scope, $uibModal, fbRef, UserStorageFactory
     });   
 	});			
 
-	s.changeProfilePicture = () => {
-		console.log("Here is where you should change your user's profile pic!");    
+  //This is set up for when you want to change your user's profile picture. A modal appears
+  //for you to crop a picture and update whatcha look like
+	s.changeProfilePicture = () => {		
 		
     var modalInstance = $uibModal.open({
       animation: true,
@@ -33,23 +31,19 @@ app.controller("MainCtrl", function($scope, $uibModal, fbRef, UserStorageFactory
       controller: 'ProfilePicCtrl',
       controllerAs: 's',
       size: 'lg',
-      appendTo: $(".modal-profile-pic"),  
+      appendTo: $(".main-modal-profile-pic"),  
+      //resolve with your current user's info 
       resolve: {
-      	user: function() {
-      		let user = UserStorageFactory.getCurrentUserInfo(),
-      				uglyId = Object.keys(user)[0];
-      		user = user[uglyId];
-      		user.ugly_id = uglyId;
-      		return user;
+      	user: function() {      		
+      		return s.currentUser;
       	}
       }
     }); 
 
-    modalInstance.result.then(function (selectedItem) {
-      s.selected = selectedItem;
-    }, function () {
-      console.log("Dismissed");
-    });
+    modalInstance.result.then(
+      (selectedItem) => s.selected = selectedItem,
+      () => console.log("Dismissed")
+    );
 	};	
 
 });
