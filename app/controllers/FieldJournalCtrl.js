@@ -6,17 +6,14 @@
 	ListFieldJournal partials. 
 */
 
-
-console.log("FieldJournalCtrl.js is connected");
-
 app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal, pages, UserStorageFactory, fbRef, GoogleMapsFactory, TastingWheelFactory, fieldJournalWheel) {
-	let s = $scope;
-	let request;
-	console.log("FieldJournalCtrl.js is working");	
-	console.log("Here is your currentUser fom within FieldJournalCtrl.js: ", s.currentUser);
+	let s = $scope;			
+
 	s.pages = pages;
 	s.category = 'Coffee';
+	//drink types are iterated over for radio buttons when deciding drink type in create a drink entry
 	s.drinkTypes = ['Espresso', 'Drip', 'Cold Brew'];
+	//These are representing my filters on listFieldJournal partial
 	s.tabs = [
 		{
 			name: 'Date Created',
@@ -43,6 +40,7 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
 	s.senses = [];
 	s.oneAtATime = true;
 	s.dummyView = '../../partials/NewDrinkEntry/DummyView.html';
+	//These are different views to be injected when creating a field Journal entry
 	s.steps = [
 		{
 			name: 'The Basics',
@@ -102,15 +100,13 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
 	};	
 
 
-	s.fieldJournal = [];
+	// s.fieldJournal = [];
 	s.drinkForm = `partials/drink-forms/${s.category}Form.html`;
+	//this gets changed when you switch between list and new
 	s.subPage = 'listFieldJournal';
 	s.fieldJournalListPicDetails = "../partials/FieldJournalListPicDetails.html";
-	s.entry = {};
-
-	s.coffeeStyles = ['Latte', 'Macchiato', 'Cortado', 'Flat White', 'Espresso', 'Cappucino'];
-	s.coffeeMethods = ['Drip', 'French Press', 'Cold Brew'];	  
-
+	//gets updated by updateEntry
+	s.entry = {};	
 
 	//==================================
 	//This is for step4 img cropping
@@ -121,44 +117,10 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
   s.bounds.left = 0;
   s.bounds.right = 0;
   s.bounds.top = 0;
-  s.bounds.bottom = 0;
-	s.showPicture = () => console.log(s.cropper); console.log(s.bounds);
-
-	//==================================
-
-	let updateCurrentFieldJournal = () => {
-
-		fbRef.database().ref('fieldJournal').orderByChild('uid').equalTo(s.currentUser.uid).once('value').then(
-				(snapshot) => {
-					let fieldJournals = snapshot.val();
-					console.log("Here is your firebase version of the update: ", fieldJournals);
-					s.fieldJournal = [];
-					for (var fieldJournalEntry in fieldJournals) {
-						console.log(fieldJournalEntry);
-						fieldJournals[fieldJournalEntry].uglyId = fieldJournalEntry;
-						s.fieldJournal.unshift(fieldJournals[fieldJournalEntry]);					
-					}		
-					console.log("Here is your field journal: ", s.fieldJournal);					
-					s.$apply();
-				}
-			);		
-	};
-	updateCurrentFieldJournal();	
-
-	var fieldNotesRef = fbRef.database().ref('fieldJournal/');
-	fieldNotesRef.on('value', function(snapshot) { updateCurrentFieldJournal(); });
-
-	s.slider1 = {			
-		options: {
-			floor: 0,
-			ceil: 5,
-			step: 0.1,
-			precision: 1,
-			showSelectionBar: true,	    
-		}
-	};
+  s.bounds.bottom = 0; 
 
 
+	//Both of these set the css when you hover over a picture on the list all field journals section
 	s.picDetailsDisplay = (index) => {
 		s.displayDetails = index;		
 		$('.img-frame-' + index).fadeTo('fast', 0.3).css('background-color', '#000');
@@ -169,20 +131,25 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
 		$('.img-frame-' + index).fadeTo('fast', 1).css('background-color', '');
 		$('.list-field-journal-pics-img-' + index).fadeTo('fast', 1);
 	};
+
+	//The tasting wheel is sensitive, and needs some sort of function to even react
 	s.updateTastingWheel = (event) => console.log(event);			
-	s.logD = (dElement) => console.log(dElement);
-	s.getCurrentLocation = () => s.myLocation = UserStorageFactory.getUserCurrentLocation(); 		
-	s.changeViews = (myString) => {
-		if (myString === 'listFieldJournal') {
-			s.cropper.croppedImage = null;
-		}
+	//This does a rest on the different views, and changing the scope variables that are in effect.	
+	s.changeViews = (myString) => {		
+		//reset	s.cropper
+		s.cropper.croppedImage = null;		
+		//reset s.newDrink
 		s.newDrink = {
 			user_rating: 0
 		};	
+		//finally change the subpage
 		s.subPage = myString;	
 	};
+	//updates s.entry
 	s.updateEntry = (myDrinkEntry) => s.entry = myDrinkEntry;			
 
+	//changes the partial injected to be step
+	//also resets the tasting wheel if you are on the tasting wheel partial
 	s.changeStep = (step) => {
 		s.selectedStep = step.partial;
 		if (step.name === 'Hone in Your Senses') {
@@ -197,128 +164,79 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
 		// console.log("FieldJournalCtrl.js: ", event.target);		
 	};
 
+	//removes senses from your newFieldJournal obj	
 	s.removeSense = (sense) => {
+		//create your filter function. Pass in someSense, return everything that is NOT that sense
 		let findSense = (someSense) => someSense != sense;		
+		//filter
 		s.senses = s.senses.filter(findSense);
-		s.user_senses = s.senses.join(' ');
-		console.log("Here are your user's senses: ", s.user_senses);
+		//join the strings together
+		s.user_senses = s.senses.join(' ');		
 	};
 
+	//Watches for changes from the tasting wheel and updates as it goes
 	s.$watch(
 		function() { return fieldJournalWheel.Sense; },
-		function(newValue, oldValue) {
-			console.log("Your shit is changinnn");
+		function(newValue, oldValue) {			
 			if (s.senses.indexOf(newValue) !== -1 || typeof newValue !== "string" || newValue === "Tasting Wheel") return;			
-			s.senses.push(newValue);			
-			s.user_senses = s.senses.join(' ');
-			console.log("Here are your user's senses: ", s.user_senses);
+			//add in new sense to the s.senses
+			s.senses.push(newValue);		
+			//join the list together to create a str	
+			s.user_senses = s.senses.join(' ');			
 		});	
 
+	//This gathers a bunch of information regarding google maps places library
+	//Whenever a user selects a place from the autocomplete input, this gets caled
 	s.logSelectedLocation = (mySelectedLocation) => {
+		//change the value of the input field
 		$("#newDrinkLocation").val(mySelectedLocation.description);
+		//update scope variables
 		s.searchPrediction = false;
-		s.predictions = null;
-		console.log(mySelectedLocation);
+		s.predictions = null;		
+		//declare google maps places library service to get some better details on the location
 		var service = new google.maps.places.PlacesService(document.createElement('div'));
-
+		//call the service, passing in the location's coords
 		service.getDetails({placeId: mySelectedLocation.place_id}, function(place, status) {
+			//check status
       if (status === google.maps.places.PlacesServiceStatus.OK) {
-        console.log("Here is my selected place; ", place);
-        s.newDrink.category = s.category;
-        s.newDrink.entry_created = Date.now();
+      	//get all details related to your selected place and add them to s.newDrink                     
         s.newDrink.place_id = place.place_id;
         s.newDrink.google_rating = place.rating;
         s.newDrink.location_title = place.name;
         s.newDrink.location_address = place.formatted_address;
         s.newDrink.location_phone_number = place.formatted_phone_number;
         s.newDrink.lat = place.geometry.location.lat();
-        s.newDrink.lng = place.geometry.location.lng();
-        s.newDrink.uid = s.currentUser.uid;
-        s.newDrink.user_name = s.currentUser.userName;
-        s.newDrink.first_name = s.currentUser.firstName;
-        s.newDrink.last_name = s.currentUser.lastName;        
-        s.newDrink.store_hours = {};
-        s.newDrink.profile_picture = s.currentUser.profile_picture;
+        s.newDrink.lng = place.geometry.location.lng();        
+        s.newDrink.store_hours = {}; 
+        //this created an obj that holds store hours for your location       
         let storeHours = place.opening_hours.weekday_text;
-        storeHours.forEach((day) => {
-        	console.log(day);
-        	let myDay = {},
-        			separator = day.indexOf(':'),
+        storeHours.forEach((day) => {        	        	
+        	let separator = day.indexOf(':'),
         			dayName = day.slice(0, separator),
         			dayHours = day.slice(separator+2, day.length);
 
         	s.newDrink.store_hours[dayName] = dayHours;
-        });
-
-        console.log(s.newDrink);        
+        });        
         s.$apply();
     	}
     });
-	};
-
-	s.GooglePlacesRequest = (placesSearchInput) => {
-		return new Promise ((resolve, reject) => {
-			$timeout.cancel(request);
-			s.showRequests = false;
-			s.searchPrediction = false;
-			request = $timeout(function() {
-
-				//s.location is updated on focus of the input field			
-				console.log("I am about to make a request");
-				console.log("Here is my current location: ", s.myLocation);
-				let latLng = {
-					lat: s.myLocation.lat,
-					lng: s.myLocation.lng
-				};
-				if(!placesSearchInput) return;
-				GoogleMapsFactory.GoogleMapsAutoComplete(placesSearchInput.toLowerCase(), latLng).then(
-						(googleMapsRequestObj) => {
-							console.log(googleMapsRequestObj.data);
-							s.predictions = googleMapsRequestObj.data.predictions;
-							console.log($("#newDrinkLocation").val());						
-							s.newFieldJournalPopup = "../../partials/BootstrapTemplates/NewFieldJournalPopup.html";						
-						  s.searchPrediction = true;	
-						  let myReturnObj = {
-						  	predictions: googleMapsRequestObj.data.predictions,
-						  	searchPrediction: true
-						  };
-						  resolve(myReturnObj); 									
-						}
-					);					
-			}, 500);
-		});
-	};
-
-
+	};	
 
 	//==============================================
 	//Anything Firebase
 
-	s.saveEditedEntry = (myEditedDrink) => {
-		console.log(myEditedDrink);
-		console.log(s.newDrink);
-
-		if (!($("#newDrinkLocation").val())) {
-			$("#newDrinkLocation").css("border", "1px solid red").attr("placeholder", "please enter new location!!");
-			return;
-		} else {			
-			for (var entry in s.newDrink) {
-				myEditedDrink[entry] = s.newDrink[entry];
-			}		
-			console.log("Here is myEditedDrink obj: ", myEditedDrink);
-			let fieldJournalUglyId = myEditedDrink.uglyId;
-			delete myEditedDrink.uglyID;
-			if (myEditedDrink.$$hashKey) delete myEditedDrink.$$hashKey;
-			fbRef.database().ref('fieldJournal/' + fieldJournalUglyId).set(myEditedDrink).then(
-					(snapshot) => $state.reload()
-				);		
-		} 
-
-	};
-
+	//whenever you create a new fieldJournal entry	
 	s.newFieldJournalEntry = () => {
+		//if you upload and crop a picture, add it
 		if (s.cropper.croppedImage) s.newDrink.drink_image = s.cropper.croppedImage;		
+		//add extra schtuff
 		s.newDrink.senses = s.senses.join(", ");
+		s.newDrink.entry_created = Date.now();
+		s.newDrink.uid = s.currentUser.uid;
+    s.newDrink.user_name = s.currentUser.userName;
+    s.newDrink.first_name = s.currentUser.firstName;
+    s.newDrink.last_name = s.currentUser.lastName;        
+    s.newDrink.profile_picture = s.currentUser.profile_picture;
 
 		//get a reference to a new key from the location you're wanting to push to 			
 		var newKey = fbRef.database().ref().child("fieldJournal").push().key,
@@ -326,56 +244,14 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
 
 		// if (createdObj.drink_image) delete createdObj.drink_image;
 	  updates['/fieldJournal/' + newKey] = s.newDrink;
-	  fbRef.database().ref().update(updates);
-	  fbRef.database().ref('fieldJournal/' + newKey).once('value').then(
-	  		(snapshot) => {
-					updateCurrentFieldJournal();
-					s.subPage = 'listFieldJournal';					  			
+	  //There is a watch function that listens for this user's fieldJournal collection changes and updates
+	  //s.fieldJournal when it is updated
+	  fbRef.database().ref().update(updates).then(
+	  		() => {
+					s.subPage = 'listFieldJournal';
+					s.$apply();					  				  			
 	  		}
-	  	);		
-	};
-
-	s.deleteFieldJournalEntry = () => {
-		fbRef.database().ref(`fieldJournal/${s.entry.uglyId}`).remove();			
-		$state.reload();
-	};
-
-  s.detailedPicModal = (entry, event) => {
-		
-  	if ($(event.target).hasClass('fieldJournal-pic-detail-location-btn')) return;
-
-    var modalInstance = $uibModal.open({
-      animation: true,      
-      ariaDescribedBy: 'modal-body',
-      templateUrl: '../../partials/FieldJournalDetailedPicModal.html',      
-      controller: 'FieldJournalDetailedPicModalCtrl',
-      controllerAs: 's',
-      size: 'lg',
-      appendTo: $(".fieldJournal-modal-parent"),  
-      resolve: {
-      	fieldJournalEntry: function() {      		
-      		return entry;
-      	},
-      	currentLocation: function() {
-      		return s.currentLocation;
-      	},
-      	fieldJournalGooglePlacesRequest: function() {
-      		return s.GooglePlacesRequest;
-      	},
-      	slider: function() {
-      		return s.slider1;
-      	},
-      	location: function() {
-      		return true;
-      	}
-      }
-    }); 
-
-    modalInstance.result.then(function (selectedItem) {
-      s.selected = selectedItem;
-    }, function () {
-      console.log("Dismissed");
-    });
-	};
+	  	);	  
+	};	
 
 });

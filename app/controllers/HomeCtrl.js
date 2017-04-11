@@ -1,25 +1,41 @@
 "use strict";
 
-console.log("HomeCtrl.js is connected");
+app.controller("HomeCtrl", function($scope, $sce, $timeout, $uibModal, $window, AuthUserFactory, GoogleMapsConfig, fbRef, UserStorageFactory, GoogleMapsFactory) {
+	let s = $scope,
+      user = UserStorageFactory.getCurrentUserInfo(),
+      request;
 
-app.controller("HomeCtrl", function($scope, $sce, $timeout, $uibModal, $window, AuthUserFactory, GoogleMapsConfig, fbRef, UserStorageFactory) {
-	let s = $scope;
-
-	console.log("HomeCtrl.js is working");
-
-	s.background = 'main';
-  let user = UserStorageFactory.getCurrentUserInfo();
+  s.background = 'main';
   s.currentUser = user[Object.keys(user)[0]];
+  s.currentUserFieldJournal = [];
   s.currentUser.ugly_id = Object.keys(user)[0];
 
-  var userRef = fbRef.database().ref('users/').child(s.currentUser.ugly_id);
-  userRef.on('value', function(snapshot) {
-    console.log(snapshot.val());
-    let user = snapshot.val();
-    user.ugly_id = s.currentUser.ugly_id;
-    console.log("Your user is changing!", user);
-    s.currentUser = user;
+  //config for my slider
+  s.slider1 = {     
+    options: {
+      floor: 0,
+      ceil: 5,
+      step: 0.1,
+      precision: 1,
+      showSelectionBar: true 
+    }
+  };
+  
+  fbRef.database().ref('fieldJournal/').orderByChild('uid').equalTo(s.currentUser.uid).on("value", function(snapshot) {    
+    let  fieldJournals = snapshot.val();
+    s.fieldJournal = Object.keys(fieldJournals).reverse().map((entry) => {
+      fieldJournals[entry].uglyId = entry;
+      return fieldJournals[entry];
+    });
+    
   });
+    
+  fbRef.database().ref('users/').child(s.currentUser.ugly_id).on("value", function(snapshot) {
+    let user = snapshot.val();
+    user.ugly_id = s.currentUser.ugly_id;    
+    s.currentUser = user;    
+  });
+  
 	console.log(s.background);
 
 	var windowHeight = window.innerHeight - 400;
@@ -34,21 +50,47 @@ app.controller("HomeCtrl", function($scope, $sce, $timeout, $uibModal, $window, 
   //showing their current location. Also, send the coords to be saved within 
   //UserStorageFactory.js to be referrenced by other controllers
   $window.navigator.geolocation.getCurrentPosition(function(position) {    
-    s.myLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);       
-
-    let myLocation = {
-      lat: s.myLocation.lat(),
-      lng: s.myLocation.lng()
-    };
-
-    console.log("Here is my location from HomeCtrl.js: ", myLocation);
-    UserStorageFactory.setUserCurrentLocation(myLocation);    
+    let myLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);       
+    s.myLocation = {
+      lat: myLocation.lat(),
+      lng: myLocation.lng()
+    };    
   });   
 
+  //this function makes a request to google maps autocomplete api to get predictions based off of your query
+  //it populates your popover with the top prediction
+  s.GooglePlacesRequest = (placesSearchInput) => {
+    //set up as a promise so that you can use it within FieldJournalDetailedPicModalCtrl.js
+    return new Promise ((resolve, reject) => {
+      //if there's already a request happening, stop it and start over
+      $timeout.cancel(request);
+      s.showRequests = false;
+      s.searchPrediction = false;
+
+      request = $timeout(function() {
+        //s.location is updated on focus of the input field             
+        if(!placesSearchInput) return;
+        //make an api call user the user's input value and your current location        
+        GoogleMapsFactory.GoogleMapsAutoComplete(placesSearchInput.toLowerCase(), s.myLocation).then(
+            (googleMapsRequestObj) => {             
+              s.predictions = googleMapsRequestObj.data.predictions;            
+              //update popover  
+              s.newFieldJournalPopup = "../../partials/BootstrapTemplates/NewFieldJournalPopup.html";           
+              //enables popover
+              s.searchPrediction = true;  
+              //resolve with your predictions obj
+              resolve({
+                predictions: googleMapsRequestObj.data.predictions,
+                searchPrediction: true
+              });                   
+            }
+          );          
+      }, 500);
+    });
+  };
 
 	s.changeBackground = (whichPic) => {
-		s.background = whichPic;
-		console.log(s.background);
+		s.background = whichPic;		
 		let backgroundImage = `../../images/${s.background}.jpg`;
 		$("#home-container").css("background-image", 'url(' + backgroundImage + ')');
 	};
@@ -69,13 +111,8 @@ app.controller("HomeCtrl", function($scope, $sce, $timeout, $uibModal, $window, 
         locationCoordsPlaceId: function() {         
           return selectedCoords;
         },
-        currentLocationCoords: function() {
-          let lat = UserStorageFactory.getUserCurrentLocation().lat,
-              lng = UserStorageFactory.getUserCurrentLocation().lng,
-              currentLocation = {
-                lat, lng
-              };
-          return currentLocation;
+        currentLocationCoords: function() {          
+          return s.myLocation;
         }
       }
     }); 
@@ -110,11 +147,59 @@ app.controller("HomeCtrl", function($scope, $sce, $timeout, $uibModal, $window, 
       }
     }); 
 
-    modalInstance.result.then(function (selectedItem) {
-      s.selected = selectedItem;
-    }, function () {
-      console.log("Dismissed");
-    });
+    modalInstance.result.then(
+      (selectedItem) => s.selected = selectedItem,
+      () => console.log("Dismissed")
+    );
 	};
+
+  //config for a more detailed 
+  s.detailedPicModal = (entry, event) => {
+    
+    //check for specific html elements
+    if ($(event.target).hasClass('fieldJournal-pic-detail-location-btn')) return;
+    if ($(event.target).hasClass('newsfeed-entry-location')) return;
+    
+    //define actual config
+    var modalInstance = $uibModal.open({
+      animation: true,      
+      ariaDescribedBy: 'modal-body',
+      templateUrl: '../../partials/FieldJournalDetailedPicModal.html',      
+      controller: 'FieldJournalDetailedPicModalCtrl',
+      controllerAs: 's',
+      size: 'lg',
+      appendTo: $(".home-detailed-pic-modeal-parent"),  
+      resolve: {
+        //selected entry to view
+        fieldJournalEntry: function() {         
+          return entry;
+        },
+        //your location coords
+        currentLocation: function() {
+          return s.myLocation;
+        },
+        //function for autocomplete on a given location
+        fieldJournalGooglePlacesRequest: function() {
+          return s.GooglePlacesRequest;
+        },
+        //pass in slider config for whenever you're editing an entry
+        slider: function() {
+          return s.slider1;
+        },
+        //what page you're on
+        pageLocation: function() {
+          return s.background;
+        }
+      }
+    }); 
+
+    //dismissal function
+    modalInstance.result.then(
+      (selectedItem) => s.selected = selectedItem,
+      () => console.log("Dismissed")
+    );
+  };
+
+
 });
 

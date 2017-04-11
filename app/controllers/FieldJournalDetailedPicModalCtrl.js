@@ -2,7 +2,7 @@
 
 console.log("FieldJournalDetailedPicModalCtrl.js is connected");
 
-app.controller("FieldJournalDetailedPicModalCtrl", function($scope, $timeout, $uibModalInstance, fieldJournalEntry, currentLocation, fieldJournalGooglePlacesRequest, fbRef, TastingWheelFactory, fieldJournalWheel, slider, location) {
+app.controller("FieldJournalDetailedPicModalCtrl", function($scope, $timeout, $uibModalInstance, fieldJournalEntry, currentLocation, fieldJournalGooglePlacesRequest, fbRef, TastingWheelFactory, fieldJournalWheel, slider, pageLocation) {
 	console.log("FieldJournalDetailedPicModalCtrl.js is working, and here is my entry: ", fieldJournalEntry);
 	let s = $scope;
 
@@ -35,7 +35,7 @@ app.controller("FieldJournalDetailedPicModalCtrl", function($scope, $timeout, $u
   s.newFieldJournalPopup = "../../partials/BootstrapTemplates/NewFieldJournalPopup.html";
   s.editedSenses = [];
   s.slider1 = slider;
-  s.location = location;
+  s.location = pageLocation;
   s.drinkTypes = ['Espresso', 'Drip', 'Cold Brew'];
 
   s.editCropper = {};
@@ -151,15 +151,6 @@ app.controller("FieldJournalDetailedPicModalCtrl", function($scope, $timeout, $u
         s.$apply();
     	}
     });
-	};
-
-	s.changeStep = (step) => {
-		s.selectedStep = step.partial;
-		if (step.name === 'Hone in Your Senses') {
-			$timeout(function() {
-				TastingWheelFactory.createWheel();				
-			}, 100); 			
-		}		
 	};
 
 	s.$watch(

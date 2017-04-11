@@ -1,7 +1,6 @@
 <h2 class="text-center"><a class="state-heading">Profile Page</a></h2>
 
 <div class="modal-profile-pic"></div>
-<div class="detailedEntry-modal-parent"></div>
 
 <div class="row">
 	<div class="col-xs-1">
@@ -44,17 +43,14 @@
 				</div>	
 				<div class="row">
 					<div class="col-xs-10 col-xs-offset-1 main-profile-user-description">
-						<h3>Welcome back {{currentUser.firstName}}!!</h3>
-						<!-- <p>Followers: </p>
-						<p>Field Journal Entries: </p>
-						<p>Places Visited: </p> -->
+						<h3>Welcome back {{currentUser.firstName}}!!</h3>						
 					</div>					
 				</div>		
 			</div>
 
 			<!-- HERE IS YOUR NEWS FEED-->
-			<div class="col-xs-8 home-newsfeed" ng-click="imConnected()">			
-				<div ng-repeat="entry in fieldJournalEntries" class="row main-newsfeed-fieldjournal" ng-click="showFieldNote(entry, $event)" ng-show="newsfeed">
+			<div class="col-xs-8 home-newsfeed">			
+				<div ng-repeat="entry in fieldJournalEntries" class="row main-newsfeed-fieldjournal" ng-click="detailedPicModal(entry, $event)" ng-show="newsfeed">
 
 					<div class="col-xs-7 col-xs-offset-1 main-newsfeed-content-row">
 						<div class="row">
@@ -80,12 +76,7 @@
 					  <img class="drinking-buddies-individual-image" style="border: 0;" 
 					  		 ng-src="{{entry.drink_image ? entry.drink_image : '../../images/no_image_available.jpeg' }}">
 					</div>
-				</div>
-
-				<!-- This is for showing a more detailed version of the user's field journal entry -->
-				<div class="row" ng-show="!newsfeed">
-					<div class="newsFeed-detailed-view" ng-include="newsFeedDetails" scope="" onload=""></div>		
-				</div>					
+				</div>				
 			</div>	
 		</div>		
 	</div>
