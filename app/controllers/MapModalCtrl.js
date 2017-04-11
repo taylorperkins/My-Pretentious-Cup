@@ -5,31 +5,35 @@ app.controller("MapModalCtrl", function($scope, $timeout, $uibModalInstance, fbR
 	let s = $scope;
 
 	s.locationAverageRating = '';
-	s.locationDetails = {};
-	s.locationFieldJournal = [];
-	s.fieldJournalListPartial = '../../partials/Reusables/DrinkingBuddiesList.html';
+	s.locationDetails = {};			
 	
-	let origin = currentLocationCoords,
-		myDestination = {
+	//separate coords from placeid in locationCoordsPlaceId
+	let myDestination = {
 			lat: locationCoordsPlaceId.lat,
 			lng: locationCoordsPlaceId.lng
 		};
 
+	//Get all entries related to given location
 	fbRef.database().ref('fieldJournal').orderByChild('place_id').equalTo(locationCoordsPlaceId.place_id).once('value').then(
 			(snapshot) => {				
+				//define entries, combined rating, and num of rates
 				let fieldJournalEntries = snapshot.val(),
 						combinedRating = 0,
 						numOfRates = 0;
 
-				for (var entry in fieldJournalEntries) {
-					fieldJournalEntries[entry].uglyId = entry;
-					s.locationFieldJournal.push(fieldJournalEntries[entry]);					
+				//Turn your obj of objs from your database into a list of your entries
+				s.locationFieldJournal = Object.keys(fieldJournalEntries).reverse().map((entry) => {
+					//If there's a rating on the entry, add it to the combined rating and ++ your numOfRates
 					if (fieldJournalEntries[entry].user_rating) {
 						combinedRating += fieldJournalEntries[entry].user_rating;
-						numOfRates++;						
+						numOfRates++;		
 					}
-				}
-				s.locationAverageRating = combinedRating / numOfRates;								
+					//assign uglyId prop to your entry
+					fieldJournalEntries[entry].uglyId = entry;
+					return fieldJournalEntries[entry];					
+				});				
+				//get an average rating of the store overall
+				s.locationAverageRating = (combinedRating / numOfRates).toFixed(1);								
 			}
 		);
 
@@ -37,43 +41,45 @@ app.controller("MapModalCtrl", function($scope, $timeout, $uibModalInstance, fbR
 	//set a timeout so that the partial loads before the controller
 	$timeout(function() {
 
-    s.drinkingBuddiesMap = new google.maps.Map(document.getElementById('drinkingBuddies-map'), {
+		//set up your initial map instance
+    s.mapModal = new google.maps.Map(document.getElementById('drinkingBuddies-map'), {
       zoom: 12,
-      center: {lat: origin.lat, lng: origin.lng}
+      center: {lat: currentLocationCoords.lat, lng: currentLocationCoords.lng}
     });
 
+    //instantiate your services from google maps API
     let directionsService = new google.maps.DirectionsService,
   			directionsDisplay = new google.maps.DirectionsRenderer,    		  			
-				service = new google.maps.places.PlacesService(s.drinkingBuddiesMap);	        
+				service = new google.maps.places.PlacesService(s.mapModal);	        
 
+		//Actually set the map
+    directionsDisplay.setMap(s.mapModal);	        	     									    
+
+		//get a more in-depth description of a your selected location
 		service.getDetails({placeId: locationCoordsPlaceId.place_id}, function(place, status) {
       if (status === google.maps.places.PlacesServiceStatus.OK) {   
         s.locationDetails = place;
       }		
     });	
 
-    directionsDisplay.setMap(s.drinkingBuddiesMap);	        	     									    
-
+		//now get a route directly related from your current location and the location that you
+		//selected. Display those directions on your map
     directionsService.route({
-      origin: {lat: origin.lat, lng: origin.lng},
+      origin: {lat: currentLocationCoords.lat, lng: currentLocationCoords.lng},
       destination: {lat: myDestination.lat, lng: myDestination.lng},
       travelMode: 'DRIVING'
-    }, function(response, status) {
-    	console.log(response, status);
+    }, function(response, status) {    	
       if (status === 'OK') {
         directionsDisplay.setDirections(response);        
       } else {
         window.alert('Directions request failed due to ' + status);
       }
     });	  
-
     s.$apply();
       
 	}, 100);		
 
-	s.cancel = function () {
-    $uibModalInstance.dismiss('cancel');
-  };
+	s.cancel = () => $uibModalInstance.dismiss('cancel');  
 
 });
 
