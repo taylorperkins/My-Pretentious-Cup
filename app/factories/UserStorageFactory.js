@@ -21,18 +21,12 @@ app.factory("UserStorageFactory", function() {
 
 	//variables to hold users' info
 	let getCurrentUserInfo = () => angular.fromJson(localStorage.getItem('user'));
-	let setCurrentUserInfo = (profileObj) => localStorage.setItem('user', JSON.stringify(profileObj));
-
-	let getUserCurrentLocation = () => userCurrentLocation;
-	let setUserCurrentLocation = (locationCoords) => userCurrentLocation = locationCoords;	
+	let setCurrentUserInfo = (profileObj) => localStorage.setItem('user', JSON.stringify(profileObj));	
 
 	
 	return {				
 						getCurrentUserInfo,
 						setCurrentUserInfo,
-
-						getUserCurrentLocation,
-						setUserCurrentLocation,
 	};
 	
 });

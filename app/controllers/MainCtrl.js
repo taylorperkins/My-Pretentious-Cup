@@ -11,28 +11,16 @@ app.controller("MainCtrl", function($scope, $uibModal, fbRef, UserStorageFactory
 	s.newsFeedDetails = '../../partials/NewsFeedDetails.html';
 	s.reader = new FileReader();
 
-	let updateFieldJournalEntries = (databaseSnapshot) => {
-		console.log("Your database was updated: ");
-		console.log("databaseSnapshot: ", databaseSnapshot);
-		s.fieldJournalEntries = [];
-		for (var entry in databaseSnapshot) {
-			s.fieldJournalEntries.unshift(databaseSnapshot[entry]);
-		}	
-		console.log("s.fieldJournalEntries: ", s.fieldJournalEntries);
-	};
-	var fieldNotesRef = fbRef.database().ref('fieldJournal/');
-	fieldNotesRef.on('value', function(snapshot) {
-	  updateFieldJournalEntries(snapshot.val());
-	});
-
-	console.log("here is my current user: ", s.currentUser);
-	
-	s.newsFeedView = () => {
-		s.newsfeed = true;
-		s.selectedFieldNote = null;
-	};
-
-	s.imConnected = () => console.log("I am here");
+  //this function listends for the fieldJournal collection in firebase to be set, then updates scope varialbes
+  //to update the newsfeed
+	fbRef.database().ref('fieldJournal/').on('value', function(snapshot) {	      
+    let databaseSnapshot = snapshot.val();
+    //with the values, iterate over them and create your entries
+    s.fieldJournalEntries = Object.keys(databaseSnapshot).reverse().map((entry) => {
+      databaseSnapshot[entry].uglyId = entry;
+      return databaseSnapshot[entry];
+    });   
+	});			
 
 	s.changeProfilePicture = () => {
 		console.log("Here is where you should change your user's profile pic!");    
@@ -62,48 +50,7 @@ app.controller("MainCtrl", function($scope, $uibModal, fbRef, UserStorageFactory
     }, function () {
       console.log("Dismissed");
     });
-	};
-
-	s.showFieldNote = (entry, event) => {
-		console.log("Selected from main.ctrl: ", entry);
-		// s.newsfeed = false;
-		// s.selectedFieldNote = selectedFieldNote;
-
-  	if ($(event.target).hasClass('newsfeed-entry-location')) return;
-
-    var modalInstance = $uibModal.open({
-      animation: true,      
-      ariaDescribedBy: 'modal-body',
-      templateUrl: '../../partials/FieldJournalDetailedPicModal.html',      
-      controller: 'FieldJournalDetailedPicModalCtrl',
-      controllerAs: 's',
-      size: 'lg',
-      appendTo: $(".detailedEntry-modal-parent"),  
-      resolve: {
-      	fieldJournalEntry: function() {      		
-      		return entry;
-      	},
-      	currentLocation: function() {
-      		return s.currentLocation;
-      	},
-      	fieldJournalGooglePlacesRequest: function() {
-      		return s.GooglePlacesRequest;
-      	},
-      	slider: function() {
-      		return s.slider1;
-      	},
-      	location: function() {
-      		return false;
-      	}
-      }
-    }); 
-
-    modalInstance.result.then(function (selectedItem) {
-      s.selected = selectedItem;
-    }, function () {
-      console.log("Dismissed");
-    });
-	};
+	};	
 
 });
 

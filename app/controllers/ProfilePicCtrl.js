@@ -15,8 +15,6 @@ app.controller("ProfilePicCtrl", function($scope, $http, $state, fbRef, $uibModa
   s.bounds.top = 0;
   s.bounds.bottom = 0;
 
-	s.showPicture = () => console.log(s.cropper); console.log(s.bounds);
-
 	s.cancel = () => $uibModalInstance.dismiss('cancel');
 
 	s.saveProfilePic = () => {
