@@ -1,10 +1,12 @@
-"use strict";
+"use strict"
 
-console.log("UserSettingsCtrl.js is connected");
+/*
+	This controller is still within production phases
+*/
 
-app.controller("UserSettingsCtrl", function($scope, $uibModal, $uibModalInstance, user, $sce) {
-	let s = $scope;
-	console.log("UserSettingsCtrl.js is working");
+
+app.controller("UserSettingsCtrl", function($scope, $uibModal, $uibModalInstance, user) {
+	let s = $scope;	
 
 	s.user = user;
 	s.userInfo = {
@@ -21,21 +23,8 @@ app.controller("UserSettingsCtrl", function($scope, $uibModal, $uibModalInstance
 	s.drinks = ['Coffee', 'Tea', 'Beer', 'Wine'];
 
 
-	s.saveUserProfile = () => {
-		console.log("I am clicked on: ");
-		console.log("Here is your user: ", user);
-		$uibModalInstance.dismiss('cancel');
-	};
-
-	s.cancel = function () {
-    $uibModalInstance.dismiss('cancel');
-  };
-
-  s.toEdit = (partialName) => {
-  	s.userSelectedInfo = `partials/UserSettings/${partialName}.html`;
-  };
-
-
-
-
+	s.saveUserProfile = () => $uibModalInstance.dismiss('cancel');	
+	s.cancel = () => $uibModalInstance.dismiss('cancel');  
+  s.toEdit = (partialName) => s.userSelectedInfo = `partials/UserSettings/${partialName}.html`;
+  
 });

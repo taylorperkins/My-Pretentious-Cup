@@ -1,21 +1,12 @@
 "use strict";
 
-app.controller("HomeCtrl", function($scope, $sce, $timeout, $uibModal, $window, AuthUserFactory, GoogleMapsConfig, fbRef, UserStorageObj, GoogleMapsFactory) {
+app.controller("HomeCtrl", function($scope, $sce, $timeout, $uibModal, $window, AuthUserFactory, GoogleMapsConfig, fbRef, GoogleMapsFactory, isAuth) {
 	let s = $scope,      
       request;
 
-  s.currentUser = UserStorageObj.currentUser;
-
-  // console.log(user);
-
   //gets set every time you switch views
   s.background = 'main';
-  // s.currentUser = user[Object.keys(user)[0]];
-  // s.currentUser.uglyId = Object.keys(user)[0];
-  // s.currentUser = user;
-  s.currentUserFieldJournal = [];
-
-  console.log(s.currentUser);
+  s.currentUserFieldJournal = [];  
 
   //config for my slider
   s.slider1 = {     
@@ -30,7 +21,7 @@ app.controller("HomeCtrl", function($scope, $sce, $timeout, $uibModal, $window, 
   
   //this listens to this particular user's field journal collection within firebase and 
   //updates s.fieldJournal upon change
-  fbRef.database().ref('fieldJournal/').orderByChild('uid').equalTo(s.currentUser.uid).on("value", function(snapshot) {    
+  fbRef.database().ref('fieldJournal/').orderByChild('uid').equalTo(isAuth.uid).on("value", function(snapshot) {    
     //val from firebase
     let  fieldJournals = snapshot.val();
     //create a new array with all of your field journal entries, also adding in the uglyID per entry
@@ -42,12 +33,12 @@ app.controller("HomeCtrl", function($scope, $sce, $timeout, $uibModal, $window, 
     
   //this function listens to the current user's user collection obj within firebase for any changes, 
   //then updates s.current user based on those changes
-  fbRef.database().ref('users/').child(s.currentUser.uglyId).on("value", function(snapshot) {
+  fbRef.database().ref('users/').orderByChild('uid').equalTo(isAuth.uid).on("value", function(snapshot) {
     //grab snapshot from firebase
-    let user = snapshot.val();
-    user.uglyId = UserStorageObj.currentUser.uglyId;  
-    UserStorageObj.currentUser = user;    
-    s.currentUser = user;    
+    let user = snapshot.val(),    
+        currentUser = user[Object.keys(user)[0]];
+    currentUser.uglyId = Object.keys(user)[0];        
+    $timeout(() => s.currentUser = currentUser );
   });	
 
   //a nifty little jQuery method for setting the well height within the page

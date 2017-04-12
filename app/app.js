@@ -19,11 +19,9 @@ The user's information will include:
 let isAuth = (AuthUserFactory, $location) => new Promise ((resolve, reject) => {
 	AuthUserFactory.isAuthenticated()
 		.then((userExists) => {		
-			if (userExists) {
-				AuthUserFactory.setLogin(true);			
-				resolve();
-			} else {
-				AuthUserFactory.setLogin(false);			
+			if (userExists) {				
+				resolve(userExists);
+			} else {				
 				$location.path('/login');
 				reject();
 			}
