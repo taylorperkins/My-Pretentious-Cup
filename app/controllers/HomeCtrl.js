@@ -1,6 +1,6 @@
 "use strict";
 
-app.controller("HomeCtrl", function($scope, $sce, $timeout, $uibModal, $window, AuthUserFactory, GoogleMapsConfig, fbRef, GoogleMapsFactory, isAuth) {
+app.controller("HomeCtrl", function($scope, $sce, $timeout, $uibModal, $window, AuthUserFactory, GoogleMapsConfig, fbRef, isAuth, GooglePlacesAutoComplete) {
 	let s = $scope,      
       request;
 
@@ -56,7 +56,7 @@ app.controller("HomeCtrl", function($scope, $sce, $timeout, $uibModal, $window, 
     s.myLocation = {
       lat: myLocation.lat(),
       lng: myLocation.lng()
-    };    
+    };     
   });   
 
   //this function makes a request to google maps autocomplete api to get predictions based off of your query
@@ -73,7 +73,7 @@ app.controller("HomeCtrl", function($scope, $sce, $timeout, $uibModal, $window, 
         //s.location is updated on focus of the input field             
         if(!placesSearchInput) return;
         //make an api call user the user's input value and your current location        
-        GoogleMapsFactory.GoogleMapsAutoComplete(placesSearchInput.toLowerCase(), s.myLocation).then(
+        GooglePlacesAutoComplete.search(placesSearchInput.toLowerCase(), s.myLocation).then(
             (googleMapsRequestObj) => {             
               s.predictions = googleMapsRequestObj.data.predictions;            
               //update popover  

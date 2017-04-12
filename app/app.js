@@ -30,14 +30,19 @@ let isAuth = (AuthUserFactory, $location) => new Promise ((resolve, reject) => {
 
 var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bootstrap', 'd3', 'angular-img-cropper', 'rzModule'])
 
+//Initializes fbRef as your overall Firebase obj. I refer to this whenever I want to 
+//alter or reference my database
 .service('fbRef', function(FBCreds) {
 	return firebase.initializeApp(FBCreds);
 })
+//This gets changed when you create or edit your senses using the d3 tasting wheel
 .service('fieldJournalWheel', function() {
 	this.Sense = {};
 })
-.service('UserStorageObj', function() {
-	this.currentUser = {};
+//This is used as an autocomplete request to google maps api and returns a data obj which produces predictions
+//based off of your userinput and LatLngCoords obj
+.service('GooglePlacesAutoComplete', function(GoogleMapsConfig, $http) {
+	this.search = (userInput, LatLngCoords) => $http.get(`https://my-pretentious-cup.herokuapp.com/api/googleMaps/place/autocomplete/json?input=${userInput}&types=establishment&location=${LatLngCoords.lat},${LatLngCoords.lng}&radius=1000&key=${GoogleMapsConfig.googlePlacesAPIKey}`);			
 })
 
 //This controller wraps the <head> tags. The only purpose is to dynamically inject
@@ -122,8 +127,8 @@ var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bo
 	
 })
 
-.run(() => {
-	
+.run(() => {	
+
 	/*
 		I am choosing to leave this section for development later on
 	*/

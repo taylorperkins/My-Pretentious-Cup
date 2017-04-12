@@ -1,6 +1,6 @@
 "use strict";
 
-app.controller("RegisterCtrl", function($scope, $location, fbRef, AuthUserFactory) {
+app.controller("RegisterCtrl", function($scope, $location, $timeout, fbRef, AuthUserFactory) {
 	let s = $scope;	
 
 	s.currentUser = false;
