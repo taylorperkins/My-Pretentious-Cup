@@ -1,6 +1,6 @@
 "use strict";
 
-app.controller("RegisterCtrl", function($scope, $location, fbRef, AuthUserFactory, UserStorageObj) {
+app.controller("RegisterCtrl", function($scope, $location, fbRef, AuthUserFactory) {
 	let s = $scope;	
 
 	s.currentUser = false;
@@ -31,7 +31,6 @@ app.controller("RegisterCtrl", function($scope, $location, fbRef, AuthUserFactor
 				AuthUserFactory.createUser({email: s.userInfo.email, password: s.userInfo.password}).then(
 					// Update uid, remove passwords, and join interests to string instead of array to make Firebase happy
 					(userData) => {						
-						// AuthUserFactory.setLogin(true);
 						s.userInfo.uid = userData.uid;
 						s.myUser = s.userInfo;
 
@@ -50,20 +49,9 @@ app.controller("RegisterCtrl", function($scope, $location, fbRef, AuthUserFactor
 								() => {
 									//with newly created user, log him in
 									AuthUserFactory.loginUser({email: userEmail, password: userPassword}).then( 
-							  		(userData) => {											
-											AuthUserFactory.setLogin(true);		
+							  		(userData) => {																						
 											//Once the user is logged in, go to firebase to retrieve the user's info									
-											fbRef.database().ref('users').orderByChild('uid').equalTo(userData.uid).once('value').then(
-								    			(snapshot) => {			    						    			
-									    			let user = snapshot.val(),
-									    			    currentUser = user[Object.keys(user)[0]];
-									    			//set the user's info within local storage
-									    			currentUser.uglyId = Object.keys(user)[0];
-									    			UserStorageObj.currentUser = currentUser;
-								    				$location.path('/home');		    				
-								    				s.$apply();
-								    			}
-								    		);															
+											$timeout(() => $location.path('/home') );					    				
 										},
 										(error) => console.log("Error creating user: ", error)										
 									);						

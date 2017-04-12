@@ -22,29 +22,24 @@ app.factory("AuthUserFactory", function(fbRef, $window) {
 	//Removes any data stored within localStorage
 	//Signs user out of fbRef
 	let logoutUser = function() {		
-		isLoggedIn = false;		
-		localStorage.removeItem('user');
+		isLoggedIn = false;				
 		$window.location.href = '#!/login';
 		return fbRef.auth().signOut();
 	};
 
-
-	//Args: boolean
-	//Changes isLoggedIn boolean
-	let setLogin = (loginState) => isLoggedIn = loginState;
-	let getLogin = () => isLoggedIn;
 
 	//Checks fbRef onAuthStateChanged() and sets currentUser to uid 
 	//Return: boolean- true if logged in
 	let isAuthenticated = function () {
 		return new Promise ( (resolve, reject) => {
 			fbRef.auth().onAuthStateChanged( (user) => {
-				if (user) { resolve(true); }
+				if (user) { 				
+					resolve(user); 
+				}
 				else { resolve(false); }
 			});
 		});
 	};
-
 
 	//Sets google as an available provider
 	let googleProvider = new firebase.auth.GoogleAuthProvider();
@@ -56,9 +51,7 @@ app.factory("AuthUserFactory", function(fbRef, $window) {
 	return {
 		createUser,
 		loginUser, 
-		logoutUser, 
-		setLogin, 
-		getLogin,
+		logoutUser, 	
 		isAuthenticated, 
 		authWithProvider
 	};

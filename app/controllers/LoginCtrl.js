@@ -1,6 +1,6 @@
 "use strict";
 
-app.controller("LoginCtrl", function($scope, $location, fbRef, AuthUserFactory, UserStorageObj) {
+app.controller("LoginCtrl", function($scope, $location, $timeout, fbRef, AuthUserFactory) {
 	let s = $scope;	
 
 	//setting up initial account obj
@@ -14,21 +14,7 @@ app.controller("LoginCtrl", function($scope, $location, fbRef, AuthUserFactory, 
 		//takes user's account information and passes it to get authenticated through firebase
   	AuthUserFactory.loginUser(s.account).then( 
   		(userData) => {		  				
-  			//if the user is logged in, define that user login is true
-				AuthUserFactory.setLogin(true);				
-				//Go to firebase to reference that user's information, then store it all within
-				//local storage
-				fbRef.database().ref('users').orderByChild('uid').equalTo(userData.uid).once('value').then(
-		    			(snapshot) => {			    						    			
-			    			let user = snapshot.val(),
-			    					currentUser = user[Object.keys(user)[0]];
-			    			currentUser.uglyId = Object.keys(user)[0];
-			    			UserStorageObj.currentUser = currentUser;
-			    			//Once the user's information has been set, change the location to /home
-		    				$location.path('/home');		    				
-		    				s.$apply();
-		    			}
-		    		);		  					
+  			$timeout(() => $location.path('/home') );
 			},
 			(error) => console.log("Error creating user: ", error)
     );
@@ -38,28 +24,13 @@ app.controller("LoginCtrl", function($scope, $location, fbRef, AuthUserFactory, 
 	s.loginGoogle = () => {				
 		AuthUserFactory.authWithProvider()
 			.then(
-				(userInfo) => {		  
-					//if a user, set user login to true  	
-		    	AuthUserFactory.setLogin(true);
-		    	console.log(userInfo);		    	
-		    	//reference the user's stored informtion from within firebase
-		    	fbRef.database().ref('users').orderByChild('uid').equalTo(userInfo.user.uid).once('value').then(
-		    			(snapshot) => {			    						    			
-			    			let user = snapshot.val(),
-			    					currentUser = user[Object.keys(user)[0]];
-			    			//set the user's information within local storag.
-			    			currentUser.uglyId = Object.keys(user)[0];
-			    			UserStorageObj.currentUser = currentUser;
-		    				$location.path('/home');		    				
-		    				s.$apply();
-		    			}
-		    		);		    
-
+				(userInfo) => {		  					
+  				$location.path('/home');  					    				  						    			   
+  				$timeout(() => $location.path('/home') );
 			}).catch(
 				(error) => {
 		    	// Handle the Errors.
-		    	console.log("error with google login", error);
-		    	AuthUserFactory.setLogin(false);
+		    	console.log("error with google login", error);		    	
 		    	var errorCode = error.code;
 		    	var errorMessage = error.message;
 		    	// The email of the user's account used.
