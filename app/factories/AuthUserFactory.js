@@ -1,8 +1,6 @@
 "use strict";
 
-app.factory("AuthUserFactory", function(fbRef, $window) {
-
-	let isLoggedIn = false;
+app.factory("AuthUserFactory", function(fbRef, $window) {	
 
 	//Args: {email: '', password: ''}
 	//Return: User obj from Firebase
@@ -21,8 +19,7 @@ app.factory("AuthUserFactory", function(fbRef, $window) {
 
 	//Removes any data stored within localStorage
 	//Signs user out of fbRef
-	let logoutUser = function() {		
-		isLoggedIn = false;				
+	let logoutUser = function() {				
 		$window.location.href = '#!/login';
 		return fbRef.auth().signOut();
 	};
@@ -33,9 +30,7 @@ app.factory("AuthUserFactory", function(fbRef, $window) {
 	let isAuthenticated = function () {
 		return new Promise ( (resolve, reject) => {
 			fbRef.auth().onAuthStateChanged( (user) => {
-				if (user) { 				
-					resolve(user); 
-				}
+				if (user) { resolve(user); }
 				else { resolve(false); }
 			});
 		});
