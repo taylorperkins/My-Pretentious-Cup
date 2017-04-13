@@ -1,43 +1,33 @@
 "use strict";
 
-console.log("FieldJournalDetailedPicModalCtrl.js is connected");
 
-app.controller("FieldJournalDetailedPicModalCtrl", function($scope, $timeout, $uibModalInstance, fieldJournalEntry, currentLocation, fieldJournalGooglePlacesRequest, fbRef, TastingWheelFactory, fieldJournalWheel, slider, pageLocation) {
-	console.log("FieldJournalDetailedPicModalCtrl.js is working, and here is my entry: ", fieldJournalEntry);
-	let s = $scope;
+app.controller("FieldJournalDetailedPicModalCtrl", function($scope, $timeout, $uibModalInstance, fieldJournalEntry, currentLocation, fieldJournalGooglePlacesRequest, fbRef, TastingWheelFactory, fieldJournalWheel, slider, pageLocation, logSelectedLocation) {	
+	let s = $scope;	
 
-	// scope set within GooglePlacesRequest
-	/*
-		s.showRequests = false;
-		s.searchPrediction = false;
-		s.predictions = googleMapsRequestObj.data.predictions;
-		s.newFieldJournalPopup = "../../partials/BootstrapTemplates/NewFieldJournalPopup.html";						
-	  s.searchPrediction = true;	
-	*/
-
+	//Set up initial scope variables	
 	s.entry = fieldJournalEntry;
 	s.editedEntry = {};
+	//This can get injected if you are on your personal list of entries
 	s.modalView = "../../partials/DetailedPicModal/DetailedPicView.html";
 	s.oneAtATime = true;
+	//This is to enable open and close features on the accordion view for editing
 	s.status = {    
     isFirstOpen: true,
     isFirstDisabled: false
-  };
-  s.editPages = {
-  	step1: '../../partials/EditDrinkEntry/EditStep1.html',
-  	step2: '../../partials/EditDrinkEntry/EditStep2.html',
-  	step3: '../../partials/EditDrinkEntry/EditStep3.html',
-  	step4: '../../partials/EditDrinkEntry/EditStep4.html'
-  };
+  };  
 
   s.drinkLocationInput = '';
   s.myLocation = currentLocation;
-  s.newFieldJournalPopup = "../../partials/BootstrapTemplates/NewFieldJournalPopup.html";
+  s.newFieldJournalPopup = '../../partials/BootstrapTemplates/NewFieldJournalPopup.html';
+  //array to hold all of your senses
   s.editedSenses = [];
+  //initialize your slider obj
   s.slider1 = slider;
+  //gets changed if you want to edit one of your entries
   s.location = pageLocation;
   s.drinkTypes = ['Espresso', 'Drip', 'Cold Brew'];
 
+  //setup cropper obj for editing images
   s.editCropper = {};
   s.editCropper.sourceImage = null;
   s.editCropper.croppedImage = null;
@@ -47,53 +37,58 @@ app.controller("FieldJournalDetailedPicModalCtrl", function($scope, $timeout, $u
   s.editBounds.top = 0;
   s.editBounds.bottom = 0;
 
+  s.logSelectedLocation = logSelectedLocation;
 
-
-
+  //switch between editing an entry and just viewing an entry
 	s.changeView = (partial) => s.modalView = `../../partials/DetailedPicModal/${partial}`;
+
+	//resets your entry so that excess data doesnt show up on your screen
 	s.resetEditedEntry = (step) => {
 		s.editedEntry = {};	
-		s.editedEntry.user_rating = s.entry.user_rating;	
-		console.log("I am working: ");
+		s.editedEntry.user_rating = s.entry.user_rating;			
 		if (step && step === 'Step2') {
-			$timeout(function() {
-				TastingWheelFactory.createWheel('editViewTastingWheel');				
-			}, 100); 	
+			//clear and reset the tasting wheel when you go to the hone in your senses edit
+			$("#editViewTastingWheel").empty();
+			$timeout(() => { TastingWheelFactory.createWheel('editViewTastingWheel');	}, 100); 	
 		}
 	};
 
+	//makes a call to firebase to update your edited entry
 	s.updateEntry = (step) => {
-		console.log("I am about to update firebase with this entry: ", s.editedEntry);
-		console.log("Here are your keys: ", Object.keys(s.editedEntry));
-		console.log("Here is the original: ", s.entry);
+		//grab your key, instantiate your updates obj, and grab all properties that have been edited
 		let key = s.entry.uglyId,
 				updates = {},
 				editedProps = Object.keys(s.editedEntry);
-
-		editedProps.forEach((prop) => {
-			s.entry[prop] = s.editedEntry[prop];
-		});
+		//if no properties have been edited, return
 		if (editedProps.length === 0) return;
 		if (step === 'Step4') {
 			if (s.editCropper.croppedImage !== null) {
 			 s.entry.drink_image = s.editCropper.croppedImage;				
 			} else { return; }
 		}
+		//for each edited property, set it to s.entry		
+		editedProps.forEach((prop) => s.entry[prop] = s.editedEntry[prop] );		
+		//delete uglyId and $$hashkey 
 		delete s.entry.uglyId;
 		delete s.entry['$$hashKey'];
+		//create your update obj to be sent to firebase
 		updates[`/fieldJournal/${key}`] = s.entry;
-		fbRef.database().ref().update(updates);
-		fbRef.database().ref(`fieldJournal/${key}`).once('value').then(
-				(snapshot) => {
-					s.entry = snapshot.val();
-					s.entry.uglyId = key;
-					console.log("Here is your updated entry: ", s.entry);
+		//update it
+		fbRef.database().ref().update(updates).then(
+				//then get the updated value and reset your entry
+				() => {
+					fbRef.database().ref(`fieldJournal/${key}`).once('value').then(
+							(snapshot) => {
+								s.entry = snapshot.val();
+								s.entry.uglyId = key;								
+							}
+						);		
 				}
-			);		
+			);
 	};
 
-	s.deleteEntry = () => {
-		console.log("Im supposed to delete something huh?");
+	//removes your entry from firebase
+	s.deleteEntry = () => {		
 		fbRef.database().ref().child(`fieldJournal/${s.entry.uglyId}`).remove().then(
 				() => {
 					s.$apply();
@@ -102,72 +97,53 @@ app.controller("FieldJournalDetailedPicModalCtrl", function($scope, $timeout, $u
 			);
 	};
 
+	//make a google maps request for seaching specific locations within your edit
 	s.GooglePlacesRequest = (searchRequest) => {
 		s.showRequests = false;
 		s.predictions = [];
+		//make a request to google maps places library for specific predictions on a given input
 		fieldJournalGooglePlacesRequest(searchRequest).then(
-				(mySearchResults) => {
-					console.log("Here are my results: ", mySearchResults);
+				(mySearchResults) => {					
+					//update predictions
 					s.searchPrediction = mySearchResults.searchPrediction;
 					s.predictions = mySearchResults.predictions;
 					s.$apply();
 				}
 			);
 	};
-
-	s.showMeSomething = (input) => console.log(input);
-
-	s.logSelectedLocation = (mySelectedLocation) => {
-		$("#newDrinkLocation").val(mySelectedLocation.description);
+	
+	//updates a bunch of location information, this is done in HomeCtrl.js
+	s.udateLocationEntry = (selectedLocation) => {
 		s.searchPrediction = false;
-		s.predictions = null;
-		console.log(mySelectedLocation);
-		var service = new google.maps.places.PlacesService(document.createElement('div'));
-
-		service.getDetails({placeId: mySelectedLocation.place_id}, function(place, status) {
-      if (status === google.maps.places.PlacesServiceStatus.OK) {
-        console.log("Here is my selected place; ", place);                
-        s.editedEntry.place_id = place.place_id;
-        s.editedEntry.google_rating = place.rating;
-        s.editedEntry.location_title = place.name;
-        s.editedEntry.location_address = place.formatted_address;
-        s.editedEntry.location_phone_number = place.formatted_phone_number;
-        s.editedEntry.lat = place.geometry.location.lat();
-        s.editedEntry.lng = place.geometry.location.lng();                                        
-        s.editedEntry.store_hours = {}; 
-        if (place.opening_hours) {
-	        let storeHours = place.opening_hours.weekday_text;
-	        storeHours.forEach((day) => {
-	        	console.log(day);
-	        	let myDay = {},
-	        			separator = day.indexOf(':'),
-	        			dayName = day.slice(0, separator),
-	        			dayHours = day.slice(separator+2, day.length);
-
-	        	s.editedEntry.store_hours[dayName] = dayHours;
-	        });        	
-        }       
-        console.log(s.editedEntry);   
-        s.$apply();
-    	}
-    });
+    s.predictions = null; 
+    //Update a bunch of location info  
+		s.logSelectedLocation(selectedLocation).then(
+				(updates) => {
+					//for each edited piece, add that property to s.editedEntry
+					Object.keys(updates).forEach((update) => {
+						s.editedEntry[update] = updates[update];
+					});	
+					$timeout(() => console.log('') );				
+				}
+			);
 	};
 
+	//This is a watch for your edited senses
 	s.$watch(
 		function() { return fieldJournalWheel.Sense; },
-		function(newValue, oldValue) {
-			console.log("Your shit is changinnn");
+		function(newValue, oldValue) {			
 			if (s.editedSenses.indexOf(newValue) !== -1 || typeof newValue !== "string" || newValue === "Tasting Wheel") return;			
 			s.editedSenses.push(newValue);			
-			s.editedEntry.senses = s.editedSenses.join(' ');
-			console.log("Here are your user's senses: ", s.editedEntry.senses);
+			s.editedEntry.senses = s.editedSenses.join(' ');			
 		});	
 
+	//This removes senses
 	s.removeEditedSense = (sense) => {
+		//set up a filter function
 		let findSense = (someSense) => someSense != sense;		
 		s.editedSenses = s.editedSenses.filter(findSense);
-		s.editedEntry.senses = s.editedSenses.join(' ');
-		console.log("Here are your user's editedSenses: ", s.editedEntry.senses);
+		//join your array of senses to a single string
+		s.editedEntry.senses = s.editedSenses.join(' ');		
 	};
 	
 

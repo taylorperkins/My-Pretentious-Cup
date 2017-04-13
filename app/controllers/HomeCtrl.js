@@ -1,11 +1,13 @@
 "use strict";
 
-app.controller("HomeCtrl", function($scope, $sce, $timeout, $uibModal, $window, AuthUserFactory, GoogleMapsConfig, fbRef, isAuth, GooglePlacesAutoComplete) {
+app.controller("HomeCtrl", function($scope, $sce, $timeout, $state, $uibModal, $window, AuthUserFactory, GoogleMapsConfig, fbRef, isAuth, GooglePlacesAutoComplete) {
 	let s = $scope,      
       request;
 
+  
+  
   //gets set every time you switch views
-  s.background = 'main';
+  s.background = 'main';  
   s.currentUserFieldJournal = [];  
 
   //config for my slider
@@ -101,6 +103,45 @@ app.controller("HomeCtrl", function($scope, $sce, $timeout, $uibModal, $window, 
   //Handles logout functions for the user
 	s.logout = () => AuthUserFactory.logoutUser();
 
+  //This gathers a bunch of information regarding google maps places library
+  //Whenever a user selects a place from the autocomplete input, this gets caled
+  s.logSelectedLocation = (mySelectedLocation) => {
+    return new Promise((resolve, reject) => {
+      //change the value of the input field
+      $("#newDrinkLocation").val(mySelectedLocation.description);
+      let edits = {};
+      
+      //declare google maps places library service to get some better details on the location
+      var service = new google.maps.places.PlacesService(document.createElement('div'));
+      //call the service, passing in the location's coords
+      service.getDetails({placeId: mySelectedLocation.place_id}, function(place, status) {
+        //check status
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          //get all details related to your selected place and add them to s.newDrink                     
+          edits.place_id = place.place_id;
+          edits.google_rating = place.rating;
+          edits.location_title = place.name;
+          edits.location_address = place.formatted_address;
+          edits.location_phone_number = place.formatted_phone_number;
+          edits.lat = place.geometry.location.lat();
+          edits.lng = place.geometry.location.lng();        
+          edits.store_hours = {}; 
+          //this created an obj that holds store hours for your location       
+          let storeHours = place.opening_hours.weekday_text;
+          storeHours.forEach((day) => {                   
+            let separator = day.indexOf(':'),
+                dayName = day.slice(0, separator),
+                dayHours = day.slice(separator+2, day.length);
+
+            edits.store_hours[dayName] = dayHours;
+          });           
+          resolve(edits);
+        }
+      });      
+    });
+
+  };  
+
   //this gets called whenever you click on a specific locations name on a field journal entry
   //It opens a modal with a map view and directions leading to that given place
   s.openMapModal = (selectedCoords) => {        
@@ -193,6 +234,9 @@ app.controller("HomeCtrl", function($scope, $sce, $timeout, $uibModal, $window, 
         //what page you're on
         pageLocation: function() {
           return s.background;
+        },
+        logSelectedLocation: function() {
+          return s.logSelectedLocation;
         }
       }
     }); 
