@@ -144,18 +144,3 @@ var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bo
 
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

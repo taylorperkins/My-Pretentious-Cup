@@ -99,6 +99,8 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
 		user_rating: 0
 	};	
 
+	console.log(s);
+
 
 	// s.fieldJournal = [];
 	s.drinkForm = `partials/drink-forms/${s.category}Form.html`;
@@ -185,42 +187,18 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
 			s.user_senses = s.senses.join(' ');			
 		});	
 
-	//This gathers a bunch of information regarding google maps places library
-	//Whenever a user selects a place from the autocomplete input, this gets caled
-	s.logSelectedLocation = (mySelectedLocation) => {
-		//change the value of the input field
-		$("#newDrinkLocation").val(mySelectedLocation.description);
-		//update scope variables
+	s.udateLocationEntry = (selectedLocation) => {
 		s.searchPrediction = false;
-		s.predictions = null;		
-		//declare google maps places library service to get some better details on the location
-		var service = new google.maps.places.PlacesService(document.createElement('div'));
-		//call the service, passing in the location's coords
-		service.getDetails({placeId: mySelectedLocation.place_id}, function(place, status) {
-			//check status
-      if (status === google.maps.places.PlacesServiceStatus.OK) {
-      	//get all details related to your selected place and add them to s.newDrink                     
-        s.newDrink.place_id = place.place_id;
-        s.newDrink.google_rating = place.rating;
-        s.newDrink.location_title = place.name;
-        s.newDrink.location_address = place.formatted_address;
-        s.newDrink.location_phone_number = place.formatted_phone_number;
-        s.newDrink.lat = place.geometry.location.lat();
-        s.newDrink.lng = place.geometry.location.lng();        
-        s.newDrink.store_hours = {}; 
-        //this created an obj that holds store hours for your location       
-        let storeHours = place.opening_hours.weekday_text;
-        storeHours.forEach((day) => {        	        	
-        	let separator = day.indexOf(':'),
-        			dayName = day.slice(0, separator),
-        			dayHours = day.slice(separator+2, day.length);
-
-        	s.newDrink.store_hours[dayName] = dayHours;
-        });        
-        s.$apply();
-    	}
-    });
-	};	
+    s.predictions = null;   
+		s.logSelectedLocation(selectedLocation).then(
+				(updates) => {
+					Object.keys(updates).forEach((update) => {
+						s.newDrink[update] = updates[update];
+					});	
+					$timeout(() => return );				
+				}
+			);
+	};
 
 	//==============================================
 	//Anything Firebase
