@@ -7,8 +7,7 @@ app.controller("HomeCtrl", function($scope, $sce, $timeout, $state, $uibModal, $
   
   
   //gets set every time you switch views
-  s.background = 'main';
-  s.name = 'Home';
+  s.background = 'main';  
   s.currentUserFieldJournal = [];  
 
   //config for my slider

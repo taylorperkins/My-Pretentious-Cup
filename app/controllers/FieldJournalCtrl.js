@@ -99,8 +99,6 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
 		user_rating: 0
 	};	
 
-	console.log(s);
-
 
 	// s.fieldJournal = [];
 	s.drinkForm = `partials/drink-forms/${s.category}Form.html`;
@@ -195,7 +193,7 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
 					Object.keys(updates).forEach((update) => {
 						s.newDrink[update] = updates[update];
 					});	
-					$timeout(() => return );				
+					$timeout(() => console.log('') );				
 				}
 			);
 	};

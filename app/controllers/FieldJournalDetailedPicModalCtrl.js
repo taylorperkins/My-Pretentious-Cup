@@ -2,8 +2,7 @@
 
 
 app.controller("FieldJournalDetailedPicModalCtrl", function($scope, $timeout, $uibModalInstance, fieldJournalEntry, currentLocation, fieldJournalGooglePlacesRequest, fbRef, TastingWheelFactory, fieldJournalWheel, slider, pageLocation, logSelectedLocation) {	
-	let s = $scope;
-	s.name = 'FieldJournalDetailedPicModalCtrl';
+	let s = $scope;	
 
 	//Set up initial scope variables	
 	s.entry = fieldJournalEntry;
@@ -124,7 +123,7 @@ app.controller("FieldJournalDetailedPicModalCtrl", function($scope, $timeout, $u
 					Object.keys(updates).forEach((update) => {
 						s.editedEntry[update] = updates[update];
 					});	
-					$timeout(() => return );				
+					$timeout(() => console.log('') );				
 				}
 			);
 	};
