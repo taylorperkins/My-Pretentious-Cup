@@ -91,8 +91,8 @@ var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bo
 					'listFieldJournal': '../partials/ListFieldJournal.html',
 					'newRecipes': '../partials/NewRecipes.html',
 					'listRecipes': '../partials/ListRecipes.html'								
-				};							
-			}							
+				};	
+			}											
 		},						
 		views: {
 			"": { 

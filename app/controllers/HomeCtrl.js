@@ -4,8 +4,7 @@ app.controller("HomeCtrl", function($scope, $sce, $timeout, $state, $uibModal, $
 	let s = $scope,      
                 request;
 
-  
-  
+       
     //gets set every time you switch views
     s.background = 'main';  
     s.currentUserFieldJournal = [];  
@@ -53,13 +52,18 @@ app.controller("HomeCtrl", function($scope, $sce, $timeout, $state, $uibModal, $
 
   //As soon as the controller loads, grab the user's current location, and display an info-window 
   //showing their current location. 
-  $window.navigator.geolocation.getCurrentPosition(function(position) {    
-    let myLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);       
+
+  let geoSuccess = (pos) => {
+    console.log(pos);
+    let myLocation = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);       
     s.myLocation = {
       lat: myLocation.lat(),
       lng: myLocation.lng()
-    };     
-  });   
+    };         
+  };
+  let geoFail = (geoErr) => console.log(geoErr);  
+  
+  navigator.geolocation.getCurrentPosition(geoSuccess, geoFail);   
 
   //this function makes a request to google maps autocomplete api to get predictions based off of your query
   //it populates your popover with the top prediction

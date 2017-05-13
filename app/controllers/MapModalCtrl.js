@@ -5,7 +5,9 @@ app.controller("MapModalCtrl", function($scope, $timeout, $uibModalInstance, fbR
 	let s = $scope;
 
 	s.locationAverageRating = '';
-	s.locationDetails = {};			
+	s.locationDetails = {};		
+
+	console.log(google);
 	
 	//separate coords from placeid in locationCoordsPlaceId
 	let myDestination = {
