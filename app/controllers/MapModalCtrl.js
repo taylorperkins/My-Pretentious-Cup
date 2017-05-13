@@ -5,7 +5,9 @@ app.controller("MapModalCtrl", function($scope, $timeout, $uibModalInstance, fbR
 	let s = $scope;
 
 	s.locationAverageRating = '';
-	s.locationDetails = {};			
+	s.locationDetails = {};		
+
+	console.log(google);
 	
 	//separate coords from placeid in locationCoordsPlaceId
 	let myDestination = {
@@ -42,42 +44,42 @@ app.controller("MapModalCtrl", function($scope, $timeout, $uibModalInstance, fbR
 	$timeout(function() {
 
 		//set up your initial map instance
-    s.mapModal = new google.maps.Map(document.getElementById('drinkingBuddies-map'), {
-      zoom: 12,
-      center: {lat: currentLocationCoords.lat, lng: currentLocationCoords.lng}
-    });
+		s.mapModal = new google.maps.Map(document.getElementById('drinkingBuddies-map'), {
+		      zoom: 12,
+		      center: {lat: currentLocationCoords.lat, lng: currentLocationCoords.lng}
+		});
 
-    //instantiate your services from google maps API
-    let directionsService = new google.maps.DirectionsService,
-  			directionsDisplay = new google.maps.DirectionsRenderer,    		  			
-				service = new google.maps.places.PlacesService(s.mapModal);	        
+	    //instantiate your services from google maps API
+	    let directionsService = new google.maps.DirectionsService,
+	  	   directionsDisplay = new google.maps.DirectionsRenderer,    		  			
+		   service = new google.maps.places.PlacesService(s.mapModal);	        
 
 		//Actually set the map
-    directionsDisplay.setMap(s.mapModal);	        	     									    
+		directionsDisplay.setMap(s.mapModal);	        	     									    
 
 		//get a more in-depth description of a your selected location
 		service.getDetails({placeId: locationCoordsPlaceId.place_id}, function(place, status) {
-      if (status === google.maps.places.PlacesServiceStatus.OK) {   
-        s.locationDetails = place;
-      }		
-    });	
+			if (status === google.maps.places.PlacesServiceStatus.OK) {   
+				s.locationDetails = place;
+		      }		
+		});	
 
 		//now get a route directly related from your current location and the location that you
 		//selected. Display those directions on your map
-    directionsService.route({
-      origin: {lat: currentLocationCoords.lat, lng: currentLocationCoords.lng},
-      destination: {lat: myDestination.lat, lng: myDestination.lng},
-      travelMode: 'DRIVING'
-    }, function(response, status) {    	
-      if (status === 'OK') {
-        directionsDisplay.setDirections(response);        
-      } else {
-        window.alert('Directions request failed due to ' + status);
-      }
-    });	  
-    s.$apply();
-      
-	}, 100);		
+	    	directionsService.route({
+			origin: {lat: currentLocationCoords.lat, lng: currentLocationCoords.lng},
+			destination: {lat: myDestination.lat, lng: myDestination.lng},
+			travelMode: 'DRIVING'
+		}, function(response, status) {    	
+			if (status === 'OK') {
+			    directionsDisplay.setDirections(response);        
+		      } else {
+				window.alert('Directions request failed due to ' + status);
+			}
+	    });	  
+	    s.$apply();  
+	        
+	}, 100);	
 
 	s.cancel = () => $uibModalInstance.dismiss('cancel');  
 

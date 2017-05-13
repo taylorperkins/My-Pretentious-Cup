@@ -12,34 +12,34 @@ app.controller("FieldJournalDetailedPicModalCtrl", function($scope, $timeout, $u
 	s.oneAtATime = true;
 	//This is to enable open and close features on the accordion view for editing
 	s.status = {    
-    isFirstOpen: true,
-    isFirstDisabled: false
-  };  
+	  isFirstOpen: true,
+	  isFirstDisabled: false
+	};  
 
-  s.drinkLocationInput = '';
-  s.myLocation = currentLocation;
-  s.newFieldJournalPopup = '../../partials/BootstrapTemplates/NewFieldJournalPopup.html';
-  //array to hold all of your senses
-  s.editedSenses = [];
-  //initialize your slider obj
-  s.slider1 = slider;
-  //gets changed if you want to edit one of your entries
-  s.location = pageLocation;
-  s.drinkTypes = ['Espresso', 'Drip', 'Cold Brew'];
+	s.drinkLocationInput = '';
+	s.myLocation = currentLocation;
+	s.newFieldJournalPopup = '../../partials/BootstrapTemplates/NewFieldJournalPopup.html';
+	//array to hold all of your senses
+	s.editedSenses = [];
+	//initialize your slider obj
+	s.slider1 = slider;
+	//gets changed if you want to edit one of your entries
+	s.location = pageLocation;
+	s.drinkTypes = ['Espresso', 'Drip', 'Cold Brew'];
 
-  //setup cropper obj for editing images
-  s.editCropper = {};
-  s.editCropper.sourceImage = null;
-  s.editCropper.croppedImage = null;
-  s.editBounds = {};
-  s.editBounds.left = 0;
-  s.editBounds.right = 0;
-  s.editBounds.top = 0;
-  s.editBounds.bottom = 0;
+	//setup cropper obj for editing images
+	s.editCropper = {};
+	s.editCropper.sourceImage = null;
+	s.editCropper.croppedImage = null;
+	s.editBounds = {};
+	s.editBounds.left = 0;
+	s.editBounds.right = 0;
+	s.editBounds.top = 0;
+	s.editBounds.bottom = 0;
 
-  s.logSelectedLocation = logSelectedLocation;
+	s.logSelectedLocation = logSelectedLocation;
 
-  //switch between editing an entry and just viewing an entry
+	//switch between editing an entry and just viewing an entry
 	s.changeView = (partial) => s.modalView = `../../partials/DetailedPicModal/${partial}`;
 
 	//resets your entry so that excess data doesnt show up on your screen
@@ -57,8 +57,8 @@ app.controller("FieldJournalDetailedPicModalCtrl", function($scope, $timeout, $u
 	s.updateEntry = (step) => {
 		//grab your key, instantiate your updates obj, and grab all properties that have been edited
 		let key = s.entry.uglyId,
-				updates = {},
-				editedProps = Object.keys(s.editedEntry);
+			updates = {},
+			editedProps = Object.keys(s.editedEntry);
 		//if no properties have been edited, return
 		if (editedProps.length === 0) return;
 		if (step === 'Step4') {
@@ -75,14 +75,14 @@ app.controller("FieldJournalDetailedPicModalCtrl", function($scope, $timeout, $u
 		updates[`/fieldJournal/${key}`] = s.entry;
 		//update it
 		fbRef.database().ref().update(updates).then(
-				//then get the updated value and reset your entry
-				() => {
-					fbRef.database().ref(`fieldJournal/${key}`).once('value').then(
-							(snapshot) => {
-								s.entry = snapshot.val();
-								s.entry.uglyId = key;								
-							}
-						);		
+			//then get the updated value and reset your entry
+			() => {
+				fbRef.database().ref(`fieldJournal/${key}`).once('value').then(
+						(snapshot) => {
+							s.entry = snapshot.val();
+							s.entry.uglyId = key;								
+						}
+					);		
 				}
 			);
 	};
@@ -115,8 +115,8 @@ app.controller("FieldJournalDetailedPicModalCtrl", function($scope, $timeout, $u
 	//updates a bunch of location information, this is done in HomeCtrl.js
 	s.udateLocationEntry = (selectedLocation) => {
 		s.searchPrediction = false;
-    s.predictions = null; 
-    //Update a bunch of location info  
+		s.predictions = null; 
+		//Update a bunch of location info  
 		s.logSelectedLocation(selectedLocation).then(
 				(updates) => {
 					//for each edited piece, add that property to s.editedEntry
@@ -145,11 +145,6 @@ app.controller("FieldJournalDetailedPicModalCtrl", function($scope, $timeout, $u
 		//join your array of senses to a single string
 		s.editedEntry.senses = s.editedSenses.join(' ');		
 	};
-	
 
 });
-
-
-
-
 

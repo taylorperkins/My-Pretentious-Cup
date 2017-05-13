@@ -53,78 +53,79 @@ var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bo
 
 .config(function($stateProvider, $urlRouterProvider, GoogleMapsConfig) {
 				
-				$urlRouterProvider.otherwise('/login');
+	$urlRouterProvider.otherwise('/login');
 
-				// HOME STATES AND NESTED VIEWS ========================================
+	// HOME STATES AND NESTED VIEWS ========================================
 
-				$stateProvider
+	$stateProvider
 
-					//'landing' state handles both login and register pages
-					.state('landing', {
-						url: '/landing',
-						template: 
-							'<div class="container">' +
-								'<div ui-view></div>' +
-							'</div>',
-						controller: "LandingCtrl"			      		           
-			  	})
-					.state('landing.login', {
-            url: '^/login',
-            templateUrl: '../partials/Login.html',
-            controller: "LoginCtrl"
-					})
-					.state('landing.register', {
-						url: '^/register',
-            templateUrl: '../partials/Register.html',
-            controller: "RegisterCtrl"
-					})
+	//'landing' state handles both login and register pages
+	.state('landing', {
+		url: '/landing',
+		template: 
+			'<div class="container">' +
+				'<div ui-view></div>' +
+			'</div>',
+		controller: "LandingCtrl"			      		           
+  	})
+	.state('landing.login', {
+           url: '^/login',
+           templateUrl: '../partials/Login.html',
+           controller: "LoginCtrl"
+	})
+	.state('landing.register', {
+		url: '^/register',
+           templateUrl: '../partials/Register.html',
+           controller: "RegisterCtrl"
+	})
 
-					//'home' state handles everything else. 
-					//This includes 'home'-wrapper, 'main', 'drinkingBuddies', and 'fieldJournal' views
-					.state('home', {			
-						url: '/home',
-						resolve: {
-							isAuth,
-							pages: function() {
-								return {
-									'newFieldJournal': '../partials/NewFieldJournal.html',
-									'listFieldJournal': '../partials/ListFieldJournal.html',
-									'newRecipes': '../partials/NewRecipes.html',
-									'listRecipes': '../partials/ListRecipes.html'								
-								};							
-							}							
-						},						
-						views: {
-							"": { 
-								templateUrl: 'partials/Home.html',
-								controller: "HomeCtrl"
-							},
-              "main@home": { 
-              	templateUrl: 'partials/Main.html',
-              	controller: "MainCtrl"              	
-              },
-              "fieldJournal@home": {
-              	url: '/fieldJournal',
-              	templateUrl: 'partials/FieldJournal.html',
-              	controller: "FieldJournalCtrl"
-              },                            
-              "drinkingBuddies@home": {
-              	templateUrl: 'partials/DrinkingBuddies.html',
-              	controller: "DrinkingBuddiesCtrl"
-              }            
-            }						
-					})      		   		       
-	        
-	        //This handles whether or not a user is on a correct path I have pre-defined. If not,
-	        //they are sent back to the most previos page they visited        
-	        .state('notARoute', {
-	        	url: '*path',
-	        	template: function($location, $scope) {
-	        		alert("I'm sorry, but the route you have chosen is not available. We're sending you back to your most rpevious page to try again!");		      
-	        		$window.history.back();
-	        	}
-	        });
-	
+	//'home' state handles everything else. 
+	//This includes 'home'-wrapper, 'main', 'drinkingBuddies', and 'fieldJournal' views
+	.state('home', {			
+		url: '/home',
+		resolve: {
+			isAuth,
+			pages: function() {
+				return {
+					'newFieldJournal': '../partials/NewFieldJournal.html',
+					'listFieldJournal': '../partials/ListFieldJournal.html',
+					'newRecipes': '../partials/NewRecipes.html',
+					'listRecipes': '../partials/ListRecipes.html'								
+				};	
+			}											
+		},						
+		views: {
+			"": { 
+				templateUrl: 'partials/Home.html',
+				controller: "HomeCtrl"
+			},
+                 "main@home": { 
+	              	templateUrl: 'partials/Main.html',
+	              	controller: "MainCtrl"              	
+	           },
+                 "fieldJournal@home": {
+	              	url: '/fieldJournal',
+	              	templateUrl: 'partials/FieldJournal.html',
+	              	controller: "FieldJournalCtrl"
+			},                            
+                 "drinkingBuddies@home": {
+	              	templateUrl: 'partials/DrinkingBuddies.html',
+	              	controller: "DrinkingBuddiesCtrl"
+			}            
+           }						
+	})      		   		       
+        
+      //This handles whether or not a user is on a correct path I have pre-defined. If not,
+      //they are sent back to the most previos page they visited        
+      .state('notARoute', {
+        	url: '*path',
+        	template: function($scope) {
+        		alert("I'm sorry, but the route you have chosen is not available. We're sending you back to your most rpevious page to try again!");		              		
+        	},
+        	controller: function ($location) {	           
+	           $location.path('/login');
+	      }
+      });
 })
 
 .run(() => {	
@@ -136,7 +137,7 @@ var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bo
 	// var client = new twilio.RestClient(TwilioCreds.accountSid, TwilioCreds.authToken);
 	// client.messages.create({
 	//     body: 'Hello from Node',
-	//     to: '+16156894486',  // Text this number
+	//     to: '',  // Text this number
 	//     from: TwilioCreds.accountPhoneNumber // From a valid Twilio number
 	// }, function(err, message) {
 	//     console.log(message.sid);

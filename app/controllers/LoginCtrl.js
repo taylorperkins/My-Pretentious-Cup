@@ -17,7 +17,7 @@ app.controller("LoginCtrl", function($scope, $location, $timeout, fbRef, AuthUse
   			$timeout(() => $location.path('/home') );
 			},
 			(error) => console.log("Error creating user: ", error)
-    );
+		);
 	};
 
 	//When you choose to login with google

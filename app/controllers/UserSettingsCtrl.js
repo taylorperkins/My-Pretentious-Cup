@@ -25,6 +25,6 @@ app.controller("UserSettingsCtrl", function($scope, $uibModal, $uibModalInstance
 
 	s.saveUserProfile = () => $uibModalInstance.dismiss('cancel');	
 	s.cancel = () => $uibModalInstance.dismiss('cancel');  
-  s.toEdit = (partialName) => s.userSelectedInfo = `partials/UserSettings/${partialName}.html`;
+	s.toEdit = (partialName) => s.userSelectedInfo = `partials/UserSettings/${partialName}.html`;
   
 });
