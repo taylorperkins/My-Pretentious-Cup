@@ -8,15 +8,15 @@ app.controller("MainCtrl", function($scope, $uibModal, fbRef) {
 	s.newsFeedDetails = '../../partials/NewsFeedDetails.html';
 	s.reader = new FileReader();
 
-  //this function listends for the fieldJournal collection in firebase to be set, then updates scope varialbes
-  //to update the newsfeed
+    //this function listends for the fieldJournal collection in firebase to be set, then updates scope varialbes
+    //to update the newsfeed
 	fbRef.database().ref('fieldJournal/').on('value', function(snapshot) {	      
-    let databaseSnapshot = snapshot.val();
-    //with the values, iterate over them and create your entries
-    s.fieldJournalEntries = Object.keys(databaseSnapshot).reverse().map((entry) => {
-      databaseSnapshot[entry].uglyId = entry;
-      return databaseSnapshot[entry];
-    });   
+        let databaseSnapshot = snapshot.val();
+        //with the values, iterate over them and create your entries
+        s.fieldJournalEntries = Object.keys(databaseSnapshot).reverse().map((entry) => {
+          databaseSnapshot[entry].uglyId = entry;
+          return databaseSnapshot[entry];
+        });   
 	});			
 
   //This is set up for when you want to change your user's profile picture. A modal appears
@@ -41,9 +41,9 @@ app.controller("MainCtrl", function($scope, $uibModal, fbRef) {
     }); 
 
     modalInstance.result.then(
-      (selectedItem) => s.selected = selectedItem,
-      () => console.log("Dismissed")
-    );
+        (selectedItem) => s.selected = selectedItem,
+        () => console.log("Dismissed")
+      );
 	};	
 
 });

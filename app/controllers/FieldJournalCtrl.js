@@ -61,39 +61,23 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
 	];
 
 	s.newDrink = {										//This obj is created to be sent to /fieldJournal collection within firebase
-																		//It should be referenced by uid
+														//It should be referenced by uid
 
 	  user_senses: '',
-		uid: '', 			//to search for the user's field notes
+		uid: '', 											//to search for the user's field notes
 		place_id: '',										//selected_prediction.place_id
-		user_rating: '',								//based on user
-		google_rating: '',							//second_call_obj.rating
-		date_created: Date.now(),				//field journal entry creation
-		review_title: '',								//user's review title
-		location_title: '',							//selected_prediction.terms[0]
-		location_address: '',						//second_call_obj.formatted_address
-		location_phone_number: '',			//second_call_obj.formatted_phone_number
-		category: s.category,						//Coffee, Wine, etc
-		review_description: '',					//user's review
-		lat: '',												//second_call_obj.geometry.location.lat()
-		lng: '',												//second_call_obj.geometry.location.lng()
-		store_hours: {}									/*
-																			second_call_obj.opening_hours.weekday_text = [strings of each days hours]
-																			let days = {};
-																			^.forEach((day) => {
-																				let myDay = {};
-																				let separator = ^[day].indexOf(':');
-																				let day_name = ^[day].slice(0, separator);
-																				let day_hours = ^[day].slice(separator+1, ^[day].length);
-																				days[day_name] = day_hours;
-
-																				days =
-																						{
-																							'Monday': '7:00 AM – 7:00 PM',
-																							'Tuesday': 'etc'
-																						}
-																			})
-																		*/		
+		user_rating: '',									//based on user
+		google_rating: '',								//second_call_obj.rating
+		date_created: Date.now(),						//field journal entry creation
+		review_title: '',									//user's review title
+		location_title: '',								//selected_prediction.terms[0]
+		location_address: '',							//second_call_obj.formatted_address
+		location_phone_number: '',					//second_call_obj.formatted_phone_number
+		category: s.category,							//Coffee, Wine, etc
+		review_description: '',							//user's review
+		lat: '',											//second_call_obj.geometry.location.lat()
+		lng: '',											//second_call_obj.geometry.location.lng()
+		store_hours: {}									
 	};
 	s.newDrink = {
 		user_rating: 0
@@ -111,13 +95,13 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
 	//==================================
 	//This is for step4 img cropping
 	s.cropper = {};
-  s.cropper.sourceImage = null;
-  s.cropper.croppedImage   = null;
-  s.bounds = {};
-  s.bounds.left = 0;
-  s.bounds.right = 0;
-  s.bounds.top = 0;
-  s.bounds.bottom = 0; 
+	s.cropper.sourceImage = null;
+	s.cropper.croppedImage   = null;
+	s.bounds = {};
+	s.bounds.left = 0;
+	s.bounds.right = 0;
+	s.bounds.top = 0;
+	s.bounds.bottom = 0; 
 
 
 	//Both of these set the css when you hover over a picture on the list all field journals section
@@ -209,23 +193,23 @@ app.controller("FieldJournalCtrl", function($scope, $state, $timeout, $uibModal,
 		s.newDrink.senses = s.senses.join(", ");
 		s.newDrink.entry_created = Date.now();
 		s.newDrink.uid = s.currentUser.uid;
-    s.newDrink.user_name = s.currentUser.userName;
-    s.newDrink.first_name = s.currentUser.firstName;
-    s.newDrink.last_name = s.currentUser.lastName;        
-    s.newDrink.profile_picture = s.currentUser.profile_picture;
+		s.newDrink.user_name = s.currentUser.userName;
+		s.newDrink.first_name = s.currentUser.firstName;
+		s.newDrink.last_name = s.currentUser.lastName;        
+		s.newDrink.profile_picture = s.currentUser.profile_picture;
 
 		//get a reference to a new key from the location you're wanting to push to 			
 		var newKey = fbRef.database().ref().child("fieldJournal").push().key,
 				updates = {};
 
 		// if (createdObj.drink_image) delete createdObj.drink_image;
-	  updates['/fieldJournal/' + newKey] = s.newDrink;
-	  //There is a watch function that listens for this user's fieldJournal collection changes and updates
-	  //s.fieldJournal when it is updated
-	  fbRef.database().ref().update(updates).then(
+		updates['/fieldJournal/' + newKey] = s.newDrink;
+		//There is a watch function that listens for this user's fieldJournal collection changes and updates
+		//s.fieldJournal when it is updated
+		fbRef.database().ref().update(updates).then(
 	  		() => {
-					s.subPage = 'listFieldJournal';
-					s.$apply();					  				  			
+				s.subPage = 'listFieldJournal';
+				s.$apply();					  				  			
 	  		}
 	  	);	  
 	};	

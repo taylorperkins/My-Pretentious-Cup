@@ -6,17 +6,17 @@ app.controller("ProfilePicCtrl", function($scope, $http, $state, fbRef, $uibModa
 
 	//Set up initial cropper properties to reference
 	s.cropper = {};
-  s.cropper.sourceImage = null;
-  s.cropper.croppedImage   = null;
-  s.bounds = {};
-  s.bounds.left = 0;
-  s.bounds.right = 0;
-  s.bounds.top = 0;
-  s.bounds.bottom = 0;
+	s.cropper.sourceImage = null;
+	s.cropper.croppedImage   = null;
+	s.bounds = {};
+	s.bounds.left = 0;
+	s.bounds.right = 0;
+	s.bounds.top = 0;
+	s.bounds.bottom = 0;
 
-  console.log(user);
+	console.log(user);
 
-  //cancel method for handling modal exits
+	//cancel method for handling modal exits
 	s.cancel = () => $uibModalInstance.dismiss('cancel');	
 
 	//save cropped profile picture, while also updating all database fieldJournal entries related to that user

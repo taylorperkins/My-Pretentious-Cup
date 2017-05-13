@@ -2,13 +2,13 @@
 
 app.controller("HomeCtrl", function($scope, $sce, $timeout, $state, $uibModal, $window, AuthUserFactory, GoogleMapsConfig, fbRef, isAuth, GooglePlacesAutoComplete) {
 	let s = $scope,      
-      request;
+                request;
 
   
   
-  //gets set every time you switch views
-  s.background = 'main';  
-  s.currentUserFieldJournal = [];  
+    //gets set every time you switch views
+    s.background = 'main';  
+    s.currentUserFieldJournal = [];  
 
   //config for my slider
   s.slider1 = {     
