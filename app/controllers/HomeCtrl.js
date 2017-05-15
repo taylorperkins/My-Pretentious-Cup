@@ -26,20 +26,24 @@ app.controller("HomeCtrl", function($scope, $sce, $timeout, $state, $uibModal, $
     //val from firebase
     let  fieldJournals = snapshot.val();
     //create a new array with all of your field journal entries, also adding in the uglyID per entry
-    s.fieldJournal = Object.keys(fieldJournals).reverse().map((entry) => {
-      fieldJournals[entry].uglyId = entry;
-      return fieldJournals[entry];
-    });
+    if (fieldJournals) {
+      s.fieldJournal = Object.keys(fieldJournals).reverse().map((entry) => {
+        fieldJournals[entry].uglyId = entry;
+        return fieldJournals[entry];
+      });      
+    }
   });
     
   //this function listens to the current user's user collection obj within firebase for any changes, 
   //then updates s.current user based on those changes
   fbRef.database().ref('users/').orderByChild('uid').equalTo(isAuth.uid).on("value", function(snapshot) {
     //grab snapshot from firebase
-    let user = snapshot.val(),    
-        currentUser = user[Object.keys(user)[0]];
-    currentUser.uglyId = Object.keys(user)[0];        
-    $timeout(() => s.currentUser = currentUser );
+    let user = snapshot.val();
+    if (user) {
+      currentUser = user[Object.keys(user)[0]];
+      currentUser.uglyId = Object.keys(user)[0];        
+      $timeout(() => s.currentUser = currentUser );
+    }      
   });	
 
   //a nifty little jQuery method for setting the well height within the page
