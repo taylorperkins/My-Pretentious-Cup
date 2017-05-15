@@ -61,7 +61,7 @@ var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bo
 
 	//'landing' state handles both login and register pages
 	.state('landing', {
-		url: '/landing',
+		url: '',
 		template: 
 			'<div class="container">' +
 				'<div ui-view></div>' +
@@ -120,7 +120,7 @@ var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bo
       .state('notARoute', {
         	url: '*path',
         	template: function($scope) {
-        		alert("I'm sorry, but the route you have chosen is not available. We're sending you back to your most rpevious page to try again!");		              		
+        		alert("I'm sorry, but the route you have chosen is not available. We're sending you back to login to try again!");		              		
         	},
         	controller: function ($location) {	           
 	           $location.path('/login');
@@ -128,7 +128,9 @@ var app = angular.module("MyPretentiousCup", ['ui.router', 'ui.validate', 'ui.bo
       });
 })
 
-.run(() => {	
+.run(($location) => {	
+
+	$location.path('/login');
 
 	/*
 		I am choosing to leave this section for development later on

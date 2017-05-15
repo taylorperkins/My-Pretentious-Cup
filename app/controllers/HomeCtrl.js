@@ -52,6 +52,7 @@ app.controller("HomeCtrl", function($scope, $sce, $timeout, $state, $uibModal, $
 
   //As soon as the controller loads, grab the user's current location, and display an info-window 
   //showing their current location. 
+  //As of 5-15-16 Chrome is no longer using this service
 
   let geoSuccess = (pos) => {
     console.log(pos);
